@@ -1,5 +1,9 @@
 package net.stoerr.grokdiscoverytoo
 
+import io.Source
+import collection.mutable
+import util.matching.Regex
+
 /**
  * Reads a pattern file for grok and replaces the %{...} references
  * to yield plain regexps
@@ -8,6 +12,29 @@ package net.stoerr.grokdiscoverytoo
  */
 trait GrokPatternReader {
 
+  /** Reads the patterns from a source */
+  def readGrokPatterns(src: Source) : Map[String, JoniRegex] = {
+    val cleanedupLines = src.getLines().filterNot(_.trim.isEmpty).filterNot(_.startsWith("#"))
+    val grokLine = "(\\w+) (.*)".r
+    val grokRegexMap : Map[String, String] = cleanedupLines.map {
+      case grokLine(name, grokregex) => (name -> grokregex)
+    }.toMap
+    grokRegexMap map {
+      case (name, grokregex) => {
+        (name -> JoniRegex(replacePatterns(grokregex, grokRegexMap)))
+      }
+    }
+  }
 
+  /** We replace patterns like %{BLA:name} with the definition of bla. This is done
+    * (arbitrarily) 10 times to allow recursions but to not allow infinite loops. */
+  protected def replacePatterns(grokregex : String, grokMap : Map[String, String]) : String = {
+    var substituted = grokregex
+    val grokReference = """%\{(\w+)(:\w+)?\}""".r
+    0 until 10 foreach { _ =>
+      substituted = grokReference replaceAllIn (substituted, m => Regex.quoteReplacement(grokMap(m.group(1))))
+    }
+    substituted
+  }
 
 }
