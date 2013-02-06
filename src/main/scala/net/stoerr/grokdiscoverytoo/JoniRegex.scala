@@ -15,12 +15,6 @@ case class JoniRegex(regex: String) {
 
   private val compiledRegex = new Regex(regex, UTF8Encoding.INSTANCE)
 
-  /** Represents a match at the beginning of a string.
-    * @param length length of the match
-    * @param matched the part of the string that was matched by the regex
-    * @param rest the part of the string after the match */
-  case class StartMatch(length: Int, matched: String, rest: String)
-
   def matchStartOf(str: String): Option[StartMatch] = {
     val bytes = str.getBytes("UTF-8")
     val matcher = compiledRegex.matcher(bytes)
@@ -30,3 +24,10 @@ case class JoniRegex(regex: String) {
   }
 
 }
+
+/** Represents a match at the beginning of a string.
+  * @param length length of the match
+  * @param matched the part of the string that was matched by the regex
+  * @param rest the part of the string after the match */
+case class StartMatch(length: Int, matched: String, rest: String)
+
