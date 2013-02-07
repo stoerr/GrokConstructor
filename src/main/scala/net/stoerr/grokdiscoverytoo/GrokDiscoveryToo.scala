@@ -1,5 +1,7 @@
 package net.stoerr.grokdiscoverytoo
 
+import net.stoerr.grokdiscoverytoo.GrokDiscoveryToo.{FixedString, NamedRegex, RegexPart}
+
 /**
  * We try to find all sensible regular expressions consisting of grok patterns and fixed strings that
  * match all of a given collection of lines. The algorithm is roughly: in each step we look whether the first characters
@@ -12,13 +14,15 @@ package net.stoerr.grokdiscoverytoo
 class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
 
   def matchingRegexpStructures(lines: List[String]): Iterator[List[RegexPart]] = {
+    if (lines.find(!_.isEmpty).isEmpty) return Iterator(List())
     val commonPrefix = biggestCommonPrefix(lines)
     if ("" != commonPrefix) {
       val restlines = lines.map(_.substring(commonPrefix.length))
-      return matchingRegexpStructures(restlines).map(RegexPart(List(commonPrefix)) :: _)
+      return matchingRegexpStructures(restlines).map(FixedString(commonPrefix) :: _)
     } else {
       val regexpand = for ((name, regex) <- namedRegexps.toList) yield (name, lines.map(regex.matchStartOf(_)))
-      val candidates = regexpand.filter(_._2.find(_.isEmpty).isDefined)
+      val candidates = regexpand.filter(_._2.find(_.isEmpty).isEmpty)
+        .filterNot(_._2.find(_.get.length != 0).isEmpty)
       val candidateToMatches = candidates.map {
         case (name, matches) => (name, matches.map(_.get))
       }
@@ -26,9 +30,9 @@ class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
       val candidatesSorted = candidatesGrouped.toList.sortBy(-_._1.map(_.length).sum)
       val res = for ((matches, names) <- candidatesSorted) yield {
         val restlines = matches.map(_.rest)
-        matchingRegexpStructures(restlines).map(RegexPart(names) :: _)
+        matchingRegexpStructures(restlines).map(NamedRegex(names) :: _)
       }
-      return res.sum
+      return res.fold(Iterator())(_ ++ _)
     }
   }
 
@@ -39,5 +43,14 @@ class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
 
 }
 
-case class RegexPart(regexps: List[String])
+object GrokDiscoveryToo {
+
+  sealed trait RegexPart
+
+  case class FixedString(str: String) extends RegexPart
+
+  case class NamedRegex(regexps: List[String]) extends RegexPart
+
+}
+
 
