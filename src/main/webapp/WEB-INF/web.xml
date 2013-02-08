@@ -5,12 +5,12 @@
     <display-name>GrokDiscoveryToo</display-name>
     <description>Guesses Grok patterns from a number of loglines</description>
     <servlet>
-        <servlet-name>Hello</servlet-name>
+        <servlet-name>discover</servlet-name>
         <servlet-class>net.stoerr.grokdiscoverytoo.GrokDiscoveryTooServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Hello</servlet-name>
-        <url-pattern>/hello/*</url-pattern>
+        <servlet-name>discover</servlet-name>
+        <url-pattern>/service/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>1</session-timeout>
