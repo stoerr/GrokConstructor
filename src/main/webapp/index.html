@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Grok Discovery Too</title>
+</head>
+<body>
+<h1>Grok Discovery<sup>2</sup></h1>
+
+<form action="/service/discover" method="post">
+    <table>
+        <tr>
+            <td>Please enter some loglines and then press <input type="submit" value="Go!"/></td>
+        </tr>
+        <tr>
+            <td>Some loglines we need to match (as varied as possible):</td>
+        </tr>
+        <tr>
+            <td><textarea rows="10" cols="120" name="loglines"></textarea></td>
+        </tr>
+        <tr>
+            <td>Grok Patterns from <a href="http://logstash.net/">logstash</a> v.1.19 :
+                <input type="checkbox" checked="checked" name="grok-patterns"/>grok-patterns
+                <input type="checkbox" name="java"/>java
+            </td>
+        </tr>
+        <tr>
+            <td>Additional patterns (example below):</td>
+        </tr>
+        <tr>
+            <td><textarea rows="20" cols="120" name="patterns"></textarea></td>
+        </tr>
+        <tr>
+            <td>Example patterns:</td>
+        </tr>
+        <tr>
+            <td><textarea rows="2" cols="120" disabled="disabled">WORD \b\w+\b
+                USERNAME [a-zA-Z0-9_-]+</textarea></td>
+        </tr>
+    </table>
+</form>
+<p>If you like it please tell <a href="http://www.stoerr.net/">me</a>, as this mightily encourages further improvements
+    to this service.
+    If you want to make me really happy please include suggestions, bugs, regular expressions you found useful, real
+    life examples where
+    the service gives particularily good or bad results, or some CSS that would make these pages look halfway decent.
+    :-)</p>
+
+<p>DISCLAIMER: This is done just for fun and you don't pay me for this, thus you get absolutely and utterly and
+    completely no
+    warranties of any kind to the extend permitted by law! Even if the program jumps out of your screen and chews at
+    your leg.</p>
+
+<p><a href="http://www.stoerr.net">Hans-Peter St&ouml;rr</a></p>
+</body>
+</html>
