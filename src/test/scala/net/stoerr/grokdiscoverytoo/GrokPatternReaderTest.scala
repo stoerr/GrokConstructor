@@ -19,7 +19,7 @@ class GrokPatternReaderTest extends FlatSpec with ShouldMatchers with GrokPatter
   }
 
   "GrokPatternReader.readGrokPatterns" should "read a pattern file and replace patterns" in {
-    val src = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("grok-patterns"))
+    val src = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("grok/grok-patterns"))
     val patterns = readGrokPatterns(src)
     patterns.size should equal(66)
     patterns("HOUR") should equal(JoniRegex("(?:2[0123]|[01][0-9])"))
