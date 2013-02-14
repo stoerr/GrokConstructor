@@ -11,6 +11,6 @@
 <p>For the loglines<p>
 <textarea rows="10" cols="120" name="loglines" disabled="disabled"><%= request.getParameter("loglines")%></textarea>
 <p>We have the following possible regexps:</p>
-<%= request.getAttribute("results") %>
+<table><%= request.getAttribute("results") %></table>
 </body>
 </html>

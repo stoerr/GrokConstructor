@@ -2,6 +2,9 @@ package net.stoerr.grokdiscoverytoo
 
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
 import io.Source
+import net.stoerr.grokdiscoverytoo.GrokDiscoveryToo.{NamedRegex, FixedString, RegexPart}
+import xml.Elem
+import concurrent.duration.span
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -10,10 +13,14 @@ import io.Source
 class GrokDiscoveryTooServlet extends HttpServlet with GrokPatternReader {
 
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
-    response.setContentType("text/html")
-    response.setStatus(HttpServletResponse.SC_OK)
-    response.getWriter.println("<h1>Hello Servlet</h1>")
-    response.getWriter.println("session=" + request.getSession(true).getId)
+    val path = request.getPathInfo
+    if (!path.matches("^[a-z/-]+$")) throw new IllegalArgumentException("Invalid path " + path)
+    if (path.startsWith("/grok/")) {
+      response.setContentType("text/plain")
+      response.setStatus(HttpServletResponse.SC_OK)
+      val src = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream(path))
+      src.getLines().foreach(response.getWriter.println(_))
+    }
   }
 
   override def doPost(request: HttpServletRequest, response: HttpServletResponse) {
@@ -21,7 +28,21 @@ class GrokDiscoveryTooServlet extends HttpServlet with GrokPatternReader {
     val loglines = Source.fromString(request.getParameter("loglines")).getLines().toList
     val patterns = readGrokPatterns(patternSource)
     val lines = new GrokDiscoveryToo(patterns).matchingRegexpStructures(loglines)
-    request.setAttribute("results", lines.toList.toString())
+    request.setAttribute("results", resultTable(lines).mkString("\n"))
     getServletContext.getRequestDispatcher("/result.jsp").forward(request, response)
   }
+
+  def resultTable(results: Iterator[List[RegexPart]]): Iterator[xml.Elem] = {
+    results map { result =>
+      <tr><td>{
+        result map {
+          case FixedString(str) => <span>{str}</span>
+          case NamedRegex(patterns) => <select> {
+              patterns map {pattern => <option>{pattern}</option>}
+            }</select>
+        }
+      }</td></tr>
+    }
+  }
+
 }
