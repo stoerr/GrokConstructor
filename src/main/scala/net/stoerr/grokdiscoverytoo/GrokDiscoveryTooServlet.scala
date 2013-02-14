@@ -5,6 +5,7 @@ import io.Source
 import net.stoerr.grokdiscoverytoo.GrokDiscoveryToo.{NamedRegex, FixedString, RegexPart}
 import xml.Elem
 import concurrent.duration.span
+import java.util
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -28,7 +29,7 @@ class GrokDiscoveryTooServlet extends HttpServlet with GrokPatternReader {
     val loglines = Source.fromString(request.getParameter("loglines")).getLines().toList
     val patterns = readGrokPatterns(patternSource)
     val lines = new GrokDiscoveryToo(patterns).matchingRegexpStructures(loglines)
-    request.setAttribute("results", resultTable(lines).mkString("\n"))
+    request.setAttribute("results", toJavaIterator(resultTable(lines)))
     getServletContext.getRequestDispatcher("/result.jsp").forward(request, response)
   }
 
@@ -43,6 +44,14 @@ class GrokDiscoveryTooServlet extends HttpServlet with GrokPatternReader {
         }
       }</td></tr>
     }
+  }
+
+  def toJavaIterator[T](scalaIterator : Iterator[T]) : java.util.Iterator[T] = new util.Iterator[T] {
+    def next(): T = scalaIterator.next()
+
+    def remove() {throw new UnsupportedOperationException}
+
+    def hasNext: Boolean = scalaIterator.hasNext
   }
 
 }

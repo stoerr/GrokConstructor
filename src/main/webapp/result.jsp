@@ -11,6 +11,10 @@
 <p>For the loglines<p>
 <textarea rows="10" cols="120" name="loglines" disabled="disabled"><%= request.getParameter("loglines")%></textarea>
 <p>We have the following possible regexps:</p>
-<table><%= request.getAttribute("results") %></table>
+<table>
+<% for(java.util.Iterator it = (java.util.Iterator)request.getAttribute("results"); it.hasNext(); ) { %>
+<%= it.next() %>
+<% } %>
+</table>
 </body>
 </html>
