@@ -5,7 +5,7 @@ import net.stoerr.grokdiscoverytoo.GrokDiscoveryToo.{FixedString, NamedRegex, Re
 /**
  * We try to find all sensible regular expressions consisting of grok patterns and fixed strings that
  * match all of a given collection of lines. The algorithm is roughly: in each step we look whether the first characters
- * of all rest-lines are equal. If they are, we take that for the regex. If they aren't we try to match all grok
+ * of all rest-lines are equal and are not letters/digits. If they are, we take that for the regex. If they aren't we try to match all grok
  * regexes against the string. The regexes are partitioned into sets that match exactly the same prefixes of all
  * rest-lines, sort these according to the average length of the matches and try these.
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -15,7 +15,7 @@ class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
 
   def matchingRegexpStructures(lines: List[String]): Iterator[List[RegexPart]] = {
     if (lines.find(!_.isEmpty).isEmpty) return Iterator(List())
-    val commonPrefix = biggestCommonPrefix(lines)
+    val commonPrefix = biggestCommonPrefixExceptDigitsOrLetters(lines)
     if ("" != commonPrefix) {
       val restlines = lines.map(_.substring(commonPrefix.length))
       return matchingRegexpStructures(restlines).map(FixedString(commonPrefix) :: _)
@@ -37,9 +37,11 @@ class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
   }
 
   /** The longest string that is a prefix of all lines. */
-  def biggestCommonPrefix(lines: List[String]): String = lines.reduce(commonPrefix)
+  def biggestCommonPrefixExceptDigitsOrLetters(lines: List[String]): String =
+    if (lines.size != 1) lines.reduce(commonPrefixExceptDigitsOrLetters)
+    else lines(0).takeWhile(!_.isLetterOrDigit)
 
-  def commonPrefix(str1: String, str2: String) = str1.zip(str2).takeWhile(p => (p._1 == p._2)).map(_._1).mkString("")
+  def commonPrefixExceptDigitsOrLetters(str1: String, str2: String) = str1.zip(str2).takeWhile(p => (p._1 == p._2 && !p._1.isLetterOrDigit)).map(_._1).mkString("")
 
 }
 

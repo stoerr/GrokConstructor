@@ -3,11 +3,14 @@ package net.stoerr.grokdiscoverytoo
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FlatSpec
 import org.joni.Regex
+import org.scalatest.junit.JUnitRunner
+import org.junit.runner.RunWith
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 06.02.13
  */
+@RunWith(classOf[JUnitRunner])
 class JoniRegexTest extends FlatSpec with ShouldMatchers {
 
   def startsWith(s: String, r: Regex) = {
@@ -37,8 +40,8 @@ class JoniRegexTest extends FlatSpec with ShouldMatchers {
   }
 
   it should "return the appropriate length, match and rest if the regex matches the start" in {
-    rn.matchStartOf("abc") should equal (Some(StartMatch(length = 3, matched="abc", rest = "")))
-    rn.matchStartOf("acdfsdf") should equal (Some(StartMatch(2, "ac", "dfsdf")))
+    rn.matchStartOf("abc") should equal(Some(StartMatch(length = 3, matched = "abc", rest = "")))
+    rn.matchStartOf("acdfsdf") should equal(Some(StartMatch(2, "ac", "dfsdf")))
   }
 
 }

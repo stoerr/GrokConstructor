@@ -1,7 +1,5 @@
 package net.stoerr.grokdiscoverytoo
 
-import io.Source
-import collection.mutable
 import util.matching.Regex
 
 /**
@@ -13,10 +11,10 @@ import util.matching.Regex
 trait GrokPatternReader {
 
   /** Reads the patterns from a source */
-  def readGrokPatterns(src: Source) : Map[String, JoniRegex] = {
-    val cleanedupLines = src.getLines().filterNot(_.trim.isEmpty).filterNot(_.startsWith("#"))
+  def readGrokPatterns(src: Iterator[String]): Map[String, JoniRegex] = {
+    val cleanedupLines = src.filterNot(_.trim.isEmpty).filterNot(_.startsWith("#"))
     val grokLine = "(\\w+) (.*)".r
-    val grokRegexMap : Map[String, String] = cleanedupLines.map {
+    val grokRegexMap: Map[String, String] = cleanedupLines.map {
       case grokLine(name, grokregex) => (name -> grokregex)
     }.toMap
     grokRegexMap map {
@@ -28,11 +26,12 @@ trait GrokPatternReader {
 
   /** We replace patterns like %{BLA:name} with the definition of bla. This is done
     * (arbitrarily) 10 times to allow recursions but to not allow infinite loops. */
-  protected def replacePatterns(grokregex : String, grokMap : Map[String, String]) : String = {
+  protected def replacePatterns(grokregex: String, grokMap: Map[String, String]): String = {
     var substituted = grokregex
     val grokReference = """%\{(\w+)(:\w+)?\}""".r
-    0 until 10 foreach { _ =>
-      substituted = grokReference replaceAllIn (substituted, m => Regex.quoteReplacement(grokMap(m.group(1))))
+    0 until 10 foreach {
+      _ =>
+        substituted = grokReference replaceAllIn(substituted, m => Regex.quoteReplacement(grokMap(m.group(1))))
     }
     substituted
   }
