@@ -8,11 +8,20 @@
         <servlet-name>discover</servlet-name>
         <servlet-class>net.stoerr.grokdiscoverytoo.GrokDiscoveryTooServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>web</servlet-name>
+        <servlet-class>net.stoerr.grokdiscoverytoo.webframe.WebDispatcher</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>discover</servlet-name>
         <url-pattern>/service/*</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>web</servlet-name>
+        <url-pattern>/web/*</url-pattern>
+    </servlet-mapping>
     <session-config>
+        <!-- We don't use sessions. -->
         <session-timeout>1</session-timeout>
     </session-config>
 </web-app>
