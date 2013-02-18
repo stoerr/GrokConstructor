@@ -13,12 +13,16 @@ import net.stoerr.grokdiscoverytoo.GrokDiscoveryToo.{FixedString, NamedRegex, Re
  */
 class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
 
-  def matchingRegexpStructures(lines: List[String]): Iterator[List[RegexPart]] = {
+  def matchingRegexpStructures(lines: List[String]): Iterator[List[RegexPart]] =
+    matchingRegexpStructures(lines, List())
+
+  def matchingRegexpStructures(lines: List[String], backtrace: List[String]): Iterator[List[RegexPart]] = {
+    println(backtrace)
     if (lines.find(!_.isEmpty).isEmpty) return Iterator(List())
     val commonPrefix = biggestCommonPrefixExceptDigitsOrLetters(lines)
     if ("" != commonPrefix) {
       val restlines = lines.map(_.substring(commonPrefix.length))
-      return matchingRegexpStructures(restlines).map(FixedString(commonPrefix) :: _)
+      return matchingRegexpStructures(restlines, commonPrefix :: backtrace).map(FixedString(commonPrefix) :: _)
     } else {
       val regexpand = for ((name, regex) <- namedRegexps.toList) yield (name, lines.map(regex.matchStartOf(_)))
       val candidates = regexpand.filter(_._2.find(_.isEmpty).isEmpty)
@@ -30,7 +34,7 @@ class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
       val candidatesSorted = candidatesGrouped.toList.sortBy(-_._1.map(_.length).sum)
       val res = for ((matches, names) <- candidatesSorted) yield {
         val restlines = matches.map(_.rest)
-        matchingRegexpStructures(restlines).map(NamedRegex(names) :: _)
+        matchingRegexpStructures(restlines, names(0) :: backtrace).map(NamedRegex(names) :: _)
       }
       return res.fold(Iterator())(_ ++ _)
     }
