@@ -13,20 +13,22 @@ import net.stoerr.grokdiscoverytoo.GrokDiscoveryToo.{FixedString, NamedRegex, Re
  */
 class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
 
-  def matchingRegexpStructures(lines: List[String]): Iterator[List[RegexPart]] =
-    matchingRegexpStructures(lines, List())
+  /** We try at most this many calls to avoid endless loops because of
+    * the combinatorical explosion */
+  var callCountdown = 10000
 
-  def matchingRegexpStructures(lines: List[String], backtrace: List[String]): Iterator[List[RegexPart]] = {
-    println(backtrace)
+  def matchingRegexpStructures(lines: List[String]): Iterator[List[RegexPart]] = {
+    if (callCountdown <= 0) return Iterator(List(FixedString("SEARCH TRUNCATED")))
+    callCountdown -= 1
     if (lines.find(!_.isEmpty).isEmpty) return Iterator(List())
     val commonPrefix = biggestCommonPrefixExceptDigitsOrLetters(lines)
-    if ("" != commonPrefix) {
+    if (0 < commonPrefix.length) {
       val restlines = lines.map(_.substring(commonPrefix.length))
-      return matchingRegexpStructures(restlines, commonPrefix :: backtrace).map(FixedString(commonPrefix) :: _)
+      return matchingRegexpStructures(restlines).map(FixedString(commonPrefix) :: _)
     } else {
       val regexpand = for ((name, regex) <- namedRegexps.toList) yield (name, lines.map(regex.matchStartOf(_)))
       val candidates = regexpand.filter(_._2.find(_.isEmpty).isEmpty)
-        .filterNot(_._2.find(_.get.length != 0).isEmpty)
+        .filterNot(_._2.find(_.get.length > 0).isEmpty)
       val candidateToMatches = candidates.map {
         case (name, matches) => (name, matches.map(_.get))
       }
@@ -34,7 +36,7 @@ class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
       val candidatesSorted = candidatesGrouped.toList.sortBy(-_._1.map(_.length).sum)
       val res = for ((matches, names) <- candidatesSorted) yield {
         val restlines = matches.map(_.rest)
-        matchingRegexpStructures(restlines, names(0) :: backtrace).map(NamedRegex(names) :: _)
+        matchingRegexpStructures(restlines).map(NamedRegex(names) :: _)
       }
       return res.fold(Iterator())(_ ++ _)
     }

@@ -1,6 +1,7 @@
 package net.stoerr.grokdiscoverytoo.webframe
 
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
+import net.stoerr.grokdiscoverytoo.matcher.MatcherEntryView
 
 /**
  * Servlet that forwards the request to a controller and displays the view.
@@ -14,11 +15,14 @@ class WebDispatcher extends HttpServlet {
   }
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    req.setAttribute("title", "My Title")
-    val body = <body>
-      <h1>Hallo!</h1>
-    </body>
-    req.setAttribute("body", body)
+    val controller = giveController(req.getPathInfo, req)
+    val view = controller.process(req)
+    req.setAttribute("title", view.title)
+    req.setAttribute("body", view.body)
     getServletContext.getRequestDispatcher("/frame.jsp").forward(req, resp)
+  }
+
+  def giveController(path: String, request: HttpServletRequest): WebController = path match {
+    case "/match" => new EmptyController(new MatcherEntryView(request))
   }
 }

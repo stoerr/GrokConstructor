@@ -28,7 +28,7 @@ trait WebForm {
     def inputText = <input type="text" name={name} id={name} value={value}/>
 
     def inputTextArea(rows: Int, cols: Int, disabled: Boolean = false) =
-        <textarea rows={rows} cols={cols} name={name} value={value} disabled={disabled}/>
+        <textarea rows={rows.toString} cols={cols.toString} name={name} value={value} disabled={disabled.toString}/>
   }
 
   case class InputMultipleChoice(name: String) extends WebFormElement {

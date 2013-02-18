@@ -13,11 +13,15 @@
 <p>We have the following possible regexps:</p>
 <hr />
 <table>
-<% for(java.util.Iterator it = (java.util.Iterator)request.getAttribute("results"); it.hasNext(); ) {
+<%
+ int countdown = 1000;
+ for(java.util.Iterator it = (java.util.Iterator)request.getAttribute("results"); it.hasNext() && (countdown > 0); countdown-- ) {
     out.println(it.next());
     out.flush();
-} %>
+ }
+%>
 </table>
+<% if (0 >= countdown) {%>RESULTS TRUNCATED<%}%>
 <hr />
 </body>
 </html>
