@@ -1,6 +1,6 @@
 package net.stoerr.grokdiscoverytoo
 
-import org.joni.Regex
+import org.joni.{CaptureTreeNode, NameEntry, Matcher, Regex}
 import org.jcodings.specific.UTF8Encoding
 
 /**
@@ -21,6 +21,35 @@ case class JoniRegex(regex: String) {
     val matchedLength = matcher.`match`(0, bytes.length, 0)
     if (0 > matchedLength) None
     else Some(StartMatch(matchedLength, new String(bytes, 0, matchedLength, "UTF-8"), new String(bytes, matchedLength, bytes.length - matchedLength, "UTF-8")))
+  }
+
+  /** Wrapper for java.util.Iterator as a Scala Iterator */
+  private class JLIterator[T](it: java.util.Iterator[T]) extends Iterator[T] {
+    def hasNext: Boolean = it.hasNext
+    def next(): T = it.next()
+  }
+
+  class JoniMatch(matcher: Matcher, bytes: Array[Byte]) {
+    def before = new String(bytes.slice(0, matcher.getBegin))
+    def after = new String(bytes.slice(matcher.getEnd, bytes.length))
+    def matched = new String(bytes.slice(matcher.getBegin, matcher.getEnd))
+
+    def namedgroups = {
+      val reg = matcher.getRegion
+      (new JLIterator[NameEntry](compiledRegex.namedBackrefIterator()).toList.map { nameEntry =>
+        val backref = compiledRegex.nameToBackrefNumber(nameEntry.name, nameEntry.nameP, nameEntry.nameEnd, reg)
+        val name = new String(nameEntry.name.slice(nameEntry.nameP, nameEntry.nameEnd))
+        name -> new String(bytes.slice(reg.beg(backref), reg.end(backref)))
+      }).toMap
+    }
+  }
+
+  def findIn(str: String) : Option[JoniMatch] = {
+    val bytes = str.getBytes("UTF-8")
+    val matcher = compiledRegex.matcher(bytes)
+    val found = matcher.search(0, bytes.length, 0)
+    if (0 > found) None
+    Some(new JoniMatch(matcher, bytes))
   }
 
 }

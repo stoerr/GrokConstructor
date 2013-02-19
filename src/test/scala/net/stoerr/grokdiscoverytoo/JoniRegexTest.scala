@@ -32,6 +32,14 @@ class JoniRegexTest extends FlatSpec with ShouldMatchers {
     startsWith("cabcd", r1) should equal(-1)
   }
 
+  it should "recognize names of groups for matches" in {
+    val rnamed = new Regex("bla(?<foo>blu)bluf")
+    val bytes = "hublablubluf".getBytes
+    val matcher = rnamed.matcher(bytes)
+    val found = matcher.search(0, bytes.length, 0)
+    found should equal(2)
+  }
+
   val rn = JoniRegex("a.*c")
 
   "JoniRegex.matchStartOf" should "return None if the regex is not found at the start" in {
@@ -42,6 +50,15 @@ class JoniRegexTest extends FlatSpec with ShouldMatchers {
   it should "return the appropriate length, match and rest if the regex matches the start" in {
     rn.matchStartOf("abc") should equal(Some(StartMatch(length = 3, matched = "abc", rest = "")))
     rn.matchStartOf("acdfsdf") should equal(Some(StartMatch(2, "ac", "dfsdf")))
+  }
+
+  "JoniRegex.find" should "find a regex and return the correct values" in {
+    val rnamed = new JoniRegex("la(?<foo>blu)bl")
+    val jmatch = rnamed.findIn("blablubluf").get
+    jmatch.before should equal("b")
+    jmatch.after should equal("uf")
+    jmatch.matched should equal("lablubl")
+    jmatch.namedgroups should equal(Map("foo" -> "blu"))
   }
 
 }
