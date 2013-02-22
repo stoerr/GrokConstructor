@@ -25,17 +25,17 @@ trait WebForm {
   case class InputText(name: String) extends WebFormElement {
     var value: String = request.getParameter(name)
 
-    def inputText = <input type="text" name={name} id={name} value={value}/>
+    def inputText(cols: Int) = <input type="text" name={name} id={name} value={value} size={cols.toString}/>
 
-    def inputTextArea(rows: Int, cols: Int, disabled: Boolean = false) =
-        <textarea rows={rows.toString} cols={cols.toString} name={name} value={value} disabled={disabled.toString}/>
+    def inputTextArea(rows: Int, cols: Int) =
+      <textarea rows={rows.toString} cols={cols.toString} name={name} value={value}></textarea>
   }
 
   case class InputMultipleChoice(name: String) extends WebFormElement {
-    var values: Array[String] = request.getParameterValues(name)
+    var values: Array[String] = Option(request.getParameterValues(name)).getOrElse(Array())
 
-    def checkboxes(values: Map[String, String]): List[Elem] =
-      for ((key, description) <- values.toList) yield <span>
+    def checkboxes(keysToText: Map[String, String]): List[Elem] =
+      for ((key, description) <- keysToText.toList) yield <span>
         <input type="checkbox" checked={if (values.contains(key)) "checked" else null} name={name} id={name + "-" + key} value={key}/>
         <label for={name + "-" + key}>
           {description}
