@@ -11,21 +11,21 @@ import org.junit.runner.RunWith
  * @since 06.02.13
  */
 @RunWith(classOf[JUnitRunner])
-class GrokPatternReaderTest extends FlatSpec with ShouldMatchers with GrokPatternReader {
+class GrokPatternLibraryTest extends FlatSpec with ShouldMatchers {
 
-  "GrokPatternReader.replacePatterns" should "replace groks patterns" in {
+  "GrokPatternLibrary.replacePatterns" should "replace groks patterns" in {
     val grokReference = """%\{(\w+)(:\w+)?\}""".r
     grokReference.pattern.matcher("%{BU}").matches() should equal(true)
     grokReference.pattern.matcher("%{BLA:name}").matches() should equal(true)
-    replacePatterns("bla%{BU}bu%{BLA:name}hu", Map("BU" -> "XYZ", "BLA" -> "HU%{BU}HA")) should equal("blaXYZbuHUXYZHAhu")
+    GrokPatternLibrary.replacePatterns("bla%{BU}bu%{BLA:name}hu", Map("BU" -> "XYZ", "BLA" -> "HU%{BU}HA")) should equal("blaXYZbuHUXYZHAhu")
     evaluating {
-      replacePatterns("%{NIX}", Map())
+      GrokPatternLibrary.replacePatterns("%{NIX}", Map())
     } should produce[NoSuchElementException]
   }
 
-  "GrokPatternReader.readGrokPatterns" should "read a pattern file and replace patterns" in {
+  "GrokPatternLibrary.readGrokPatterns" should "read a pattern file and replace patterns" in {
     val src = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("grok/grok-patterns"))
-    val patterns = readGrokPatterns(src.getLines())
+    val patterns = GrokPatternLibrary.readGrokPatterns(src.getLines())
     patterns.size should equal(66)
     patterns("HOUR") should equal(JoniRegex("(?:2[0123]|[01][0-9])"))
     patterns("ISO8601_TIMEZONE") should equal(JoniRegex("(?:Z|[+-](?:2[0123]|[01][0-9])(?::?(?:[0-5][0-9])))"))

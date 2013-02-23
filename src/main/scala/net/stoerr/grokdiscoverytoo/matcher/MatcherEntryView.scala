@@ -2,7 +2,8 @@ package net.stoerr.grokdiscoverytoo.matcher
 
 import net.stoerr.grokdiscoverytoo.webframe.WebView
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.GrokPatternLibrary
+import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary}
+import xml.NodeBuffer
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -13,9 +14,23 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 
   val form = MatcherForm(request)
 
+  def showResult(pat: String): NodeBuffer = {
+      <hr/>
+      <table>
+        {form.loglines.valueSplitToLines.map {
+        line =>
+          <tr>
+            <td>
+              {}
+            </td>
+          </tr>
+      }}
+      </table>
+  }
+
   def body: AnyRef = <body>
     <h1>Test grok patterns</h1>
-    <form action="/web/matching" method="post">
+    <form action="/web/match" method="post">
       <table>
         <tr>
           <td>Please enter some loglines and then press
@@ -53,6 +68,6 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
           </td>
         </tr>
       </table>
-    </form>
+    </form>{form.pattern.value.map(showResult(_)).getOrElse(<span/>)}
   </body>
 }

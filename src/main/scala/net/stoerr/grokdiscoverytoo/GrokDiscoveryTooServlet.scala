@@ -9,37 +9,29 @@ import java.util
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 07.02.13
  */
-class GrokDiscoveryTooServlet extends HttpServlet with GrokPatternReader {
+class GrokDiscoveryTooServlet extends HttpServlet {
 
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
     val path = request.getPathInfo
     if (path.startsWith("/grok/")) {
       response.setContentType("text/plain")
       response.setStatus(HttpServletResponse.SC_OK)
-      grokSource(path).getLines().foreach(response.getWriter.println(_))
+      GrokPatternLibrary.grokSource(path.substring(6)).getLines().foreach(response.getWriter.println(_))
     }
-  }
-
-  def grokSource(location: String): Source = {
-    if (!location.matches("^[a-z/-]+$")) throw new IllegalArgumentException("Invalid path " + location)
-    return Source.fromInputStream(getClass.getClassLoader.getResourceAsStream(location))
   }
 
   override def doPost(request: HttpServletRequest, response: HttpServletResponse) {
     val loglines = Source.fromString(request.getParameter("loglines")).getLines().filter(!_.isEmpty).toList
-    val patterns = readGrokPatterns(getPatternLines(request))
+    val patterns = getPatternLines(request)
     val lines = new GrokDiscoveryToo(patterns).matchingRegexpStructures(loglines)
     request.setAttribute("results", toJavaIterator(resultTable(lines)))
     getServletContext.getRequestDispatcher("/result.jsp").forward(request, response)
   }
 
 
-  def getPatternLines(request: HttpServletRequest): Iterator[String] = {
-    val patternLines = Source.fromString(request.getParameter("patterns")).getLines()
-    val grokParameters = Option(request.getParameterValues("grok")).getOrElse(Array())
-    val grokPatternSources = for (grokfile <- grokParameters) yield grokSource("/grok/" + grokfile)
-    val allPatternLines = grokPatternSources.map(_.getLines()).fold(patternLines)(_ ++ _)
-    allPatternLines
+  def getPatternLines(request: HttpServletRequest): Map[String, JoniRegex] = {
+    val grokParameters = Option(request.getParameterValues("grok")).getOrElse(Array()).toList
+    GrokPatternLibrary.mergePatternLibraries(grokParameters, Option(request.getParameter("patterns")))
   }
 
   def resultTable(results: Iterator[List[RegexPart]]): Iterator[xml.Elem] = {

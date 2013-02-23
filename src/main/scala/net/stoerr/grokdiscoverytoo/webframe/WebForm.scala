@@ -23,16 +23,18 @@ trait WebForm {
   }
 
   case class InputText(name: String) extends WebFormElement {
-    var value: String = request.getParameter(name)
+    var value: Option[String] = Option(request.getParameter(name))
 
-    def inputText(cols: Int) = <input type="text" name={name} id={name} value={value} size={cols.toString}/>
+    def valueSplitToLines = value.map(_.split("\r?\n"))
+
+    def inputText(cols: Int) = <input type="text" name={name} id={name} value={value.orNull} size={cols.toString}/>
 
     def inputTextArea(rows: Int, cols: Int) =
-      <textarea rows={rows.toString} cols={cols.toString} name={name} value={value}></textarea>
+      <textarea rows={rows.toString} cols={cols.toString} name={name} value={value.orNull}></textarea>
   }
 
   case class InputMultipleChoice(name: String) extends WebFormElement {
-    var values: Array[String] = Option(request.getParameterValues(name)).getOrElse(Array())
+    var values: List[String] = Option(request.getParameterValues(name)).getOrElse(Array()).toList
 
     def checkboxes(keysToText: Map[String, String]): List[Elem] =
       for ((key, description) <- keysToText.toList) yield <span>
