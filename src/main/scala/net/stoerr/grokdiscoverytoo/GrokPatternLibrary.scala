@@ -45,10 +45,14 @@ object GrokPatternLibrary {
     * (arbitrarily) 10 times to allow recursions but to not allow infinite loops. */
   def replacePatterns(grokregex: String, grokMap: Map[String, String]): String = {
     var substituted = grokregex
-    val grokReference = """%\{(\w+)(:\w+)?\}""".r
+    val grokReference = """%\{(\w+)(:(\w+))?\}""".r
     0 until 10 foreach {
       _ =>
-        substituted = grokReference replaceAllIn(substituted, m => Regex.quoteReplacement(grokMap(m.group(1))))
+        substituted = grokReference replaceAllIn(substituted, {
+          m =>
+            "(?" + Option(m.group(3)).map(Regex.quoteReplacement).map("<" + _ + ">").getOrElse(":") +
+              Regex.quoteReplacement(grokMap(m.group(1))) + ")"
+        })
     }
     substituted
   }
