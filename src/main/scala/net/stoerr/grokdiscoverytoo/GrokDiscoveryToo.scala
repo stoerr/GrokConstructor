@@ -11,7 +11,11 @@ import net.stoerr.grokdiscoverytoo.GrokDiscoveryToo.{FixedString, NamedRegex, Re
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 06.02.13
  */
-class GrokDiscoveryToo(namedRegexps: Map[String, JoniRegex]) {
+class GrokDiscoveryToo(grokMap: Map[String, String]) {
+
+  val namedRegexps: Map[String, JoniRegex] = grokMap.map {
+    case (name, regex) => (name -> new JoniRegex(GrokPatternLibrary.replacePatterns(regex, grokMap)))
+  }
 
   /** We try at most this many calls to avoid endless loops because of
     * the combinatorical explosion */

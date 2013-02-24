@@ -15,7 +15,7 @@ import org.scalatest.junit.JUnitRunner
 class GrokDiscoveryTooTest extends FlatSpec with ShouldMatchers {
 
   "GrokDiscoveryToo.commonPrefixExceptDigitsOrLetters" should "return the common prefix of two strings" in {
-    val d = new GrokDiscoveryToo(null)
+    val d = new GrokDiscoveryToo(Map())
     d.commonPrefixExceptDigitsOrLetters("$#@@#$@", "$#%@#$") should equal("$#")
     d.commonPrefixExceptDigitsOrLetters("!@#", "#@!") should equal("")
     d.commonPrefixExceptDigitsOrLetters("", "$#$") should equal("")
@@ -23,14 +23,14 @@ class GrokDiscoveryTooTest extends FlatSpec with ShouldMatchers {
   }
 
   "GrokDiscoveryToo.biggestCommonPrefixExceptDigitsOrLetters" should "return the biggest common prefix" in {
-    val d = new GrokDiscoveryToo(null)
+    val d = new GrokDiscoveryToo(Map())
     d.biggestCommonPrefixExceptDigitsOrLetters(List("#@!%$%", "#@!&$*", "#@!*#&")) should equal("#@!")
     d.biggestCommonPrefixExceptDigitsOrLetters(List("!@#", "$#@")) should equal("")
     d.biggestCommonPrefixExceptDigitsOrLetters(List("$#@$bla")) should equal("$#@$")
   }
 
   "GrokDiscoveryToo.matchingRegexpStructures" should "suggest all pattern combinations" in {
-    val regexes = Map("A" -> JoniRegex("a|b"), "B" -> JoniRegex("b|c"), "S" -> JoniRegex("\\s*"))
+    val regexes = Map("A" -> "a|b", "B" -> "b|c", "S" -> "\\s*")
     val d = new GrokDiscoveryToo(regexes)
     d.matchingRegexpStructures(List("-")).toList should equal(List(List(FixedString("-"))))
     d.matchingRegexpStructures(List("a", "b")).toList should equal(List(List(NamedRegex(List("A")))))

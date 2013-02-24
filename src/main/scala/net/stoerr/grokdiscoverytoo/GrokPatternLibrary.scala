@@ -15,7 +15,7 @@ object GrokPatternLibrary {
   val extrapatternnames = List("extras")
   val extrapatternKeys = extrapatternnames.map(p => (p -> p)).toMap
 
-  def mergePatternLibraries(libraries: List[String], extrapatterns: Option[String]): Map[String, JoniRegex] = {
+  def mergePatternLibraries(libraries: List[String], extrapatterns: Option[String]): Map[String, String] = {
     val extrapatternlines: Iterator[String] = extrapatterns.map(Source.fromString(_).getLines()).getOrElse(Iterator())
     val grokPatternSources = for (grokfile <- libraries) yield grokSource("/grok/" + grokfile).getLines()
     val allPatternLines = grokPatternSources.fold(extrapatternlines)(_ ++ _)
@@ -28,17 +28,12 @@ object GrokPatternLibrary {
   }
 
   /** Reads the patterns from a source */
-  def readGrokPatterns(src: Iterator[String]): Map[String, JoniRegex] = {
+  def readGrokPatterns(src: Iterator[String]): Map[String, String] = {
     val cleanedupLines = src.filterNot(_.trim.isEmpty).filterNot(_.startsWith("#"))
     val grokLine = "(\\w+) (.*)".r
-    val grokRegexMap: Map[String, String] = cleanedupLines.map {
+    cleanedupLines.map {
       case grokLine(name, grokregex) => (name -> grokregex)
     }.toMap
-    grokRegexMap map {
-      case (name, grokregex) => {
-        (name -> JoniRegex(replacePatterns(grokregex, grokRegexMap)))
-      }
-    }
   }
 
   /** We replace patterns like %{BLA:name} with the definition of bla. This is done

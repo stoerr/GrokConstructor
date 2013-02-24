@@ -29,7 +29,7 @@ class GrokDiscoveryTooServlet extends HttpServlet {
   }
 
 
-  def getPatternLines(request: HttpServletRequest): Map[String, JoniRegex] = {
+  def getPatternLines(request: HttpServletRequest): Map[String, String] = {
     val grokParameters = Option(request.getParameterValues("grok")).getOrElse(Array()).toList
     GrokPatternLibrary.mergePatternLibraries(grokParameters, Option(request.getParameter("patterns")))
   }
