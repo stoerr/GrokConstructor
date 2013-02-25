@@ -26,30 +26,36 @@ case class JoniRegex(regex: String) {
   /** Wrapper for java.util.Iterator as a Scala Iterator */
   private class JLIterator[T](it: java.util.Iterator[T]) extends Iterator[T] {
     def hasNext: Boolean = it.hasNext
+
     def next(): T = it.next()
   }
 
+  /** Data about a match of a regular expression in a given String */
   class JoniMatch(matcher: Matcher, bytes: Array[Byte]) {
     def before = new String(bytes.slice(0, matcher.getBegin))
+
     def after = new String(bytes.slice(matcher.getEnd, bytes.length))
+
     def matched = new String(bytes.slice(matcher.getBegin, matcher.getEnd))
 
-    def namedgroups = {
+    def namedgroups: Map[String, String] = {
       val reg = matcher.getRegion
-      (new JLIterator[NameEntry](compiledRegex.namedBackrefIterator()).toList.map { nameEntry =>
-        val backref = compiledRegex.nameToBackrefNumber(nameEntry.name, nameEntry.nameP, nameEntry.nameEnd, reg)
-        val name = new String(nameEntry.name.slice(nameEntry.nameP, nameEntry.nameEnd))
-        name -> new String(bytes.slice(reg.beg(backref), reg.end(backref)))
+      if (0 >= compiledRegex.numberOfNames()) Map()
+      else (new JLIterator[NameEntry](compiledRegex.namedBackrefIterator()).toList.map {
+        nameEntry =>
+          val backref = compiledRegex.nameToBackrefNumber(nameEntry.name, nameEntry.nameP, nameEntry.nameEnd, reg)
+          val name = new String(nameEntry.name.slice(nameEntry.nameP, nameEntry.nameEnd))
+          name -> new String(bytes.slice(reg.beg(backref), reg.end(backref)))
       }).toMap
     }
   }
 
-  def findIn(str: String) : Option[JoniMatch] = {
+  /** Finds first occurrence of a regex in a String. */
+  def findIn(str: String): Option[JoniMatch] = {
     val bytes = str.getBytes("UTF-8")
     val matcher = compiledRegex.matcher(bytes)
     val found = matcher.search(0, bytes.length, 0)
-    if (0 > found) None
-    Some(new JoniMatch(matcher, bytes))
+    if (found < 0) None else Some(new JoniMatch(matcher, bytes))
   }
 
 }

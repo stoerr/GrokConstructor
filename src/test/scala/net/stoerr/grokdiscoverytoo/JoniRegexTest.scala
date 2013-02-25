@@ -61,4 +61,9 @@ class JoniRegexTest extends FlatSpec with ShouldMatchers {
     jmatch.namedgroups should equal(Map("foo" -> "blu"))
   }
 
+  it should "not find anything if it isn't there" in {
+    val rnamed = new JoniRegex("la(?<foo>blu)bl")
+    rnamed.findIn("nixda") should equal(None)
+  }
+
 }

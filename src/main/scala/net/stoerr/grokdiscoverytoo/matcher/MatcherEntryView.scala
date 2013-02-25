@@ -15,15 +15,45 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
   val form = MatcherForm(request)
 
   def showResult(pat: String): NodeBuffer = {
+    val regex = new JoniRegex(pat)
       <hr/>
-      <table>
-        {form.loglines.valueSplitToLines.map {
-        line =>
-          <tr>
-            <td>
-              {}
-            </td>
-          </tr>
+      <table border="1">
+        {for (line <- form.loglines.valueSplitToLines.get) yield {
+        <tr>
+          <th colspan="2">
+            {line}
+          </th>
+        </tr> ++ {
+          regex.findIn(line) match {
+            case None =>
+              <tr>
+                <td>NOT MATCHED</td>
+              </tr>
+            case Some(jmatch) =>
+              <tr>
+                <td>before match:
+                </td> <td>
+                {jmatch.before}
+              </td>
+              </tr> ++ {
+                for ((name, nameResult) <- jmatch.namedgroups) yield {
+                  <tr>
+                    <td>
+                      {name}
+                    </td> <td>
+                    {nameResult}
+                  </td>
+                  </tr>
+                }
+              } ++
+                <tr>
+                  <td>after match:
+                  </td> <td>
+                  {jmatch.after}
+                </td>
+                </tr>
+          }
+        }
       }}
       </table>
   }
