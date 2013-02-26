@@ -25,11 +25,11 @@ trait WebForm {
   case class InputText(name: String) extends WebFormElement {
     var value: Option[String] = Option(request.getParameter(name))
 
-    def valueSplitToLines = value.map(_.split("\r?\n"))
+    def valueSplitToLines: Option[Array[String]] = value.map(_.split("\r?\n"))
 
-    def inputText(cols: Int) = <input type="text" name={name} id={name} value={value.orNull} size={cols.toString}/>
+    def inputText(cols: Int): Elem = <input type="text" name={name} id={name} value={value.orNull} size={cols.toString}/>
 
-    def inputTextArea(rows: Int, cols: Int) =
+    def inputTextArea(rows: Int, cols: Int) : Elem =
       <textarea rows={rows.toString} cols={cols.toString} name={name}>{value.orNull}</textarea>
   }
 
