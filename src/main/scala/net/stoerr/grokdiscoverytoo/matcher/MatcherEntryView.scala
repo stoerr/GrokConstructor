@@ -16,9 +16,10 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 
   def showResult(pat: String): NodeBuffer = {
     val regex = new JoniRegex(pat)
+    val lines: Seq[String] = form.multlineFilter(form.loglines.valueSplitToLines.get)
       <hr/>
       <table border="1">
-        {for (line <- form.loglines.valueSplitToLines.get) yield {
+        {for (line <- lines) yield {
         <tr>
           <th colspan="2">
             {line}
