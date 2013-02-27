@@ -15,14 +15,13 @@ class WebDispatcher extends HttpServlet {
   }
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    val controller = giveController(req.getPathInfo, req)
-    val view = controller.process(req)
+    val view = giveView(req.getPathInfo, req)
     req.setAttribute("title", view.title)
     req.setAttribute("body", view.body)
     getServletContext.getRequestDispatcher("/frame.jsp").forward(req, resp)
   }
 
-  def giveController(path: String, request: HttpServletRequest): WebController = path match {
-    case "/match" => new EmptyController(new MatcherEntryView(request))
+  def giveView(path: String, request: HttpServletRequest): WebView = path match {
+    case "/match" => new MatcherEntryView(request)
   }
 }

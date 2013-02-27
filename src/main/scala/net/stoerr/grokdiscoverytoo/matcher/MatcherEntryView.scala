@@ -89,6 +89,11 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
         </tr>
         <tr>
           <td>
+            {form.multlinePart()}
+          </td>
+        </tr>
+        <tr>
+          <td>
             {form.pattern.label("The pattern that should match all of them")}
           </td>
         </tr>

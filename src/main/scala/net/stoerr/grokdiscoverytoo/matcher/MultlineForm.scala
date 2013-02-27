@@ -24,7 +24,7 @@ trait MultlineForm extends WebForm {
   val multlineNegate = InputMultipleChoice("multlinenegate")
 
   def multlinePart(): NodeSeq =
-    multlineRegex.inputText(80) ++ multlineRegex.label("Multline Regex") ++
+    multlineRegex.label("Multline Regex") ++ multlineRegex.inputText(80) ++
       multlineNegate.checkboxes(Map(negatekey -> "negate"))
 
   private def continuationLine(line: String) = {
@@ -32,21 +32,21 @@ trait MultlineForm extends WebForm {
     if (multlineNegate.values.contains(negatekey)) !ismatched else ismatched
   }
 
-  def multlineFilter[S <: Seq[String]](lines: S): Seq[String] = {
+  def multlineFilter(lines: Seq[String]) : Seq[String] = {
     if (multlineRegex.value.isEmpty || lines.isEmpty) return lines
-    val builder = lines.repr.companion.newBuilder[String]
-    var combinedmessage: String = null
-    for (line <- lines) {
-      if (continuationLine(line))
-        if (null == combinedmessage) combinedmessage = line
-        else combinedmessage += line
-      else {
-        if (null != combinedmessage) builder += combinedmessage
-        combinedmessage = line
-      }
+    val lineswithmatch: Seq[(Boolean, String)] = lines.map(l => (continuationLine(l), l))
+    /** Partition in groups where each group starts with an item where _1 is true. */
+    def group(currentgroup: List[String], list: List[(Boolean, String)]): List[List[String]] = list match {
+      case (false, l) :: Nil if currentgroup.isEmpty => List(List(l))
+      case (false, l) :: Nil => List(currentgroup, List(l))
+      case (true, l) :: Nil => List(currentgroup ++ List(l))
+      case (false, l) :: rest if currentgroup.isEmpty => group(List(l), rest)
+      case (false, l) :: rest => currentgroup :: group(List(l), rest)
+      case (true, l) :: rest => group(currentgroup ++ List(l), rest)
+      case _ => List.empty
     }
-    if (!combinedmessage.isEmpty) combinedmessage
-    return builder.result()
+    val linesgrouped = group(List(), lineswithmatch.toList)
+    linesgrouped.map(_.reduce(_ + "\n" + _))
   }
 
 }

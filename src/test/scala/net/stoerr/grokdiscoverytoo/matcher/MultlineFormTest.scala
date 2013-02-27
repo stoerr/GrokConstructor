@@ -26,10 +26,18 @@ class MultlineFormTest extends FlatSpec with ShouldMatchers with MockitoSugar {
     form.multlineFilter(List("a")) should equal(List("a"))
     form.multlineFilter(List("-a")) should equal(List("-a"))
     form.multlineFilter(List("a", "b")) should equal(List("a", "b"))
-    form.multlineFilter(List("a", "b")) should equal(List("-a", "b"))
+    form.multlineFilter(List("-a", "b")) should equal(List("-a", "b"))
     form.multlineFilter(List("a", "-a")) should equal(List("a\n-a"))
     form.multlineFilter(List("a", "-a", "b")) should equal(List("a\n-a", "b"))
     form.multlineFilter(List("-a", "b", "-b", "-bb")) should equal(List("-a", "b\n-b\n-bb"))
+  }
+
+  it should "observe negate" in {
+    val mockreq = mock[HttpServletRequest]
+    when(mockreq.getParameter("multline")).thenReturn("^-")
+    when(mockreq.getParameterValues("multlinenegate")).thenReturn(Array("negate"))
+    val form = new MockForm(mockreq)
+    form.multlineFilter(List("-a", "b", "-b", "-bb")) should equal(List("-a\nb", "-b", "-bb"))
   }
 
 }
