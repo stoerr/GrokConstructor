@@ -11,6 +11,8 @@ trait TableMaker {
 
   implicit def stringToNode(str: String): NodeSeq = new Text(str)
 
+  def warn(content: NodeSeq) = <span style="color:red">{content}</span>
+
   def row(content: NodeSeq) = <tr>
     <td>
       {content}

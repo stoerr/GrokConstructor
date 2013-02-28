@@ -48,6 +48,8 @@ case class JoniRegex(regex: String) {
           name -> new String(bytes.slice(reg.beg(backref), reg.end(backref)))
       }).toMap
     }
+
+    def regex = JoniRegex.this.regex
   }
 
   /** Finds first occurrence of a regex in a String. */

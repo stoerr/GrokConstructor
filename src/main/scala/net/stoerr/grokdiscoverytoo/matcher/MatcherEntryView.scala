@@ -4,6 +4,7 @@ import net.stoerr.grokdiscoverytoo.webframe.WebView
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary}
 import xml.NodeBuffer
+import scala.collection.immutable.NumericRange
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -28,7 +29,12 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
         rowheader2(line) ++ {
           regex.findIn(line) match {
             case None =>
-              row2("NOT MATCHED")
+              val jmatch = longestMatchOfRegexPrefix(patternGrokked, line)
+              row2(warn("NOT MATCHED")) ++
+                row2("Longest prefix that matches", jmatch.regex) ++ {
+                for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, nameResult)
+              } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
+                ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
             case Some(jmatch) =>
               row2("MATCHED") ++ {
                 for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, nameResult)
@@ -39,6 +45,12 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
       }}
       </table>
   }
+
+  def longestMatchOfRegexPrefix(pattern: String, line: String) =
+    NumericRange.inclusive(pattern.length - 1, 0, -1).toIterator
+      .map(pattern.substring(0, _))
+      .map(new JoniRegex(_).findIn(line))
+      .find(_.isDefined).get.get
 
   def body: AnyRef = <body>
     <h1>Test grok patterns</h1>
