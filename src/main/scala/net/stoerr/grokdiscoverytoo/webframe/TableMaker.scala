@@ -7,11 +7,13 @@ import scala.xml.{Text, NodeSeq}
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 28.02.13
  */
-trait TableMaker {
+object TableMaker {
 
   implicit def stringToNode(str: String): NodeSeq = new Text(str)
 
-  def warn(content: NodeSeq) = <span style="color:red">{content}</span>
+  def warn(content: NodeSeq) = <span style="color:red">
+    {content}
+  </span>
 
   def row(content: NodeSeq) = <tr>
     <td>
