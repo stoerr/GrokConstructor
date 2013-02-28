@@ -1,6 +1,6 @@
 package net.stoerr.grokdiscoverytoo.matcher
 
-import net.stoerr.grokdiscoverytoo.webframe.WebForm
+import net.stoerr.grokdiscoverytoo.webframe.{TableMaker, WebForm}
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.JoniRegex
 
@@ -23,16 +23,16 @@ trait MultlineForm extends WebForm {
     * lines that do match the filter. */
   val multlineNegate = InputMultipleChoice("multlinenegate")
 
-  def multlinePart(): NodeSeq =
+  def multlineEntry: NodeSeq = TableMaker.row(
     multlineRegex.label("Multline Regex") ++ multlineRegex.inputText(80) ++
-      multlineNegate.checkboxes(Map(negatekey -> "negate"))
+      multlineNegate.checkboxes(Map(negatekey -> "negate")))
 
   private def continuationLine(line: String) = {
     val ismatched = new JoniRegex(multlineRegex.value.get).findIn(line).isDefined
     if (multlineNegate.values.contains(negatekey)) !ismatched else ismatched
   }
 
-  def multlineFilter(lines: Seq[String]) : Seq[String] = {
+  def multlineFilter(lines: Seq[String]): Seq[String] = {
     if (multlineRegex.value.isEmpty || multlineRegex.value.get.isEmpty || lines.isEmpty) return lines
     val lineswithmatch: Seq[(Boolean, String)] = lines.map(l => (continuationLine(l), l))
     /** Partition in groups where each group starts with an item where _1 is true. */

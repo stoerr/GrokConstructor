@@ -60,20 +60,10 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
         {row(<span>Please enter some loglines and then press
         <input type="submit" value="Go!"/>
       </span>) ++
-        row(form.loglines.label("Some log lines you want to match. Choose diversity.")) ++
-        row(form.loglines.inputTextArea(10, 180)) ++
-        row(<span>
-          Grok Patterns from
-          <a href="http://logstash.net/">logstash</a>
-          v.1.19 :
-          {form.groklibs.checkboxes(GrokPatternLibrary.grokpatternKeys)}
-          and some
-          {form.extralibs.checkboxes(GrokPatternLibrary.extrapatternKeys)}
-          from me
-        </span>) ++
-        row(form.multlinePart()) ++
-        row(form.pattern.label("This pattern that should match all logfile lines:")) ++
-        row(form.pattern.inputText(180))}
+        form.loglinesEntry ++
+        form.patternEntry ++
+        form.grokpatternEntry ++
+        form.multlineEntry}
       </table>
     </form>{form.pattern.value.map(showResult(_)).getOrElse(<span/>)}
   </body>
