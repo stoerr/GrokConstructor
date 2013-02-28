@@ -14,45 +14,26 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 
   val form = MatcherForm(request)
 
+  private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
+
+  lazy val groklib = GrokPatternLibrary.mergePatternLibraries(form.groklibs.values, None)
+
   def showResult(pat: String): NodeBuffer = {
-    val regex = new JoniRegex(pat)
+    val patternGrokked = GrokPatternLibrary.replacePatterns(pat, groklib)
+    val regex = new JoniRegex(patternGrokked)
     val lines: Seq[String] = form.multlineFilter(form.loglines.valueSplitToLines.get)
       <hr/>
       <table border="1">
         {for (line <- lines) yield {
-        <tr>
-          <th colspan="2">
-            {line}
-          </th>
-        </tr> ++ {
+        rowheader2(line) ++ {
           regex.findIn(line) match {
             case None =>
-              <tr>
-                <td>NOT MATCHED</td>
-              </tr>
+              row2("NOT MATCHED")
             case Some(jmatch) =>
-              <tr>
-                <td>before match:
-                </td> <td>
-                {jmatch.before}
-              </td>
-              </tr> ++ {
-                for ((name, nameResult) <- jmatch.namedgroups) yield {
-                  <tr>
-                    <td>
-                      {name}
-                    </td> <td>
-                    {nameResult}
-                  </td>
-                  </tr>
-                }
-              } ++
-                <tr>
-                  <td>after match:
-                  </td> <td>
-                  {jmatch.after}
-                </td>
-                </tr>
+              row2("MATCHED") ++ {
+                for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, nameResult)
+              } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
+                ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
           }
         }
       }}
@@ -95,7 +76,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
         </tr>
         <tr>
           <td>
-            {form.pattern.label("The pattern that should match all of them")}
+            {form.pattern.label("This pattern that should match all logfile lines:")}
           </td>
         </tr>
         <tr>

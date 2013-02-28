@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 15.02.13
  */
-trait WebView {
+trait WebView extends TableMaker {
 
   val request: HttpServletRequest
 

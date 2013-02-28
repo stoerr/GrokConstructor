@@ -1,7 +1,7 @@
 package net.stoerr.grokdiscoverytoo
 
 import util.matching.Regex
-import io.Source
+import scala.io.{BufferedSource, Source}
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -17,14 +17,16 @@ object GrokPatternLibrary {
 
   def mergePatternLibraries(libraries: List[String], extrapatterns: Option[String]): Map[String, String] = {
     val extrapatternlines: Iterator[String] = extrapatterns.map(Source.fromString(_).getLines()).getOrElse(Iterator())
-    val grokPatternSources = for (grokfile <- libraries) yield grokSource("/grok/" + grokfile).getLines()
+    val grokPatternSources = for (grokfile <- libraries) yield grokSource(grokfile).getLines()
     val allPatternLines = grokPatternSources.fold(extrapatternlines)(_ ++ _)
     readGrokPatterns(allPatternLines)
   }
 
   def grokSource(location: String): Source = {
     if (!location.matches("^[a-z-]+$")) throw new IllegalArgumentException("Invalid path " + location)
-    return Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("/grok/" + location))
+    val stream: BufferedSource = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("/grok/" + location))
+    if (null == stream) throw new IllegalArgumentException("Could not find " + location)
+    return stream
   }
 
   /** Reads the patterns from a source */

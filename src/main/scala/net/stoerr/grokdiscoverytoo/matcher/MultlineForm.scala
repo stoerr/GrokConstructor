@@ -33,7 +33,7 @@ trait MultlineForm extends WebForm {
   }
 
   def multlineFilter(lines: Seq[String]) : Seq[String] = {
-    if (multlineRegex.value.isEmpty || lines.isEmpty) return lines
+    if (multlineRegex.value.isEmpty || multlineRegex.value.get.isEmpty || lines.isEmpty) return lines
     val lineswithmatch: Seq[(Boolean, String)] = lines.map(l => (continuationLine(l), l))
     /** Partition in groups where each group starts with an item where _1 is true. */
     def group(currentgroup: List[String], list: List[(Boolean, String)]): List[List[String]] = list match {
