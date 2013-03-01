@@ -25,7 +25,7 @@ trait MultlineFormPart extends WebForm {
 
   def multlineEntry: NodeSeq = TableMaker.row(
     multlineRegex.label("Multline Regex") ++ multlineRegex.inputText(80) ++
-      multlineNegate.checkboxes(Map(negatekey -> "negate")))
+      multlineNegate.checkboxes(Map(negatekey -> <span>"negate"</span>)))
 
   private def continuationLine(line: String) = {
     val ismatched = new JoniRegex(multlineRegex.value.get).findIn(line).isDefined

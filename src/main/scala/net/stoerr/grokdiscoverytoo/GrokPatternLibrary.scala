@@ -10,10 +10,8 @@ import scala.io.{BufferedSource, Source}
 object GrokPatternLibrary {
 
   val grokpatternnames = List("firewalls", "grok-patterns", "haproxy", "java", "linux-syslog", "nagios", "ruby")
-  val grokpatternKeys = grokpatternnames.map(p => (p -> p)).toMap
 
   val extrapatternnames = List("extras")
-  val extrapatternKeys = extrapatternnames.map(p => (p -> p)).toMap
 
   def mergePatternLibraries(libraries: List[String], extrapatterns: Option[String]): Map[String, String] = {
     val extrapatternlines: Iterator[String] = extrapatterns.map(Source.fromString(_).getLines()).getOrElse(Iterator())

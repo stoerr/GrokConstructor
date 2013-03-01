@@ -3,6 +3,7 @@ package net.stoerr.grokdiscoverytoo.forms
 import net.stoerr.grokdiscoverytoo.webframework.WebForm
 import net.stoerr.grokdiscoverytoo.GrokPatternLibrary
 import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
+import xml.NodeSeq
 
 /**
  * Input(s) for grok patterns
@@ -17,13 +18,18 @@ trait GrokPatternFormPart extends WebForm {
 
   val grokadditionalinput = InputText("grokadditional")
 
+  private def keyToGrokLink(key: String): (String, NodeSeq) =
+    key -> <a href={"/service/grok/" + key}>
+      {key}
+    </a>
+
   def grokpatternEntry = row(<span>
     Grok Patterns from
     <a href="http://logstash.net/">logstash</a>
     v.1.19 :
-    {groklibs.checkboxes(GrokPatternLibrary.grokpatternKeys)}
+    {groklibs.checkboxes(GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap)}
     , and some
-    {extralibs.checkboxes(GrokPatternLibrary.extrapatternKeys)}
+    {extralibs.checkboxes(GrokPatternLibrary.extrapatternnames.map(keyToGrokLink).toMap)}
     from me
   </span>) ++
     row("Additional grok patterns:") ++
