@@ -12,7 +12,8 @@ import net.stoerr.grokdiscoverytoo.webframe.TableMaker._
  * @since 17.02.13
  */
 class MatcherEntryView(val request: HttpServletRequest) extends WebView {
-  def title: String = "Test grok patterns"
+  override val title: String = "Test grok patterns"
+  override val action = "/web/match"
 
   val form = MatcherForm(request)
 
@@ -30,9 +31,9 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
         rowheader2(line) ++ {
           regex.findIn(line) match {
             case None =>
-              val jmatch = longestMatchOfRegexPrefix(patternGrokked, line)
+              val (jmatch, subregex) = longestMatchOfRegexPrefix(pat, line)
               row2(warn("NOT MATCHED")) ++
-                row2("Longest prefix that matches", jmatch.regex) ++ {
+                row2("Longest prefix that matches", subregex) ++ {
                 for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, nameResult)
               } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
                 ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
@@ -47,24 +48,31 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
       </table>
   }
 
-  def longestMatchOfRegexPrefix(pattern: String, line: String) =
-    NumericRange.inclusive(pattern.length - 1, 0, -1).toIterator
+  private def longestMatchOfRegexPrefix(pattern: String, line: String): (JoniRegex#JoniMatch, String) = {
+    val found: (Option[JoniRegex#JoniMatch], String) = NumericRange.inclusive(pattern.length - 1, 0, -1).toIterator
       .map(pattern.substring(0, _))
-      .map(new JoniRegex(_).findIn(line))
-      .find(_.isDefined).get.get
+      .map(safefind(_, line))
+      .find(_._1.isDefined).get
+    (found._1.get, found._2)
+  }
 
-  def body: AnyRef = <body>
-    <h1>Test grok patterns</h1>
-    <form action="/web/match" method="post">
-      <table>
-        {row(<span>Please enter some loglines and then press
-        <input type="submit" value="Go!"/>
-      </span>) ++
-        form.loglinesEntry ++
-        form.patternEntry ++
-        form.grokpatternEntry ++
-        form.multlineEntry}
-      </table>
-    </form>{form.pattern.value.map(showResult(_)).getOrElse(<span/>)}
-  </body>
+  private def safefind(regex: String, line: String): (Option[JoniRegex#JoniMatch], String) =
+    try {
+      val regexGrokked = GrokPatternLibrary.replacePatterns(regex, groklib)
+      (new JoniRegex(regexGrokked).findIn(line), regex)
+    } catch {
+      case _: Exception => (None, regex)
+    }
+
+  override def inputform =
+    row(<span>Please enter some loglines and then press
+      <input type="submit" value="Go!"/>
+    </span>) ++
+      form.loglinesEntry ++
+      form.patternEntry ++
+      form.grokpatternEntry ++
+      form.multlineEntry
+
+  override def result = form.pattern.value.map(showResult(_)).getOrElse(<span/>)
+
 }

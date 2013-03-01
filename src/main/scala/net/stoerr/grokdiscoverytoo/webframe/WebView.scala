@@ -1,6 +1,7 @@
 package net.stoerr.grokdiscoverytoo.webframe
 
 import javax.servlet.http.HttpServletRequest
+import xml.NodeSeq
 
 /**
  * Basis for a View-Class that displays a page.
@@ -11,8 +12,25 @@ trait WebView {
 
   val request: HttpServletRequest
 
-  def title: String
+  val title: String
 
-  def body: AnyRef
+  /** action of the form, e.g. "/web/match" */
+  val action: String
+
+  def inputform: NodeSeq
+
+  def result: NodeSeq
+
+  def body = <body>
+    <h1>
+      {title}
+    </h1>
+    <form action={action} method="post">
+      <table>
+        {inputform}
+      </table>{result}
+    </form>
+  </body>
+
 
 }
