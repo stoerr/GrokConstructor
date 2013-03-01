@@ -19,10 +19,8 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 
   private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
-  lazy val groklib = GrokPatternLibrary.mergePatternLibraries(form.groklibs.values, None)
-
   def showResult(pat: String): NodeBuffer = {
-    val patternGrokked = GrokPatternLibrary.replacePatterns(pat, groklib)
+    val patternGrokked = GrokPatternLibrary.replacePatterns(pat, form.grokPatternLibrary)
     val regex = new JoniRegex(patternGrokked)
     val lines: Seq[String] = form.multlineFilter(form.loglines.valueSplitToLines.get)
       <hr/>
@@ -58,7 +56,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 
   private def safefind(regex: String, line: String): (Option[JoniRegex#JoniMatch], String) =
     try {
-      val regexGrokked = GrokPatternLibrary.replacePatterns(regex, groklib)
+      val regexGrokked = GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary)
       (new JoniRegex(regexGrokked).findIn(line), regex)
     } catch {
       case _: Exception => (None, regex)
