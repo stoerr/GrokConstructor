@@ -7,18 +7,19 @@ import org.scalatest.FlatSpec
 import javax.servlet.http.HttpServletRequest
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
+import net.stoerr.grokdiscoverytoo.forms.MultlineFormPart
 
 /**
- * Tests the functionality of MultlineForm
+ * Tests the functionality of MultlineFormPart
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 26.02.13
  */
 @RunWith(classOf[JUnitRunner])
 class MultlineFormTest extends FlatSpec with ShouldMatchers with MockitoSugar {
 
-  private class MockForm(val request: HttpServletRequest) extends MultlineForm
+  private class MockForm(val request: HttpServletRequest) extends MultlineFormPart
 
-  "MultlineForm.multlineFilter" should "correctly parse multlines" in {
+  "MultlineFormPart.multlineFilter" should "correctly parse multlines" in {
     val mockreq = mock[HttpServletRequest]
     when(mockreq.getParameter("multline")).thenReturn("^-")
     val form = new MockForm(mockreq)

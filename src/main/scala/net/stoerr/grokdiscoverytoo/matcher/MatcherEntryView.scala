@@ -1,11 +1,11 @@
 package net.stoerr.grokdiscoverytoo.matcher
 
-import net.stoerr.grokdiscoverytoo.webframe.WebView
+import net.stoerr.grokdiscoverytoo.webframework.WebView
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary}
 import xml.NodeBuffer
 import scala.collection.immutable.NumericRange
-import net.stoerr.grokdiscoverytoo.webframe.TableMaker._
+import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -65,7 +65,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
     }
 
   override def inputform =
-    row(<span>Please enter some loglines and then press
+    row(<span>Please enter some loglines for which you want to check a grok pattern and then press
       <input type="submit" value="Go!"/>
     </span>) ++
       form.loglinesEntry ++

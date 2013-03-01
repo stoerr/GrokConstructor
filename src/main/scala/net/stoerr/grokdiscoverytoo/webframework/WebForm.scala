@@ -1,4 +1,4 @@
-package net.stoerr.grokdiscoverytoo.webframe
+package net.stoerr.grokdiscoverytoo.webframework
 
 import javax.servlet.http.HttpServletRequest
 import xml.Elem
@@ -29,8 +29,10 @@ trait WebForm {
 
     def inputText(cols: Int): Elem = <input type="text" name={name} id={name} value={value.orNull} size={cols.toString}/>
 
-    def inputTextArea(rows: Int, cols: Int) : Elem =
-      <textarea rows={rows.toString} cols={cols.toString} name={name}>{value.orNull}</textarea>
+    def inputTextArea(rows: Int, cols: Int): Elem =
+      <textarea rows={rows.toString} cols={cols.toString} name={name}>
+        {value.orNull}
+      </textarea>
   }
 
   case class InputMultipleChoice(name: String) extends WebFormElement {

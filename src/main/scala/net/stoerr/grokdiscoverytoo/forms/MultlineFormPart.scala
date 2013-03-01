@@ -1,6 +1,6 @@
-package net.stoerr.grokdiscoverytoo.matcher
+package net.stoerr.grokdiscoverytoo.forms
 
-import net.stoerr.grokdiscoverytoo.webframe.{TableMaker, WebForm}
+import net.stoerr.grokdiscoverytoo.webframework.{TableMaker, WebForm}
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.JoniRegex
 
@@ -10,7 +10,7 @@ import net.stoerr.grokdiscoverytoo.JoniRegex
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 26.02.13
  */
-trait MultlineForm extends WebForm {
+trait MultlineFormPart extends WebForm {
 
   /** If non empty, we will put the loglines through a
     * http://logstash.net/docs/1.1.9/filters/multiline filter */

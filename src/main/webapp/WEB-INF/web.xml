@@ -10,7 +10,7 @@
     </servlet>
     <servlet>
         <servlet-name>web</servlet-name>
-        <servlet-class>net.stoerr.grokdiscoverytoo.webframe.WebDispatcher</servlet-class>
+        <servlet-class>net.stoerr.grokdiscoverytoo.webframework.WebDispatcher</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>discover</servlet-name>

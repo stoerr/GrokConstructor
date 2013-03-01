@@ -1,4 +1,4 @@
-package net.stoerr.grokdiscoverytoo.webframe
+package net.stoerr.grokdiscoverytoo.webframework
 
 import javax.servlet.http.HttpServletRequest
 import xml.NodeSeq
