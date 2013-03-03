@@ -9,7 +9,7 @@ import net.stoerr.grokdiscoverytoo.forms.{MultlineFormPart, LoglinesFormPart, Gr
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 17.02.13
  */
-case class MatcherForm(val request: HttpServletRequest) extends WebForm with GrokPatternFormPart with MultlineFormPart with LoglinesFormPart {
+case class MatcherForm(request: HttpServletRequest) extends WebForm with GrokPatternFormPart with MultlineFormPart with LoglinesFormPart {
 
   val pattern = InputText("pattern")
 

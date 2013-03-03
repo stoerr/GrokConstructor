@@ -2,7 +2,7 @@ package net.stoerr.grokdiscoverytoo.webframework
 
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
 import net.stoerr.grokdiscoverytoo.matcher.MatcherEntryView
-import net.stoerr.grokdiscoverytoo.incremental.IncrementalConstructionInputView
+import net.stoerr.grokdiscoverytoo.incremental.{IncrementalConstructionStepView, IncrementalConstructionInputView}
 
 /**
  * Servlet that forwards the request to a controller and displays the view.
@@ -16,14 +16,25 @@ class WebDispatcher extends HttpServlet {
   }
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    val view = giveView(req.getPathInfo, req)
-    req.setAttribute("title", view.title)
-    req.setAttribute("body", view.body)
-    getServletContext.getRequestDispatcher("/frame.jsp").forward(req, resp)
+    giveView(req.getPathInfo, req) match {
+      case Left(url) =>
+        getServletContext.getRequestDispatcher(url).forward(req, resp)
+      case Right(view) =>
+        req.setAttribute("title", view.title)
+        req.setAttribute("body", view.body)
+        getServletContext.getRequestDispatcher("/frame.jsp").forward(req, resp)
+    }
   }
 
-  def giveView(path: String, request: HttpServletRequest): WebView = path match {
-    case "/match" => new MatcherEntryView(request)
-    case "/construction" => new IncrementalConstructionInputView(request)
+  def giveView(path: String, request: HttpServletRequest): Either[String, WebView] = {
+    var view = ("/web" + path) match {
+      case "/match" => new MatcherEntryView(request)
+      case "/construction" => new IncrementalConstructionInputView(request)
+      case "/constructionstep" => new IncrementalConstructionStepView(request)
+    }
+    view.doforward match {
+      case Some(res) => res
+      case None => Right(view)
+    }
   }
 }

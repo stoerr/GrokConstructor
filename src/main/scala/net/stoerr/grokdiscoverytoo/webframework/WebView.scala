@@ -17,6 +17,9 @@ trait WebView {
   /** action of the form, e.g. "/web/match" */
   val action: String
 
+  /** If this returns something, we will use the returned view. */
+  def doforward: Option[Either[String, WebView]] = None
+
   def inputform: NodeSeq
 
   def result: NodeSeq

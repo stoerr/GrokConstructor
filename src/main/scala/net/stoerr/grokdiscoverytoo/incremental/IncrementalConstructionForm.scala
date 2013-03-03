@@ -9,6 +9,6 @@ import javax.servlet.http.HttpServletRequest
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 01.03.13
  */
-case class IncrementalConstructionForm(val request: HttpServletRequest) extends WebForm with GrokPatternFormPart with MultlineFormPart with LoglinesFormPart {
+case class IncrementalConstructionForm(request: HttpServletRequest) extends WebForm with GrokPatternFormPart with MultlineFormPart with LoglinesFormPart {
 
 }

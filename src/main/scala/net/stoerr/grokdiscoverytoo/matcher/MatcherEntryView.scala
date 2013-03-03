@@ -13,7 +13,7 @@ import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
  */
 class MatcherEntryView(val request: HttpServletRequest) extends WebView {
   override val title: String = "Test grok patterns"
-  override val action = "/web/match"
+  override val action = MatcherEntryView.path
 
   val form = MatcherForm(request)
 
@@ -73,4 +73,8 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 
   override def result = form.pattern.value.map(showResult(_)).getOrElse(<span/>)
 
+}
+
+object MatcherEntryView {
+  val path = "/web/match"
 }
