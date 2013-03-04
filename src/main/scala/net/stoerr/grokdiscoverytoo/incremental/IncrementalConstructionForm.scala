@@ -11,4 +11,7 @@ import javax.servlet.http.HttpServletRequest
  */
 case class IncrementalConstructionForm(request: HttpServletRequest) extends WebForm with GrokPatternFormPart with MultlineFormPart with LoglinesFormPart {
 
+  /** Contains the part of the regular expression that is constructed so far. Starts with \A and matches all loglines. */
+  val constructedRegex = InputText("constructedRegex")
+
 }

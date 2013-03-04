@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.webframework.WebView
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
-import net.stoerr.grokdiscoverytoo.RandomTryLibrary
+import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary, RandomTryLibrary}
 
 /**
  * Performs a step in the incremental construction of the grok pattern.
@@ -13,8 +13,8 @@ import net.stoerr.grokdiscoverytoo.RandomTryLibrary
  */
 class IncrementalConstructionStepView(val request: HttpServletRequest) extends WebView {
 
-  val title: String = "Incremental Construction of Grok Patterns in progress"
-  val action: String = IncrementalConstructionStepView.path
+  override val title: String = "Incremental Construction of Grok Patterns in progress"
+  override val action: String = IncrementalConstructionStepView.path
 
   val form = IncrementalConstructionForm(request)
 
@@ -27,11 +27,28 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
     </span>) ++
       form.loglines.hiddenField ++
       form.grokhiddenfields ++
-      form.multlinehiddenfields
+      form.multlinehiddenfields ++
+      form.constructedRegex.inputText(80)               // TODO hidden
 
-  // missing: extra patterns by hand
+  // TODO missing: add extra patterns by hand later
 
-  def result: NodeSeq = <span>TODO</span>
+  val currentRegex = form.constructedRegex.value.getOrElse("\\A")
+  val currentJoniRegex = new JoniRegex(GrokPatternLibrary.replacePatterns(currentRegex, form.grokPatternLibrary))
+  val loglinesSplitted: Array[(String, String)] = form.loglines.valueSplitToLines.get.map({
+    line =>
+      val jmatch = currentJoniRegex.matchStartOf(line)
+      (jmatch.get.matched, jmatch.get.rest)
+  })
+  val loglineRests: Array[String] = loglinesSplitted.map(_._2)
+
+  override def result: NodeSeq = {
+    <table border="1">{
+      rowheader2("Matched", "Rest") ++
+      loglinesSplitted.map {
+        case (start, rest) => row2(<code>{start}</code>, <code>{rest}</code>)
+      }
+    } </table>
+  }
 
 }
 
