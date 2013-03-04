@@ -18,7 +18,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   val form = IncrementalConstructionForm(request)
 
-  override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("example")) None
+  override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
   else Some(Left(IncrementalConstructionInputView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
 
   def inputform: NodeSeq =

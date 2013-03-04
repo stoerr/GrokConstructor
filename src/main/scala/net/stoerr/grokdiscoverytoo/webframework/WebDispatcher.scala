@@ -16,9 +16,10 @@ class WebDispatcher extends HttpServlet {
   }
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    giveView(req.getPathInfo, req) match {
+    val view: Either[String, WebView] = giveView(req.getPathInfo, req)
+    view match {
       case Left(url) =>
-        getServletContext.getRequestDispatcher(url).forward(req, resp)
+        resp.sendRedirect(url)
       case Right(view) =>
         req.setAttribute("title", view.title)
         req.setAttribute("body", view.body)
@@ -27,12 +28,13 @@ class WebDispatcher extends HttpServlet {
   }
 
   def giveView(path: String, request: HttpServletRequest): Either[String, WebView] = {
-    var view = ("/web" + path) match {
-      case "/match" => new MatcherEntryView(request)
-      case "/construction" => new IncrementalConstructionInputView(request)
-      case "/constructionstep" => new IncrementalConstructionStepView(request)
+    val view = ("/web" + path) match {
+      case MatcherEntryView.path => new MatcherEntryView(request)
+      case IncrementalConstructionInputView.path => new IncrementalConstructionInputView(request)
+      case IncrementalConstructionStepView.path => new IncrementalConstructionStepView(request)
     }
-    view.doforward match {
+    val forward: Option[Either[String, WebView]] = view.doforward
+    forward match {
       case Some(res) => res
       case None => Right(view)
     }

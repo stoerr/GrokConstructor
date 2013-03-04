@@ -2,7 +2,7 @@ package net.stoerr.grokdiscoverytoo.matcher
 
 import net.stoerr.grokdiscoverytoo.webframework.WebView
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary}
+import net.stoerr.grokdiscoverytoo.{RandomTryLibrary, JoniRegex, GrokPatternLibrary}
 import xml.NodeBuffer
 import scala.collection.immutable.NumericRange
 import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
@@ -16,6 +16,18 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
   override val action = MatcherEntryView.path
 
   val form = MatcherForm(request)
+
+  override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
+  else Some(Left(MatcherEntryView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
+
+  if (null != request.getParameter("example")) {
+    val trial = RandomTryLibrary.example(request.getParameter("example").toInt)
+    form.loglines.value = Some(trial.loglines)
+    form.pattern.value = Some(trial.pattern)
+    form.multlineRegex.value = trial.multline
+    form.multlineNegate.values = List(form.multlineNegate.name)
+    form.groklibs.values = List("grok-patterns")
+  }
 
   private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
@@ -64,7 +76,8 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 
   override def inputform =
     row(<span>Please enter some loglines for which you want to check a grok pattern and then press
-      <input type="submit" value="Go!"/>
+      <input type="submit" value="Go!"/>  You can also just
+      <input type="submit" name="randomize" value="try it with a random example."/>
     </span>) ++
       form.loglinesEntry ++
       form.patternEntry ++

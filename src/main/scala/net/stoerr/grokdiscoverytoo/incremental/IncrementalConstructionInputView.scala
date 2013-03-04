@@ -5,6 +5,7 @@ import net.stoerr.grokdiscoverytoo.webframework.WebView
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.RandomTryLibrary
+import scala.collection.immutable.Range.Int
 
 /**
  * Entry for the start parameters for the incremental construction of grok patterns.
@@ -18,7 +19,7 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
   val form = IncrementalConstructionForm(request)
 
   if (null != request.getParameter("example")) {
-    val trial = RandomTryLibrary.example(0) // XXX
+    val trial = RandomTryLibrary.example(request.getParameter("example").toInt)
     form.loglines.value = Some(trial.loglines)
     form.multlineRegex.value = trial.multline
     form.multlineNegate.values = List(form.multlineNegate.name)
@@ -28,8 +29,8 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
   def inputform: NodeSeq =
     row(<span>Please enter some loglines you want to construct a grok pattern for and then press
       <input type="submit" value="Go!"/>
-      If you can also just
-      <input type="submit" name="randomize" value="try it with random values."/>
+      You can also just
+      <input type="submit" name="randomize" value="try it with a random example."/>
     </span>) ++
       form.loglinesEntry ++
       form.grokpatternEntry ++
