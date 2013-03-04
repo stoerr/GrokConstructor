@@ -27,6 +27,8 @@ trait MultlineFormPart extends WebForm {
     multlineRegex.label("Multline Regex") ++ multlineRegex.inputText(80) ++
       multlineNegate.checkboxes(Map(negatekey -> <span>"negate"</span>)))
 
+  def multlinehiddenfields: NodeSeq = multlineRegex.hiddenField ++ multlineNegate.hiddenField
+
   private def continuationLine(line: String) = {
     val ismatched = new JoniRegex(multlineRegex.value.get).findIn(line).isDefined
     if (multlineNegate.values.contains(negatekey)) !ismatched else ismatched

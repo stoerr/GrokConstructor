@@ -35,6 +35,8 @@ trait GrokPatternFormPart extends WebForm {
     row("Additional grok patterns:") ++
     row(grokadditionalinput.inputTextArea(5, 180))
 
+  def grokhiddenfields: NodeSeq = groklibs.hiddenField ++ extralibs.hiddenField ++ grokadditionalinput.hiddenField
+
   lazy val grokPatternLibrary =
     GrokPatternLibrary.mergePatternLibraries(groklibs.values ++ extralibs.values, grokadditionalinput.value)
 

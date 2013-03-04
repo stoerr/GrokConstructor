@@ -25,13 +25,13 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
     row(<span>
       <input type="submit" value="Go!"/>
     </span>) ++
-      form.loglinesEntry ++
-      form.grokpatternEntry ++
-      form.multlineEntry
+      form.loglines.hiddenField ++
+      form.grokhiddenfields ++
+      form.multlinehiddenfields
 
   // missing: extra patterns by hand
 
-  def result: NodeSeq = <span/>
+  def result: NodeSeq = <span>TODO</span>
 
 }
 

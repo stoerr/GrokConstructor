@@ -32,6 +32,8 @@ trait WebForm {
     def inputTextArea(rows: Int, cols: Int): Elem =
     // we add the child explicitly since we must not include any additional whitespace
       (<textarea rows={rows.toString} cols={cols.toString} name={name}/>).copy(child = new Text(value.getOrElse("")))
+
+    def hiddenField: Elem = <input type="hidden" name={name} id={name} value={value.orNull} />
   }
 
   case class InputMultipleChoice(name: String) extends WebFormElement {
@@ -44,6 +46,8 @@ trait WebForm {
             {description}
           </label>}
     </span>
+
+    def hiddenField: NodeSeq = values.map(value => <input type="hidden" name={name} id={name} value={value} />)
   }
 
 }

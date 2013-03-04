@@ -76,8 +76,8 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 
   override def inputform =
     row(<span>Please enter some loglines for which you want to check a grok pattern and then press
-      <input type="submit" value="Go!"/>  You can also just
-      <input type="submit" name="randomize" value="try it with a random example."/>
+      <input type="submit" value="Go!"/>  You can also just try this out with a
+      <input type="submit" name="randomize" value="random example."/>
     </span>) ++
       form.loglinesEntry ++
       form.patternEntry ++

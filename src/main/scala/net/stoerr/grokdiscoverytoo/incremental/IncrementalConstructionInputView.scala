@@ -29,8 +29,8 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
   def inputform: NodeSeq =
     row(<span>Please enter some loglines you want to construct a grok pattern for and then press
       <input type="submit" value="Go!"/>
-      You can also just
-      <input type="submit" name="randomize" value="try it with a random example."/>
+      You can also just fill this with a
+      <input type="submit" name="randomize" value="random example."/>
     </span>) ++
       form.loglinesEntry ++
       form.grokpatternEntry ++
