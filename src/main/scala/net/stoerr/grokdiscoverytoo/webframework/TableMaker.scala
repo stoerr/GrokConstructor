@@ -1,6 +1,6 @@
 package net.stoerr.grokdiscoverytoo.webframework
 
-import scala.xml.{Text, NodeSeq}
+import xml.{Node, Elem, Text, NodeSeq}
 
 /**
  * Some helper functions to create tables
@@ -9,7 +9,7 @@ import scala.xml.{Text, NodeSeq}
  */
 object TableMaker {
 
-  implicit def stringToNode(str: String): NodeSeq = new Text(str)
+  implicit def stringToNode(str: String): Node = new Text(str)
 
   def warn(content: NodeSeq) = <span style="color:red">
     {content}

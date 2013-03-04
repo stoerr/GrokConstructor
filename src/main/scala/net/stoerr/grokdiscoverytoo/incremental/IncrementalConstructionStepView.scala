@@ -5,6 +5,7 @@ import net.stoerr.grokdiscoverytoo.webframework.WebView
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary, RandomTryLibrary}
+import collection.immutable.{NumericRange, WrappedString}
 
 /**
  * Performs a step in the incremental construction of the grok pattern.
@@ -28,7 +29,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       form.loglines.hiddenField ++
       form.grokhiddenfields ++
       form.multlinehiddenfields ++
-      form.constructedRegex.inputText(80)               // TODO hidden
+      form.constructedRegex.hiddenField
 
   // TODO missing: add extra patterns by hand later
 
@@ -42,13 +43,35 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   val loglineRests: Array[String] = loglinesSplitted.map(_._2)
 
   override def result: NodeSeq = {
-    <table border="1">{
-      rowheader2("Matched", "Rest") ++
+    <table border="1">
+      {rowheader2("Matched", "Rest") ++
       loglinesSplitted.map {
-        case (start, rest) => row2(<code>{start}</code>, <code>{rest}</code>)
-      }
-    } </table>
+        case (start, rest) => row2(<code>
+          {start}
+        </code>, <code>
+          {rest}
+        </code>)
+      }}
+    </table> ++ <table border="1">
+      {rowheader("Please choose one of the following continuations of your regular expression") ++
+        commonprefixesOfLoglineRests.map(p => row(form.nextPart.radiobutton(p, <code>
+          {'»' + p + '«'}
+        </code>)))}
+    </table>
   }
+
+  private def commonprefixesOfLoglineRests: Iterator[String] = {
+    val biggestprefix = biggestCommonPrefix(loglineRests)
+    NumericRange.inclusive(1, biggestprefix.length, 1).toIterator
+      .map(biggestprefix.substring(0, _))
+  }
+
+  // no idea why the implicit conversion to WrappedString does not work here. Somehow it collides with TableMaker.stringToNode .
+  private def commonPrefix(str1: String, str2: String) = new WrappedString(str1).zip(new WrappedString(str2)).takeWhile(p => (p._1 == p._2)).map(_._1).mkString("")
+
+  /** The longest string that is a prefix of all lines. */
+  private def biggestCommonPrefix(lines: Seq[String]): String =
+    if (lines.size > 1) lines.reduce(commonPrefix) else lines(0)
 
 }
 

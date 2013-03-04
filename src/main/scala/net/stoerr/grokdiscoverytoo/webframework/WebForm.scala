@@ -17,11 +17,14 @@ trait WebForm {
   trait WebFormElement {
     val name: String
 
-    def label(text: String) = <label for={name}>
+    def label(text: String): Elem = label(new Text(text))
+
+    def label(text: NodeSeq): Elem = <label for={name}>
       {text}
     </label>
   }
 
+  /** An input that has (at most) a single value, like a text field, a set of radio buttons, a drop down list. */
   case class InputText(name: String) extends WebFormElement {
     var value: Option[String] = Option(request.getParameter(name))
 
@@ -33,9 +36,12 @@ trait WebForm {
     // we add the child explicitly since we must not include any additional whitespace
       (<textarea rows={rows.toString} cols={cols.toString} name={name}/>).copy(child = new Text(value.getOrElse("")))
 
-    def hiddenField: Elem = <input type="hidden" name={name} id={name} value={value.orNull} />
+    def hiddenField: Elem = <input type="hidden" name={name} id={name} value={value.orNull}/>
+
+    def radiobutton(value: String, description: NodeSeq) = <input type="radio" name={name} id={name} value={value}/> ++ label(description)
   }
 
+  /** An input that can have several values at once. That is, a set of checkboxes. */
   case class InputMultipleChoice(name: String) extends WebFormElement {
     var values: List[String] = Option(request.getParameterValues(name)).getOrElse(Array()).toList
 
@@ -47,7 +53,7 @@ trait WebForm {
           </label>}
     </span>
 
-    def hiddenField: NodeSeq = values.map(value => <input type="hidden" name={name} id={name} value={value} />)
+    def hiddenField: NodeSeq = values.map(value => <input type="hidden" name={name} id={name} value={value}/>)
   }
 
 }

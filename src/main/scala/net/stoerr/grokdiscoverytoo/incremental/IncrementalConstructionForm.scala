@@ -14,4 +14,7 @@ case class IncrementalConstructionForm(request: HttpServletRequest) extends WebF
   /** Contains the part of the regular expression that is constructed so far. Starts with \A and matches all loglines. */
   val constructedRegex = InputText("constructedRegex")
 
+  /** The next part of the regular expression. */
+  val nextPart = InputText("nextPart")
+
 }

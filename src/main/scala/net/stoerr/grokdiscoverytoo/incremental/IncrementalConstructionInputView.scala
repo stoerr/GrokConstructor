@@ -5,7 +5,6 @@ import net.stoerr.grokdiscoverytoo.webframework.WebView
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.RandomTryLibrary
-import scala.collection.immutable.Range.Int
 
 /**
  * Entry for the start parameters for the incremental construction of grok patterns.
