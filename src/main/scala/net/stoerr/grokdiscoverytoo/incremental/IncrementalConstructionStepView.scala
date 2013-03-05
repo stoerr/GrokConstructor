@@ -5,7 +5,7 @@ import net.stoerr.grokdiscoverytoo.webframework.WebView
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary, RandomTryLibrary}
-import collection.immutable.{NumericRange, WrappedString}
+import collection.immutable.NumericRange
 
 /**
  * Performs a step in the incremental construction of the grok pattern.
@@ -58,7 +58,8 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       {rowheader("Please choose one of the following continuations of your regular expression") ++
         commonprefixesOfLoglineRests.map(p => row(form.nextPart.radiobutton(p, <code>
           {'»' + p + '«'}
-        </code>)))}
+        </code>))) ++
+        groknameListToMatchesCleanedup}
     </table>
   }
 
@@ -68,12 +69,24 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       .map(biggestprefix.substring(0, _))
   }
 
-  // no idea why the implicit conversion to WrappedString does not work here. Somehow it collides with TableMaker.stringToNode .
-  private def commonPrefix(str1: String, str2: String) = new WrappedString(str1).zip(new WrappedString(str2)).takeWhile(p => (p._1 == p._2)).map(_._1).mkString("")
+  // unfortunately wrapString collides with TableMaker.stringToNode , so we use it explicitly
+  private def commonPrefix(str1: String, str2: String) = wrapString(str1).zip(wrapString(str2)).takeWhile(p => (p._1 == p._2)).map(_._1).mkString("")
 
   /** The longest string that is a prefix of all lines. */
   private def biggestCommonPrefix(lines: Seq[String]): String =
     if (lines.size > 1) lines.reduce(commonPrefix) else lines(0)
+
+  val groknameToMatches: List[(String, List[String])] = for {
+    grokname <- form.grokPatternLibrary.keys.toList
+    regex = new JoniRegex(GrokPatternLibrary.replacePatterns("%{" + grokname + "}", form.grokPatternLibrary))
+    restlinematchOptions = loglineRests.map(regex.matchStartOf(_))
+    if (restlinematchOptions.find(_.isEmpty)).isEmpty
+    restlinematches: List[String] = restlinematchOptions.map(_.get.matched).toList
+  } yield (grokname, restlinematches)
+  /** List of pairs of a list of groknames that have identical matches on the restlines to the list of matches. */
+  val groknameListToMatches: List[(List[String], List[String])] = groknameToMatches.groupBy(_._2).map(p => (p._2.map(_._1), p._1)).toList
+  /** groknameListToMatches that have at least one nonempty match, sorted by the sum of the lengths of the matches. */
+  val groknameListToMatchesCleanedup = groknameListToMatches.filter(_._2.find(!_.isEmpty).isDefined).sortBy(-_._2.map(_.length).sum)
 
 }
 
