@@ -27,13 +27,15 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       <input type="submit" value="Go!"/>
     </span>) ++
       form.loglines.hiddenField ++
+      form.constructedRegex.hiddenField ++
       form.grokhiddenfields ++
-      form.multlinehiddenfields ++
-      form.constructedRegex.hiddenField
+      form.multlinehiddenfields
 
   // TODO missing: add extra patterns by hand later
 
-  val currentRegex = form.constructedRegex.value.getOrElse("\\A")
+  val currentRegex = form.constructedRegex.value.getOrElse("\\A") + form.nextPart.value.getOrElse("")
+  form.constructedRegex.value = Some(currentRegex)
+
   val currentJoniRegex = new JoniRegex(GrokPatternLibrary.replacePatterns(currentRegex, form.grokPatternLibrary))
   val loglinesSplitted: Array[(String, String)] = form.loglines.valueSplitToLines.get.map({
     line =>
