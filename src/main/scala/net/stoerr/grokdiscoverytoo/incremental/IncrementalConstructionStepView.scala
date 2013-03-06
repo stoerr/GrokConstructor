@@ -55,11 +55,11 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
         </code>)
       }}
     </table> ++ <table border="1">
-      {rowheader("Please choose one of the following continuations of your regular expression") ++
-        commonprefixesOfLoglineRests.map(p => row(form.nextPart.radiobutton(p, <code>
+      {rowheader2("Please choose one of the following continuations of your regular expression") ++
+        commonprefixesOfLoglineRests.map(p => row2(form.nextPart.radiobutton(p, <code>
           {'»' + p + '«'}
         </code>))) ++
-        groknameListToMatchesCleanedup}
+        groknameListToMatchesCleanedup.map(grokoption)}
     </table>
   }
 
@@ -87,6 +87,17 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   val groknameListToMatches: List[(List[String], List[String])] = groknameToMatches.groupBy(_._2).map(p => (p._2.map(_._1), p._1)).toList
   /** groknameListToMatches that have at least one nonempty match, sorted by the sum of the lengths of the matches. */
   val groknameListToMatchesCleanedup = groknameListToMatches.filter(_._2.find(!_.isEmpty).isDefined).sortBy(-_._2.map(_.length).sum)
+
+  def grokoption(grokopt: (List[String], List[String])) = grokopt match {
+    case (groknames, restlinematches) =>
+      row2(
+        groknames.map(grokname =>
+          form.nextPart.radiobutton("%{" + grokname + "}", <code>
+            {"%{" + grokname + "}"}
+          </code>)).reduce(_ ++ <br/> ++ _), <pre>
+          {restlinematches.mkString("\n")}
+        </pre>)
+  }
 
 }
 
