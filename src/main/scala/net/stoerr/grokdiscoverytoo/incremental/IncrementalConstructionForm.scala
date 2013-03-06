@@ -17,4 +17,7 @@ case class IncrementalConstructionForm(request: HttpServletRequest) extends WebF
   /** The next part of the regular expression. */
   val nextPart = InputText("nextPart")
 
+  /** In case of grok expressions the name we want to give the next part */
+  val nameOfNextPart = InputText("nameOfNextPart")
+
 }

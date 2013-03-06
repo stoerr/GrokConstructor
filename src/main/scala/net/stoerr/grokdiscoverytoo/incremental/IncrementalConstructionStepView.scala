@@ -2,7 +2,7 @@ package net.stoerr.grokdiscoverytoo.incremental
 
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.webframework.WebView
-import xml.NodeSeq
+import scala.xml.{Text, NodeSeq}
 import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary, RandomTryLibrary}
 import collection.immutable.NumericRange
@@ -26,6 +26,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
     row(<span>
       <input type="submit" value="Go!"/>
     </span>) ++
+      row(form.constructedRegex.label("Constructed regular expression so far: ") ++ <br/> ++ form.constructedRegex.inputText(180, false)) ++
       form.loglines.hiddenField ++
       form.constructedRegex.hiddenField ++
       form.grokhiddenfields ++
@@ -33,8 +34,16 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   // TODO missing: add extra patterns by hand later
 
-  val currentRegex = form.constructedRegex.value.getOrElse("\\A") + form.nextPart.value.getOrElse("")
+  val currentRegex = form.constructedRegex.value.getOrElse("\\A") + getNamedNextPartOrEmpty
   form.constructedRegex.value = Some(currentRegex)
+
+  private def getNamedNextPartOrEmpty = {
+    val nextPart = form.nextPart.value.getOrElse("")
+    form.nameOfNextPart.value match {
+      case None => nextPart
+      case Some(name) => nextPart.replaceFirst( """^%\{(\w+)}$""", """%{$1:""" + name + "}")
+    }
+  }
 
   val currentJoniRegex = new JoniRegex(GrokPatternLibrary.replacePatterns(currentRegex, form.grokPatternLibrary))
   val loglinesSplitted: Array[(String, String)] = form.loglines.valueSplitToLines.get.map({
@@ -46,7 +55,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   override def result: NodeSeq = {
     <table border="1">
-      {rowheader2("Matched", "Rest") ++
+      {rowheader2("Matched", "Unmatched rest of the loglines to match") ++
       loglinesSplitted.map {
         case (start, rest) => row2(<code>
           {start}
@@ -56,9 +65,13 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       }}
     </table> ++ <table border="1">
       {rowheader2("Please choose one of the following continuations of your regular expression") ++
-        commonprefixesOfLoglineRests.map(p => row2(form.nextPart.radiobutton(p, <code>
+        row2(
+          commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(p, <code>
           {'»' + p + '«'}
-        </code>))) ++
+        </code>) ++ <br/>).reduceOption(_ ++ _).getOrElse(<span/>)
+        ) ++ rowheader2("Or one of the following expressions from the grok library.") ++
+        row2(form.nameOfNextPart.inputText(20) ++ form.nameOfNextPart.label("Optional, name for the grok expression")) ++
+        rowheader2("Grok expression", "Matches at the start of the rest of the loglines") ++
         groknameListToMatchesCleanedup.map(grokoption)}
     </table>
   }
@@ -94,9 +107,8 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
         groknames.map(grokname =>
           form.nextPart.radiobutton("%{" + grokname + "}", <code>
             {"%{" + grokname + "}"}
-          </code>)).reduce(_ ++ <br/> ++ _), <pre>
-          {restlinematches.mkString("\n")}
-        </pre>)
+          </code>)).reduce(_ ++ <br/> ++ _), <pre/>.copy(child = new Text(restlinematches.mkString("\n")))
+      )
   }
 
 }

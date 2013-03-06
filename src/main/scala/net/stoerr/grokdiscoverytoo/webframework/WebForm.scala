@@ -30,7 +30,8 @@ trait WebForm {
 
     def valueSplitToLines: Option[Array[String]] = value.map(_.split("\r?\n"))
 
-    def inputText(cols: Int): Elem = <input type="text" name={name} id={name} value={value.orNull} size={cols.toString}/>
+    def inputText(cols: Int, enabled: Boolean = true): Elem =
+        <input type="text" name={name} id={name} value={value.orNull} size={cols.toString} disabled={if (enabled) null else "disabled"} />
 
     def inputTextArea(rows: Int, cols: Int): Elem =
     // we add the child explicitly since we must not include any additional whitespace
