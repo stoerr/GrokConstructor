@@ -19,8 +19,10 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   val form = IncrementalConstructionForm(request)
 
-  override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
-  else Some(Left(IncrementalConstructionInputView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
+  override def doforward: Option[Either[String, WebView]] =
+    if (null != request.getParameter("randomize"))
+      Some(Left(IncrementalConstructionInputView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
+    else None
 
   def inputform: NodeSeq =
     row(<span>
@@ -39,7 +41,8 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   private def getNamedNextPartOrEmpty = {
     val nextPart = form.nextPart.value.getOrElse("")
-    form.nameOfNextPart.value match {
+    if (nextPart == form.nextPartPerHandMarker) form.nextPartPerHand.value.getOrElse("")
+    else form.nameOfNextPart.value match {
       case None => nextPart
       case Some(name) => nextPart.replaceFirst( """^%\{(\w+)}$""", """%{$1:""" + name + "}")
     }
@@ -64,15 +67,20 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
         </code>)
       }}
     </table> ++ <table border="1">
-      {rowheader2("Please choose one of the following continuations of your regular expression") ++
-        row2(
-          commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(p, <code>
+      {
+        rowheader2("To choose a continuation of your regular expresion you can either input a regex that will match the next part of all logfile lines") ++
+          row2(
+            form.nextPart.radiobutton(form.nextPartPerHandMarker, "continue with:") ++ form.nextPartPerHand.inputText(170)
+          ) ++
+          rowheader2("or choose a fixed string that is common to all log file lines (if available)") ++
+          row2(
+            commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(p, <code>
           {'»' + p + '«'}
         </code>) ++ <br/>).reduceOption(_ ++ _).getOrElse(<span/>)
-        ) ++ rowheader2("Or one of the following expressions from the grok library.") ++
-        row2(form.nameOfNextPart.inputText(20) ++ form.nameOfNextPart.label("Optional, name for the grok expression")) ++
-        rowheader2("Grok expression", "Matches at the start of the rest of the loglines") ++
-        groknameListToMatchesCleanedup.map(grokoption)}
+          ) ++ rowheader2("or choose one of the following expressions from the grok library.") ++
+          row2(form.nameOfNextPart.inputText(20) ++ form.nameOfNextPart.label("Optional, name for the grok expression")) ++
+          rowheader2("Grok expression", "Matches at the start of the rest of the loglines") ++
+          groknameListToMatchesCleanedup.map(grokoption)}
     </table>
   }
 
