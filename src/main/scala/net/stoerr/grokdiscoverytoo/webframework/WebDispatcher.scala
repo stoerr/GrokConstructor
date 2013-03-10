@@ -3,6 +3,7 @@ package net.stoerr.grokdiscoverytoo.webframework
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
 import net.stoerr.grokdiscoverytoo.matcher.MatcherEntryView
 import net.stoerr.grokdiscoverytoo.incremental.{IncrementalConstructionStepView, IncrementalConstructionInputView}
+import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView
 
 /**
  * Servlet that forwards the request to a controller and displays the view.
@@ -16,8 +17,8 @@ class WebDispatcher extends HttpServlet {
   }
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    val view: Either[String, WebView] = giveView(req.getPathInfo, req)
-    view match {
+    val vieworredirect: Either[String, WebView] = giveView(req.getPathInfo, req)
+    vieworredirect match {
       case Left(url) =>
         resp.sendRedirect(url)
       case Right(view) =>
@@ -32,6 +33,7 @@ class WebDispatcher extends HttpServlet {
       case MatcherEntryView.path => new MatcherEntryView(request)
       case IncrementalConstructionInputView.path => new IncrementalConstructionInputView(request)
       case IncrementalConstructionStepView.path => new IncrementalConstructionStepView(request)
+      case AutomaticDiscoveryView.path => new AutomaticDiscoveryView(request)
     }
     val forward: Option[Either[String, WebView]] = view.doforward
     forward match {

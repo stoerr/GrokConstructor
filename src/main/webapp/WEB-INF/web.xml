@@ -5,15 +5,15 @@
     <display-name>GrokDiscoveryToo</display-name>
     <description>Guesses Grok patterns from a number of loglines</description>
     <servlet>
-        <servlet-name>discover</servlet-name>
-        <servlet-class>net.stoerr.grokdiscoverytoo.GrokDiscoveryTooServlet</servlet-class>
+        <servlet-name>library</servlet-name>
+        <servlet-class>net.stoerr.grokdiscoverytoo.GrokLibraryServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>web</servlet-name>
         <servlet-class>net.stoerr.grokdiscoverytoo.webframework.WebDispatcher</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>discover</servlet-name>
+        <servlet-name>library</servlet-name>
         <url-pattern>/service/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
