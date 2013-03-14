@@ -1,117 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <title>Test of Yaml</title>
+<meta charset="utf-8" />
+<title>Test of Yaml</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./css/styles.css" rel="stylesheet" type="text/css"/>
-    <!--[if lte IE 7]>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="./css/styles.css" rel="stylesheet" type="text/css" />
+<!--[if lte IE 7]>
     <link href="yaml/core/iehacks.css" rel="stylesheet" type="text/css"/>
     <![endif]-->
 
-    <!--[if lt IE 9]>
+<!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
 <body>
-<ul class="ym-skiplinks">
-    <li><a class="ym-skip" href="#nav">Skip to navigation (Press Enter)</a></li>
-    <li><a class="ym-skip" href="#main">Skip to main content (Press Enter)</a></li>
-</ul>
-<div class="ym-wrapper">
+  <div class="ym-wrapper">
     <header>
-        <div class="ym-wbox">
-            <h1>Project Name</h1>
-        </div>
+      <div class="ym-wbox">
+        <h1>Project Name</h1>
+      </div>
     </header>
     <nav id="nav">
-        <div class="ym-hlist">
-            <ul>
-                <li class="active"><strong>Active</strong></li>
-                <li><a href="#">Link</a></li>
-                <li><a href="#">Link</a></li>
-                <li><a href="#">Link</a></li>
-                <li><a href="#">Link</a></li>
-            </ul>
-        </div>
+      <div class="ym-hlist">
+        <ul>
+          <li class="active"><strong>Active</strong></li>
+          <li><a href="#">Link</a></li>
+          <li><a href="#">Link</a></li>
+          <li><a href="#">Link</a></li>
+          <li><a href="#">Link</a></li>
+        </ul>
+      </div>
     </nav>
     <div id="main">
-        <div class="ym-wbox">
-            <section class="box info">
-                <div class="ym-grid linearize-level-1">
-                    <article class="ym-gl">
-                        <h4>Here's a box</h4>
+      <div class="ym-wbox">
+        <section class="box info">
+          <div class="ym-grid linearize-level-1">
+            <article class="ym-gl">
+              <h4>Here's a box</h4>
 
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-                        <a class="ym-button ym-next" href="#">Read More</a>
-                        <a class="ym-button ym-next" href="#">Read More</a>
-                        <a class="ym-button ym-next" href="#">Read More</a>
-                        <a class="ym-button ym-next" href="#">Read More</a>
-                    </article>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing
+                elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis
+                nostrud exercitation ullamco laboris nisi ut aliquip.</p>
+              <a class="ym-button ym-next" href="#">Read More</a> <a
+                class="ym-button ym-next" href="#">Read More</a> <a
+                class="ym-button ym-next" href="#">Read More</a> <a
+                class="ym-button ym-next" href="#">Read More</a> <a
+                href="#" class="ym-button ym-add">text</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="ym-grid linearize-level-1">
+          <article class="ym-gl content">
+            <div class="ym-gbox-left ym-clearfix">
+              <h4>Test</h4>
+
+              <p>
+                Lorem ipsum dolor sit amet, <em>consectetuer
+                  adipiscing elit</em>. Nunc congue ipsum vestibulum libero.
+                Aenean vitae justo. Nam eget tellus. Etiam convallis,
+                est eu lobortis mattis, lectus tellus tempus felis, a
+                ultricies erat ipsum at metus.
+              </p>
+
+              <form class="ym-form ym-full">
+                <div class="ym-fbox-text ym-error">
+                  <p class="ym-message">Error: invalid value!</p>
+                  ...
                 </div>
-            </section>
+                <div class="ym-fbox-text">
+                  <label for="your-id">your label</label> <input
+                    type="text" name="your-id" id="your-id" size="20" />
+                </div>
+                <div class="ym-fbox-text">
+                  <label for="your-id">your label<sup
+                    class="ym-required">*</sup></label>
+                  <textarea name="your-id" id="your-id" cols="30"
+                    rows="7"></textarea>
+                </div>
+                <h6 class="ym-fbox-heading">Sample Heading</h6>
+                <div class="ym-fbox-text">...</div>
+                <div class="ym-fbox-select">
+                  <label for="your-id">More Options</label> <select
+                    name="your-id" id="your-id" size="1">
+                    <option value="0" selected="selected"
+                      disabled="disabled">Please choose</option>
+                    <optgroup label="First options to choose from">
+                      <option value="value #1">Option 1</option>
+                      <option value="value #2">Option 2</option>
+                    </optgroup>
+                    <optgroup label="Yet more options to choose from">
+                      <option value="value #3">Option 3</option>
+                      <option value="value #4">Option 4</option>
+                      <option value="value #5">Option 5</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="ym-fbox-check">
+                  <input type="checkbox" name="your-id" id="your-id" />
+                  <label for="your-id">Your checkbox label</label>
+                </div>
+                <div class="ym-fbox-check">
+                  <input type="radio" name="your-id" value="value #1"
+                    id="your-id" /> <label for="your-id">Your
+                    radio-button label</label>
+                </div>
+                <div class="ym-fbox-button">
+                  <input type="submit" class="ym-button" value="submit"
+                    id="submit" name="submit" /> <input type="reset"
+                    class="ym-button" value="reset" id="reset"
+                    name="reset" /> <input type="button"
+                    class="ym-button" value="button" id="button1"
+                    name="button1" />
+                </div>
+                <div class="ym-fbox-checkbox">
+                  <div>
+                    <span class="ym-label">Custom Label</span> <input
+                      type="radio" name="vote" value="Option 1"
+                      id="vote1" /> <label for="vote1">Option 1</label>
+                  </div>
+                  ...
+                </div>
 
-            <section class="ym-grid linearize-level-1">
-                <article class="ym-gl content">
-                    <div class="ym-gbox-left ym-clearfix">
-                        <h4>Test</h4>
+              </form>
 
-                        <p>Lorem ipsum dolor sit amet, <em>consectetuer adipiscing elit</em>. Nunc congue ipsum
-                            vestibulum libero. Aenean vitae justo. Nam eget tellus. Etiam convallis, est eu lobortis
-                            mattis, lectus tellus tempus felis, a ultricies erat ipsum at metus.</p>
+              <table class="bordertable narrow">
+                <thead>
+                  <tr>
+                    <th>Head</th>
+                    <th>Head2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Head</td>
+                    <td>Body2</td>
+                  </tr>
+                </tbody>
+              </table>
 
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi et risus. Aliquam nisl. Nulla
-                            facilisi. Cras accumsan vestibulum ante. Vestibulum sed tortor. Praesent SMALL CAPS tempus
-                            fringilla elit. Ut elit diam, sagittis in, nonummy in, gravida non, nunc. Ut orci. Class
-                            aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Nam
-                            egestas, orci eu imperdiet malesuada, nisl purus fringilla odio, quis commodo est orci vitae
-                            justo. Aliquam placerat odio tincidunt nulla. Cras in libero. Aenean rutrum, magna non
-                            tristique posuere, erat odio eleifend nisl, non convallis est tortor blandit ligula. Nulla
-                            id augue.</p>
 
-                        <p>Nullam mattis, odio ut tempus facilisis, metus nisl facilisis metus, auctor consectetuer
-                            felis ligula nec mauris. Vestibulum odio erat, fermentum at, commodo vitae, ultrices et,
-                            urna. Mauris vulputate, mi pulvinar sagittis condimentum, sem nulla aliquam velit, sed
-                            imperdiet mi purus eu magna. Nulla varius metus ut eros. Aenean aliquet magna eget orci.
-                            Class aptent taciti sociosqu ad litora.</p>
+              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing
+                elit. Morbi et risus. Aliquam nisl. Nulla facilisi. Cras
+                accumsan vestibulum ante. Vestibulum sed tortor.
+                Praesent SMALL CAPS tempus fringilla elit. Ut elit diam,
+                sagittis in, nonummy in, gravida non, nunc. Ut orci.
+                Class aptent taciti sociosqu ad litora torquent per
+                conubia nostra, per inceptos hymenaeos. Nam egestas,
+                orci eu imperdiet malesuada, nisl purus fringilla odio,
+                quis commodo est orci vitae justo. Aliquam placerat odio
+                tincidunt nulla. Cras in libero. Aenean rutrum, magna
+                non tristique posuere, erat odio eleifend nisl, non
+                convallis est tortor blandit ligula. Nulla id augue.</p>
 
-                        <p>Vivamus euismod. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur
-                            ridiculus mus. Suspendisse vel nibh ut turpis dictum sagittis. Aliquam vel velit a elit
-                            auctor sollicitudin. Nam vel dui vel neque lacinia pretium. Quisque nunc erat, venenatis id,
-                            volutpat ut, scelerisque sed, diam. Mauris ante. Pellentesque habitant morbi tristique
-                            senectus et netus et malesuada fames ac turpis egestas. Donec mattis. Morbi dignissim
-                            sollicitudin libero. Nulla lorem.</p>
-                        <blockquote>
-                            <p>Integer cursus ornare mauris. Praesent nisl arcu, imperdiet eu, ornare id, scelerisque
-                                ut, nunc. Praesent sagittis erat sed velit tempus imperdiet. Ut tristique, ante in
-                                interdum hendrerit, erat enim faucibus felis, quis rutrum mauris lorem quis sem.
-                                Vestibulum ligula nisi, mattis nec, posuere et, blandit eu, ligula. Nam suscipit
-                                placerat odio. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-                                inceptos hymenaeos. Pellentesque tortor libero, venenatis vitae, rhoncus eu, placerat
-                                ut, mi. Nulla nulla.</p>
-                        </blockquote>
-                        <p>Maecenas vel metus quis magna pharetra fermentum. <em>Integer sit amet tortor</em>. Maecenas
-                            porttitor, pede sed gravida auctor, nulla augue aliquet elit, at pretium urna orci ut metus.
-                            Aliquam in dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-                            cubilia Curae; Sed aliquam, tellus id ornare posuere, quam nunc accumsan turpis, at
-                            convallis tellus orci et nisl. Phasellus congue neque a lorem.</p>
+              <p>Nullam mattis, odio ut tempus facilisis, metus nisl
+                facilisis metus, auctor consectetuer felis ligula nec
+                mauris. Vestibulum odio erat, fermentum at, commodo
+                vitae, ultrices et, urna. Mauris vulputate, mi pulvinar
+                sagittis condimentum, sem nulla aliquam velit, sed
+                imperdiet mi purus eu magna. Nulla varius metus ut eros.
+                Aenean aliquet magna eget orci. Class aptent taciti
+                sociosqu ad litora.</p>
 
-                    </div>
-                </article>
-            </section>
-        </div>
+              <p>Vivamus euismod. Cum sociis natoque penatibus et
+                magnis dis parturient montes, nascetur ridiculus mus.
+                Suspendisse vel nibh ut turpis dictum sagittis. Aliquam
+                vel velit a elit auctor sollicitudin. Nam vel dui vel
+                neque lacinia pretium. Quisque nunc erat, venenatis id,
+                volutpat ut, scelerisque sed, diam. Mauris ante.
+                Pellentesque habitant morbi tristique senectus et netus
+                et malesuada fames ac turpis egestas. Donec mattis.
+                Morbi dignissim sollicitudin libero. Nulla lorem.</p>
+              <blockquote>
+                <p>Integer cursus ornare mauris. Praesent nisl arcu,
+                  imperdiet eu, ornare id, scelerisque ut, nunc.
+                  Praesent sagittis erat sed velit tempus imperdiet. Ut
+                  tristique, ante in interdum hendrerit, erat enim
+                  faucibus felis, quis rutrum mauris lorem quis sem.
+                  Vestibulum ligula nisi, mattis nec, posuere et,
+                  blandit eu, ligula. Nam suscipit placerat odio. Class
+                  aptent taciti sociosqu ad litora torquent per conubia
+                  nostra, per inceptos hymenaeos. Pellentesque tortor
+                  libero, venenatis vitae, rhoncus eu, placerat ut, mi.
+                  Nulla nulla.</p>
+              </blockquote>
+              <p>
+                Maecenas vel metus quis magna pharetra fermentum. <em>Integer
+                  sit amet tortor</em>. Maecenas porttitor, pede sed gravida
+                auctor, nulla augue aliquet elit, at pretium urna orci
+                ut metus. Aliquam in dolor. Vestibulum ante ipsum primis
+                in faucibus orci luctus et ultrices posuere cubilia
+                Curae; Sed aliquam, tellus id ornare posuere, quam nunc
+                accumsan turpis, at convallis tellus orci et nisl.
+                Phasellus congue neque a lorem.
+              </p>
+
+            </div>
+          </article>
+        </section>
+      </div>
     </div>
     <footer>
-        <div class="ym-wbox">
-            <p>© Company 2012 &ndash; Layout based on <a href="http://www.yaml.de">YAML</a></p>
-        </div>
+      <div class="ym-wbox">
+        <p>
+          <a href="http://www.stoerr.net">Hans-Peter St&ouml;rr</a>
+          &ndash; Layout based on <a href="http://www.yaml.de">YAML</a>
+        </p>
+      </div>
     </footer>
-</div>
-
-<!-- full skip link functionality in webkit browsers -->
-<script src="../yaml/core/js/yaml-focusfix.js"></script>
+  </div>
 </body>
 </html>
