@@ -1,6 +1,6 @@
 package net.stoerr.grokdiscoverytoo.webframework
 
-import xml.{Node, Elem, Text, NodeSeq}
+import xml.{Node, Text, NodeSeq}
 
 /**
  * Some helper functions to create tables
@@ -11,9 +11,16 @@ object TableMaker {
 
   implicit def stringToNode(str: String): Node = new Text(str)
 
-  def warn(content: NodeSeq) = <span style="color:red">
-    {content}
-  </span>
+  def table(contents: () => NodeSeq): Node = <table class="bordertable narrow">
+    {contents}
+  </table>
+
+  def warn(content: NodeSeq) =
+    <div class="ym-fbox-text ym-error">
+      <p class="ym-message">
+        {content}
+      </p>
+    </div>
 
   def row(content: NodeSeq) = <tr>
     <td>

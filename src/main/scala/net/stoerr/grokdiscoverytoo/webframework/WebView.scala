@@ -22,18 +22,17 @@ trait WebView {
 
   def inputform: NodeSeq
 
+  def navigation: NodeSeq = <a class="ym-button ym-next" href="#">Read More</a> ++
+    <a class="ym-button ym-next" href="#">Read More</a>
+
   def result: NodeSeq
 
-  def body = <body>
-    <h1>
+  def body: NodeSeq =
+    <h4>
       {title}
-    </h1>
-    <form action={action} method="post">
-      <table>
-        {inputform}
-      </table>{result}
-    </form>
-  </body>
+    </h4> <form class="ym-form ym-full" action={action} method="post">
+      {inputform}
+    </form> ++ result
 
 
 }

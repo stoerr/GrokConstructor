@@ -14,7 +14,7 @@
 <meta http-equiv="content-style-type" content="text/css" />
 <meta http-equiv="content-script-type" content="text/javascript" />
 <meta name="revisit-after" content="31 days" />
-<link href="./css/styles.css" rel="stylesheet" type="text/css" />
+<link href="../css/styles.css" rel="stylesheet" type="text/css" />
 <!--[if lte IE 7]>
     <link href="yaml/core/iehacks.css" rel="stylesheet" type="text/css"/>
     <![endif]-->
@@ -41,7 +41,11 @@
     </nav>
     <div id="main">
       <div class="ym-wbox">
-        <%=request.getAttribute("body")%>
+         <section class="ym-grid linearize-level-1">
+            <article class="ym-gl content">
+                <%=request.getAttribute("body")%>
+            </article>
+         </section>
       </div>
     </div>
     <footer>

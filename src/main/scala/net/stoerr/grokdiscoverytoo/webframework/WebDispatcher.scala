@@ -24,7 +24,7 @@ class WebDispatcher extends HttpServlet {
       case Right(view) =>
         req.setAttribute("title", view.title)
         req.setAttribute("body", view.body)
-        getServletContext.getRequestDispatcher("/frame.jsp").forward(req, resp)
+        getServletContext.getRequestDispatcher("/jsp/frame.jsp").forward(req, resp)
     }
   }
 
