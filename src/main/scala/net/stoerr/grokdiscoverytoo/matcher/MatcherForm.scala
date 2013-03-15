@@ -2,7 +2,6 @@ package net.stoerr.grokdiscoverytoo.matcher
 
 import net.stoerr.grokdiscoverytoo.webframework.WebForm
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.forms.{MultlineFormPart, LoglinesFormPart, GrokPatternFormPart}
 
 /**
@@ -13,7 +12,6 @@ case class MatcherForm(request: HttpServletRequest) extends WebForm with GrokPat
 
   val pattern = InputText("pattern")
 
-  def patternEntry = row(pattern.label("This pattern that should match all logfile lines:")) ++
-    row(pattern.inputText(180))
+  def patternEntry = pattern.inputText("This pattern that should match all logfile lines:", 180)
 
 }

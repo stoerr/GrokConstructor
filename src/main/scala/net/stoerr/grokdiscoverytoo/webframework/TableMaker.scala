@@ -11,7 +11,7 @@ object TableMaker {
 
   implicit def stringToNode(str: String): Node = new Text(str)
 
-  def table(contents: () => NodeSeq): Node = <table class="bordertable narrow">
+  def table(contents: NodeSeq): Node = <table class="bordertable narrow">
     {contents}
   </table>
 

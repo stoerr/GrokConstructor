@@ -3,7 +3,6 @@ package net.stoerr.grokdiscoverytoo.incremental
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.webframework.WebView
 import xml.NodeSeq
-import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.RandomTryLibrary
 
 /**
@@ -26,11 +25,11 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
   }
 
   def inputform: NodeSeq =
-    row(<span>Please enter some loglines you want to construct a grok pattern for and then press
+    <p>Please enter some loglines you want to construct a grok pattern for and then press
       <input type="submit" value="Go!"/>
       You can also just fill this with a
       <input type="submit" name="randomize" value="random example."/>
-    </span>) ++
+    </p> ++
       form.loglinesEntry ++
       form.grokpatternEntry ++
       form.multlineEntry

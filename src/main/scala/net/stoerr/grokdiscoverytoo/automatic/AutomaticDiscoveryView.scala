@@ -23,18 +23,18 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebView {
   override val title: String = "Automatic grok discovery"
   override val action: String = AutomaticDiscoveryView.path
 
-  override def inputform: NodeSeq = row(<span>Please enter some loglines for which you want generate possible grok patterns and then press
+  override def inputform: NodeSeq = <p>Please enter some loglines for which you want generate possible grok patterns and then press
     <input type="submit" value="Go!"/>
     You can also just try this out with a
     <input type="submit" name="randomize" value="random example."/>
-  </span>) ++
+  </p> ++
     form.loglinesEntry ++
     form.grokpatternEntry
 
   override def result: NodeSeq = form.loglines.valueSplitToLines.map(_.toList).map(matchingRegexpStructures).map(resultTable).getOrElse(<span/>)
 
-  def resultTable(results: Iterator[List[RegexPart]]): xml.Elem = <table>
-    {rowheader("Possible grok regex combinations that match all lines")}{results.toList map {
+  def resultTable(results: Iterator[List[RegexPart]]): xml.Node = table(
+    rowheader("Possible grok regex combinations that match all lines") ++ results.toList.map {
       result =>
         row(result map {
           case FixedString(str) => <span>
@@ -51,8 +51,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebView {
             }}
           </select>
         })
-    }}
-  </table>
+    })
 
   lazy val namedRegexps: Map[String, JoniRegex] = form.grokPatternLibrary.map {
     case (name, regex) => (name -> new JoniRegex(GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary)))

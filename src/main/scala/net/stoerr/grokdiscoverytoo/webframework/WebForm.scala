@@ -16,12 +16,6 @@ trait WebForm {
 
   trait WebFormElement {
     val name: String
-
-    def label(text: String): Elem = label(new Text(text))
-
-    def label(text: NodeSeq): Elem = <label for={name}>
-      {text}
-    </label>
   }
 
   /** An input that has (at most) a single value, like a text field, a set of radio buttons, a drop down list. */
@@ -30,29 +24,44 @@ trait WebForm {
 
     def valueSplitToLines: Option[Array[String]] = value.map(_.split("\r?\n"))
 
-    def inputText(cols: Int, enabled: Boolean = true): Elem =
-        <input type="text" name={name} id={name} value={value.orNull} size={cols.toString} disabled={if (enabled) null else "disabled"} />
+    def inputText(label: String, cols: Int, enabled: Boolean = true): Elem =
+      <div class="ym-fbox-text">
+        <label for={name}>
+          {new Text(label)}
+        </label> <input
+        type="text" name={name} id={name} size={cols.toString} value={value.orNull} disabled={if (enabled) null else "disabled"}/>
+      </div>
 
-    def inputTextArea(rows: Int, cols: Int): Elem =
-    // we add the child explicitly since we must not include any additional whitespace
-      (<textarea rows={rows.toString} cols={cols.toString} name={name}/>).copy(child = new Text(value.getOrElse("")))
+    def inputTextArea(label: String, rows: Int, cols: Int): Elem =
+      <div class="ym-fbox-text">
+        <label for={name}>
+          {new Text(label)}
+        </label>{// we add the child explicitly since we must not include any additional whitespace:
+          <textarea name={name} id={name} cols={cols.toString} rows={rows.toString}/>.copy(child = new Text(value.getOrElse("")))}
+      </div>
 
     def hiddenField: Elem = <input type="hidden" name={name} id={name} value={value.orNull}/>
 
-    def radiobutton(value: String, description: NodeSeq) = <input type="radio" name={name} id={name} value={value}/> ++ label(description)
+    def radiobutton(value: String, description: NodeSeq): NodeSeq = <span>
+      <input type="radio" name={name} value={value}
+             id={name}/> <label for={name}>
+        {description}
+      </label>
+    </span>
+
   }
 
   /** An input that can have several values at once. That is, a set of checkboxes. */
   case class InputMultipleChoice(name: String) extends WebFormElement {
     var values: List[String] = Option(request.getParameterValues(name)).getOrElse(Array()).toList
 
-    def checkboxes(keysToText: Map[String, NodeSeq]): Elem = <span>
+    def checkboxes(keysToText: Map[String, NodeSeq]): Elem = <div class="ym-fbox-check">
       {for ((key, description) <- keysToText.toList) yield
           <input type="checkbox" checked={if (values.contains(key)) "checked" else null} name={name} id={name + "-" + key} value={key}/> ++
           <label for={name + "-" + key}>
             {description}
           </label>}
-    </span>
+    </div>
 
     def hiddenField: NodeSeq = values.map(value => <input type="hidden" name={name} id={name} value={value}/>)
   }

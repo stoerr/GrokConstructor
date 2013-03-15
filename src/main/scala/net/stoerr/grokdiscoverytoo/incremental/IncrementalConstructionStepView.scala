@@ -25,10 +25,8 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
     else None
 
   def inputform: NodeSeq =
-    row(<span>
-      <input type="submit" value="Go!"/>
-    </span>) ++
-      row(form.constructedRegex.label("Constructed regular expression so far: ") ++ <br/> ++ form.constructedRegex.inputText(180, false)) ++
+      <input type="submit" value="Go!"/> ++
+      form.constructedRegex.inputText("Constructed regular expression so far: ", 180, false) ++
       form.loglines.hiddenField ++
       form.constructedRegex.hiddenField ++
       form.grokhiddenfields ++
@@ -57,30 +55,28 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   val loglineRests: Array[String] = loglinesSplitted.map(_._2)
 
   override def result: NodeSeq = {
-    <table border="1">
-      {rowheader2("Matched", "Unmatched rest of the loglines to match") ++
-      loglinesSplitted.map {
-        case (start, rest) => row2(<code>
-          {start}
-        </code>, <code>
-          {rest}
-        </code>)
-      }}
-    </table> ++ <table border="1">
-      {
-        rowheader2("To choose a continuation of your regular expresion you can either input a regex that will match the next part of all logfile lines") ++
-          row2(
-            form.nextPart.radiobutton(form.nextPartPerHandMarker, "continue with:") ++ form.nextPartPerHand.inputText(170)
-          ) ++
-          rowheader2("or choose a fixed string that is common to all log file lines (if available)") ++
-          row2(
-            commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(p, <code>
-          {'»' + p + '«'}
-        </code>) ++ <br/>).reduceOption(_ ++ _).getOrElse(<span/>)
-          ) ++ rowheader2("or choose one of the following expressions from the grok library.") ++
-          row2(form.nameOfNextPart.inputText(20) ++ form.nameOfNextPart.label("Optional, name for the grok expression")) ++
-          rowheader2("Grok expression", "Matches at the start of the rest of the loglines") ++
-          groknameListToMatchesCleanedup.map(grokoption)}
+    table(
+      rowheader2("Matched", "Unmatched rest of the loglines to match") ++
+        loglinesSplitted.map {
+          case (start, rest) => row2(<code>
+            {start}
+          </code>, <code>
+            {rest}
+          </code>)
+        }) ++ <table border="1">
+      {rowheader2("To choose a continuation of your regular expresion you can either input a regex that will match the next part of all logfile lines") ++
+        row2(
+          form.nextPart.radiobutton(form.nextPartPerHandMarker, "continue") ++ form.nextPartPerHand.inputText("with:", 170)
+        ) ++
+        rowheader2("or choose a fixed string that is common to all log file lines (if available)") ++
+        row2(
+          commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(p, <code>
+            {'»' + p + '«'}
+          </code>) ++ <br/>).reduceOption(_ ++ _).getOrElse(<span/>)
+        ) ++ rowheader2("or choose one of the following expressions from the grok library.") ++
+        row2(form.nameOfNextPart.inputText("Optional, name for the grok expression", 20)) ++
+        rowheader2("Grok expression", "Matches at the start of the rest of the loglines") ++
+        groknameListToMatchesCleanedup.map(grokoption)}
     </table>
   }
 

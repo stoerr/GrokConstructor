@@ -2,7 +2,6 @@ package net.stoerr.grokdiscoverytoo.forms
 
 import net.stoerr.grokdiscoverytoo.webframework.WebForm
 import net.stoerr.grokdiscoverytoo.GrokPatternLibrary
-import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import xml.NodeSeq
 
 /**
@@ -23,17 +22,14 @@ trait GrokPatternFormPart extends WebForm {
       {key}
     </a>
 
-  def grokpatternEntry = row(<span>
+  def grokpatternEntry = <p>
     Grok Patterns from
     <a href="http://logstash.net/">logstash</a>
-    v.1.19 :
-    {groklibs.checkboxes(GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap)}
-    , and some
-    {extralibs.checkboxes(GrokPatternLibrary.extrapatternnames.map(keyToGrokLink).toMap)}
-    from me
-  </span>) ++
-    row("Additional grok patterns:") ++
-    row(grokadditionalinput.inputTextArea(5, 180))
+    v.1.19 :</p> ++
+    groklibs.checkboxes(GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap) ++
+    <p>and some extras from me</p> ++
+    extralibs.checkboxes(GrokPatternLibrary.extrapatternnames.map(keyToGrokLink).toMap) ++
+    grokadditionalinput.inputTextArea("Additional grok patterns:", 5, 180)
 
   def grokhiddenfields: NodeSeq = groklibs.hiddenField ++ extralibs.hiddenField ++ grokadditionalinput.hiddenField
 

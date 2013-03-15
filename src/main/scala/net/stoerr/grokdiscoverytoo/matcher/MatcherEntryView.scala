@@ -3,7 +3,7 @@ package net.stoerr.grokdiscoverytoo.matcher
 import net.stoerr.grokdiscoverytoo.webframework.WebView
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.{RandomTryLibrary, JoniRegex, GrokPatternLibrary}
-import xml.NodeBuffer
+import xml.NodeSeq
 import scala.collection.immutable.NumericRange
 import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 
@@ -31,13 +31,12 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 
   private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
-  def showResult(pat: String): NodeBuffer = {
+  def showResult(pat: String): NodeSeq = {
     val patternGrokked = GrokPatternLibrary.replacePatterns(pat, form.grokPatternLibrary)
     val regex = new JoniRegex(patternGrokked)
     val lines: Seq[String] = form.multlineFilter(form.loglines.valueSplitToLines.get)
-      <hr/>
-      <table border="1">
-        {for (line <- lines) yield {
+      <hr/> ++ <table class="bordertable narrow">
+      {for (line <- lines) yield {
         rowheader2(line) ++ {
           regex.findIn(line) match {
             case None =>
@@ -55,7 +54,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
           }
         }
       }}
-      </table>
+    </table>
   }
 
   private def longestMatchOfRegexPrefix(pattern: String, line: String): (JoniRegex#JoniMatch, String) = {
@@ -75,10 +74,11 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
     }
 
   override def inputform =
-    row(<span>Please enter some loglines for which you want to check a grok pattern and then press
-      <input type="submit" value="Go!"/>  You can also just try this out with a
+    <p>Please enter some loglines for which you want to check a grok pattern and then press
+      <input type="submit" value="Go!"/>
+      You can also just try this out with a
       <input type="submit" name="randomize" value="random example."/>
-    </span>) ++
+    </p> ++
       form.loglinesEntry ++
       form.patternEntry ++
       form.grokpatternEntry ++

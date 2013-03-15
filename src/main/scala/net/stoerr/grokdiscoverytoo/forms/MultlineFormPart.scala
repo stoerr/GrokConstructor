@@ -1,6 +1,6 @@
 package net.stoerr.grokdiscoverytoo.forms
 
-import net.stoerr.grokdiscoverytoo.webframework.{TableMaker, WebForm}
+import net.stoerr.grokdiscoverytoo.webframework.WebForm
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.JoniRegex
 
@@ -23,9 +23,9 @@ trait MultlineFormPart extends WebForm {
     * lines that do match the filter. */
   val multlineNegate = InputMultipleChoice("multlinenegate")
 
-  def multlineEntry: NodeSeq = TableMaker.row(
-    multlineRegex.label("Multline Regex") ++ multlineRegex.inputText(80) ++
-      multlineNegate.checkboxes(Map(negatekey -> <span>"negate"</span>)))
+  def multlineEntry: NodeSeq =
+    multlineRegex.inputText("Multline Regex", 80) ++
+      multlineNegate.checkboxes(Map(negatekey -> <span>"negate"</span>))
 
   def multlinehiddenfields: NodeSeq = multlineRegex.hiddenField ++ multlineNegate.hiddenField
 
