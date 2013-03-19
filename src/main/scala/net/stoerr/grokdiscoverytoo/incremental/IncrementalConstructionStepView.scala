@@ -25,7 +25,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
     else None
 
   def inputform: NodeSeq =
-      <input type="submit" value="Go!"/> ++
+    submit("Go!") ++
       form.constructedRegex.inputText("Constructed regular expression so far: ", 180, false) ++
       form.loglines.hiddenField ++
       form.constructedRegex.hiddenField ++

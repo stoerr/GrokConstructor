@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.webframework.WebView
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.RandomTryLibrary
+import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 
 /**
  * Entry for the start parameters for the incremental construction of grok patterns.
@@ -26,9 +27,9 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
 
   def inputform: NodeSeq =
     <p>Please enter some loglines you want to construct a grok pattern for and then press
-      <input type="submit" value="Go!"/>
+      {submit("Go!")}
       You can also just fill this with a
-      <input type="submit" name="randomize" value="random example."/>
+      {buttonanchor(action + "?randomize", "random example.")}
     </p> ++
       form.loglinesEntry ++
       form.grokpatternEntry ++

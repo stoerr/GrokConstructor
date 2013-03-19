@@ -25,7 +25,7 @@ trait MultlineFormPart extends WebForm {
 
   def multlineEntry: NodeSeq =
     multlineRegex.inputText("Multline Regex", 80) ++
-      multlineNegate.checkboxes(Map(negatekey -> <span>"negate"</span>))
+      multlineNegate.checkboxes(Map(negatekey -> <span>negate the multline regex</span>))
 
   def multlinehiddenfields: NodeSeq = multlineRegex.hiddenField ++ multlineNegate.hiddenField
 

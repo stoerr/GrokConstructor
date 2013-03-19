@@ -74,11 +74,22 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
     }
 
   override def inputform =
-    <p>Please enter some loglines for which you want to check a grok pattern and then press
-      <input type="submit" value="Go!"/>
-      You can also just try this out with a
-      <input type="submit" name="randomize" value="random example."/>
-    </p> ++
+    <div class="ym-grid">
+      <div class="ym-g62 ym-gl">
+        <div class="box info">
+          <p>
+            Please enter some loglines for which you want to check a grok pattern and then press bla blu bla
+            asd jdnasliu efoiu fdsoisudf gosiufdhgosiudf gosiufdgosidufgosiudfo gsiudf
+          </p>{submit("Go!")}
+        </div>
+      </div>
+      <div class="ym-38 ym-gr">
+        <div class="box info">
+          <p>
+            You can also just try this out with a</p>{buttonanchor(action + "?randomize", "random example")}
+        </div>
+      </div>
+    </div> ++
       form.loglinesEntry ++
       form.patternEntry ++
       form.grokpatternEntry ++

@@ -62,4 +62,10 @@ object TableMaker {
     </th>
   </tr>
 
+  def submit(text: String) = <input type="submit" class="save ym-button ym-next" value={text} id="submit" name="submit"/>
+
+  def buttonanchor(link: String, text: String) = <a href={link} class="ym-button ym-add">
+    {text}
+  </a>
+
 }
