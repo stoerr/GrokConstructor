@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.webframework.WebView
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.RandomTryLibrary
-import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 
 /**
  * Entry for the start parameters for the incremental construction of grok patterns.

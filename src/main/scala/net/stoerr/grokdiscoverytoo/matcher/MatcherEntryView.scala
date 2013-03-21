@@ -1,17 +1,16 @@
 package net.stoerr.grokdiscoverytoo.matcher
 
-import net.stoerr.grokdiscoverytoo.webframework.WebView
+import net.stoerr.grokdiscoverytoo.webframework.{WebViewWithHeaderAndSidebox, WebView}
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.{RandomTryLibrary, JoniRegex, GrokPatternLibrary}
 import xml.NodeSeq
 import scala.collection.immutable.NumericRange
-import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 17.02.13
  */
-class MatcherEntryView(val request: HttpServletRequest) extends WebView {
+class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
   override val title: String = "Test grok patterns"
   override val action = MatcherEntryView.path
 
@@ -73,27 +72,18 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
       case _: Exception => (None, regex)
     }
 
-  override def inputform =
-    <div class="ym-grid">
-      <div class="ym-g62 ym-gl">
-        <div class="box info">
-          <p>
-            Please enter some loglines for which you want to check a grok pattern and then press bla blu bla
-            asd jdnasliu efoiu fdsoisudf gosiufdhgosiudf gosiufdgosidufgosiudfo gsiudf
-          </p>{submit("Go!")}
-        </div>
-      </div>
-      <div class="ym-38 ym-gr">
-        <div class="box info">
-          <p>
-            You can also just try this out with a</p>{buttonanchor(action + "?randomize", "random example")}
-        </div>
-      </div>
-    </div> ++
-      form.loglinesEntry ++
-      form.patternEntry ++
-      form.grokpatternEntry ++
-      form.multlineEntry
+  override def maintext: NodeSeq = <p>
+    Please enter some loglines for which you want to check a grok pattern and then press bla blu bla
+    asd jdnasliu efoiu fdsoisudf gosiufdhgosiudf gosiufdgosidufgosiudfo gsiudf
+  </p> ++ submit("Go!")
+
+  override def sidebox: NodeSeq = <p>
+    You can also just try this out with a</p> ++ buttonanchor(action + "?randomize", "random example")
+
+  override def formparts: NodeSeq = form.loglinesEntry ++
+    form.patternEntry ++
+    form.grokpatternEntry ++
+    form.multlineEntry
 
   override def result = form.pattern.value.map(showResult(_)).getOrElse(<span/>)
 

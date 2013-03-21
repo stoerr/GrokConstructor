@@ -3,7 +3,6 @@ package net.stoerr.grokdiscoverytoo.incremental
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.webframework.WebView
 import scala.xml.{Text, NodeSeq}
-import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary, RandomTryLibrary}
 import collection.immutable.NumericRange
 

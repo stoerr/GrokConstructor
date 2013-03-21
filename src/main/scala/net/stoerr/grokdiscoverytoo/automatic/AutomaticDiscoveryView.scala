@@ -3,7 +3,6 @@ package net.stoerr.grokdiscoverytoo.automatic
 import net.stoerr.grokdiscoverytoo.webframework.WebView
 import xml.NodeSeq
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView.{RegexPart, NamedRegex, FixedString}
 import net.stoerr.grokdiscoverytoo.{GrokPatternLibrary, JoniRegex, StartMatch}
 
