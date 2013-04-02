@@ -1,6 +1,6 @@
 package net.stoerr.grokdiscoverytoo.automatic
 
-import net.stoerr.grokdiscoverytoo.webframework.WebView
+import net.stoerr.grokdiscoverytoo.webframework.WebViewWithHeaderAndSidebox
 import xml.NodeSeq
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView.{RegexPart, NamedRegex, FixedString}
@@ -15,20 +15,20 @@ import net.stoerr.grokdiscoverytoo.{GrokPatternLibrary, JoniRegex, StartMatch}
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 08.03.13
  */
-class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebView {
+class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
 
   val form = AutomaticDiscoveryForm(request)
 
   override val title: String = "Automatic grok discovery"
   override val action: String = AutomaticDiscoveryView.path
 
-  override def inputform: NodeSeq = <p>Please enter some loglines for which you want generate possible grok patterns and then press
-    {submit("Go!")}
-    You can also just try this out with a
-    {buttonanchor(action + "?randomize", "random example.")}
-  </p> ++
-    form.loglinesEntry ++
-    form.grokpatternEntry
+  def maintext: NodeSeq = <p>Please enter some loglines for which you want generate possible grok patterns and then press</p> ++
+    submit("Go!")
+
+  def sidebox: NodeSeq = <p>You can also just try this out with a</p> ++ buttonanchor(action + "?randomize", "random example")
+
+
+  def formparts: NodeSeq = form.loglinesEntry ++ form.grokpatternEntry
 
   override def result: NodeSeq = form.loglines.valueSplitToLines.map(_.toList).map(matchingRegexpStructures).map(resultTable).getOrElse(<span/>)
 
@@ -90,7 +90,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebView {
 
 object AutomaticDiscoveryView {
 
-  val path = "/web/automatic"
+  val path = "/do/automatic"
 
   sealed trait RegexPart
 

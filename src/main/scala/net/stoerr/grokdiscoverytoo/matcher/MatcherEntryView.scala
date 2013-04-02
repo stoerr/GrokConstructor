@@ -19,6 +19,19 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
   override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
   else Some(Left(MatcherEntryView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
 
+  override def maintext: NodeSeq = <p>
+    Please enter some loglines for which you want to check a grok pattern and then press bla blu bla
+    asd jdnasliu efoiu fdsoisudf gosiufdhgosiudf gosiufdgosidufgosiudfo gsiudf
+  </p> ++ submit("Go!")
+
+  override def sidebox: NodeSeq = <p>
+    You can also just try this out with a</p> ++ buttonanchor(action + "?randomize", "random example")
+
+  override def formparts: NodeSeq = form.loglinesEntry ++
+    form.patternEntry ++
+    form.grokpatternEntry ++
+    form.multlineEntry
+
   if (null != request.getParameter("example")) {
     val trial = RandomTryLibrary.example(request.getParameter("example").toInt)
     form.loglines.value = Some(trial.loglines)
@@ -27,6 +40,8 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
     form.multlineNegate.values = List(form.multlineNegate.name)
     form.groklibs.values = List("grok-patterns")
   }
+
+  override def result = form.pattern.value.map(showResult(_)).getOrElse(<span/>)
 
   private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
@@ -72,23 +87,8 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
       case _: Exception => (None, regex)
     }
 
-  override def maintext: NodeSeq = <p>
-    Please enter some loglines for which you want to check a grok pattern and then press bla blu bla
-    asd jdnasliu efoiu fdsoisudf gosiufdhgosiudf gosiufdgosidufgosiudfo gsiudf
-  </p> ++ submit("Go!")
-
-  override def sidebox: NodeSeq = <p>
-    You can also just try this out with a</p> ++ buttonanchor(action + "?randomize", "random example")
-
-  override def formparts: NodeSeq = form.loglinesEntry ++
-    form.patternEntry ++
-    form.grokpatternEntry ++
-    form.multlineEntry
-
-  override def result = form.pattern.value.map(showResult(_)).getOrElse(<span/>)
-
 }
 
 object MatcherEntryView {
-  val path = "/web/match"
+  val path = "/do/match"
 }

@@ -29,7 +29,7 @@ class WebDispatcher extends HttpServlet {
   }
 
   def giveView(path: String, request: HttpServletRequest): Either[String, WebView] = {
-    val view = ("/web" + path) match {
+    val view = ("/do" + path) match {
       case MatcherEntryView.path => new MatcherEntryView(request)
       case IncrementalConstructionInputView.path => new IncrementalConstructionInputView(request)
       case IncrementalConstructionStepView.path => new IncrementalConstructionStepView(request)
