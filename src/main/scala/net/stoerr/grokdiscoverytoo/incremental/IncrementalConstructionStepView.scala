@@ -48,12 +48,12 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   }
 
   val currentJoniRegex = new JoniRegex(GrokPatternLibrary.replacePatterns(currentRegex, form.grokPatternLibrary))
-  val loglinesSplitted: Array[(String, String)] = form.loglines.valueSplitToLines.get.map({
+  val loglinesSplitted: Seq[(String, String)] = form.multlineFilter(form.loglines.valueSplitToLines.get).map({
     line =>
       val jmatch = currentJoniRegex.matchStartOf(line)
       (jmatch.get.matched, jmatch.get.rest)
   })
-  val loglineRests: Array[String] = loglinesSplitted.map(_._2)
+  val loglineRests: Seq[String] = loglinesSplitted.map(_._2)
 
   override def result: NodeSeq = {
     table(

@@ -4,7 +4,7 @@ import net.stoerr.grokdiscoverytoo.webframework.WebViewWithHeaderAndSidebox
 import xml.NodeSeq
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView.{RegexPart, NamedRegex, FixedString}
-import net.stoerr.grokdiscoverytoo.{GrokPatternLibrary, JoniRegex, StartMatch}
+import net.stoerr.grokdiscoverytoo.{RandomTryLibrary, GrokPatternLibrary, JoniRegex, StartMatch}
 
 /**
  * We try to find all sensible regular expressions consisting of grok patterns and fixed strings that
@@ -27,13 +27,23 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
 
   def sidebox: NodeSeq = <p>You can also just try this out with a</p> ++ buttonanchor(action + "?randomize", "random example")
 
-
   def formparts: NodeSeq = form.loglinesEntry ++ form.grokpatternEntry
 
-  override def result: NodeSeq = form.loglines.valueSplitToLines.map(_.toList).map(matchingRegexpStructures).map(resultTable).getOrElse(<span/>)
+  override def result: NodeSeq = {
+    val linesOpt = form.loglines.valueSplitToLines.map(form.multlineFilter(_))
+    linesOpt.map(_.toList).map(matchingRegexpStructures).map(resultTable).getOrElse(<span/>)
+  }
+
+  if (null != request.getParameter("randomize")) {
+    val trial = RandomTryLibrary.example(RandomTryLibrary.randomExampleNumber())
+    form.loglines.value = Some(trial.loglines)
+    form.multlineRegex.value = trial.multline
+    form.multlineNegate.values = List(form.multlineNegate.name)
+    form.groklibs.values = List("grok-patterns")
+  }
 
   def resultTable(results: Iterator[List[RegexPart]]): xml.Node = table(
-    rowheader("Possible grok regex combinations that match all lines") ++ results.toList.map {
+    rowheader("Possible grok regex combinations that match all lines") ++ results.take(200).toList.map {
       result =>
         row(result map {
           case FixedString(str) => <span>
@@ -59,7 +69,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
 
   /** We try at most this many calls to avoid endless loops because of
     * the combinatorical explosion */
-  var callCountdown = 10000
+  var callCountdown = 1000
 
   def matchingRegexpStructures(lines: List[String]): Iterator[List[RegexPart]] = {
     if (callCountdown <= 0) return Iterator(List(FixedString("SEARCH TRUNCATED")))
