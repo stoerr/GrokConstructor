@@ -37,7 +37,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
     form.loglines.value = Some(trial.loglines)
     form.pattern.value = Some(trial.pattern)
     form.multlineRegex.value = trial.multline
-    form.multlineNegate.values = List(form.multlineNegate.name)
+    form.multlineNegate.values = List()
     form.groklibs.values = List("grok-patterns")
   }
 

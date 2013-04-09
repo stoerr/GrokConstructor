@@ -1,6 +1,6 @@
 package net.stoerr.grokdiscoverytoo.automatic
 
-import net.stoerr.grokdiscoverytoo.webframework.WebViewWithHeaderAndSidebox
+import net.stoerr.grokdiscoverytoo.webframework.{WebView, WebViewWithHeaderAndSidebox}
 import xml.NodeSeq
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView.{RegexPart, NamedRegex, FixedString}
@@ -25,7 +25,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
   def maintext: NodeSeq = <p>Please enter some loglines for which you want generate possible grok patterns and then press</p> ++
     submit("Go!")
 
-  def sidebox: NodeSeq = <p>You can also just try this out with a</p> ++ buttonanchor(action + "?randomize", "random example")
+  def sidebox: NodeSeq = <p>You can also just try this out with a</p> ++ buttonanchor(AutomaticDiscoveryView.path + "?randomize", "random example")
 
   def formparts: NodeSeq = form.loglinesEntry ++ form.grokpatternEntry
 
@@ -34,8 +34,11 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
     linesOpt.map(_.toList).map(matchingRegexpStructures).map(resultTable).getOrElse(<span/>)
   }
 
-  if (null != request.getParameter("randomize")) {
-    val trial = RandomTryLibrary.example(RandomTryLibrary.randomExampleNumber())
+  override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
+  else Some(Left(fullpath(AutomaticDiscoveryView.path) + "?example=" + RandomTryLibrary.randomExampleNumber()))
+
+  if (null != request.getParameter("example")) {
+    val trial = RandomTryLibrary.example(request.getParameter("example").toInt)
     form.loglines.value = Some(trial.loglines)
     form.multlineRegex.value = trial.multline
     form.multlineNegate.values = List(form.multlineNegate.name)

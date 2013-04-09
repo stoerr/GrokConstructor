@@ -31,7 +31,7 @@ trait MultlineFormPart extends WebForm {
 
   private def continuationLine(line: String) = {
     val ismatched = new JoniRegex(multlineRegex.value.get).findIn(line).isDefined
-    if (multlineNegate.values.contains(negatekey)) !ismatched else ismatched
+    if (multlineNegate.values.contains(negatekey)) ismatched else !ismatched
   }
 
   def multlineFilter(lines: Seq[String]): Seq[String] = {

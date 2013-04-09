@@ -1,7 +1,7 @@
 package net.stoerr.grokdiscoverytoo.incremental
 
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.webframework.WebViewWithHeaderAndSidebox
+import net.stoerr.grokdiscoverytoo.webframework.{WebView, WebViewWithHeaderAndSidebox}
 import xml.NodeSeq
 import net.stoerr.grokdiscoverytoo.RandomTryLibrary
 
@@ -15,6 +15,9 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
   val action: String = IncrementalConstructionStepView.path
 
   val form = IncrementalConstructionForm(request)
+
+  override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
+  else Some(Left(fullpath(IncrementalConstructionInputView.path) + "?example=" + RandomTryLibrary.randomExampleNumber()))
 
   if (null != request.getParameter("example")) {
     val trial = RandomTryLibrary.example(request.getParameter("example").toInt)
