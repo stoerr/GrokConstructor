@@ -100,7 +100,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
 
 object AutomaticDiscoveryView {
 
-  val path = "/do/automatic"
+  val path = "/automatic"
 
   sealed trait RegexPart
 

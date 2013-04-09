@@ -26,7 +26,7 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
 
   def maintext: NodeSeq = <p>Please enter some loglines you want to construct a grok pattern for and then press</p> ++ submit("Go!")
 
-  def sidebox: NodeSeq = <p>You can also just fill this with a</p> ++ buttonanchor(action + "?randomize", "random example.")
+  def sidebox: NodeSeq = <p>You can also just fill this with a</p> ++ buttonanchor(IncrementalConstructionInputView.path + "?randomize", "random example.")
 
   def formparts: NodeSeq = form.loglinesEntry ++ form.grokpatternEntry ++ form.multlineEntry
 
@@ -37,5 +37,5 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
 }
 
 object IncrementalConstructionInputView {
-  val path = "/do/construction"
+  val path = "/construction"
 }

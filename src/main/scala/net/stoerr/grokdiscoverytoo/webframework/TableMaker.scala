@@ -1,6 +1,7 @@
 package net.stoerr.grokdiscoverytoo.webframework
 
 import xml.{Node, Text, NodeSeq}
+import javax.servlet.http.HttpServletRequest
 
 /**
  * Some helper functions to create tables
@@ -8,6 +9,10 @@ import xml.{Node, Text, NodeSeq}
  * @since 28.02.13
  */
 trait TableMaker {
+
+  val request: HttpServletRequest
+
+  def fullpath(relurl: String) = request.getContextPath + request.getServletPath + relurl
 
   implicit def stringToNode(str: String): Node = new Text(str)
 
@@ -64,7 +69,7 @@ trait TableMaker {
 
   def submit(text: String) = <input type="submit" class="save ym-button ym-next" value={text} id="submit" name="submit"/>
 
-  def buttonanchor(link: String, text: String) = <a href={link} class="ym-button ym-add">
+  def buttonanchor(link: String, text: String) = <a href={fullpath(link)} class="ym-button ym-add">
     {text}
   </a>
 

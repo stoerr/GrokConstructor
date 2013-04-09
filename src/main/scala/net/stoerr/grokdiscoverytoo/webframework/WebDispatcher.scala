@@ -55,13 +55,21 @@ class WebDispatcher extends HttpServlet {
 
   def navigation(request: HttpServletRequest): NodeSeq = {
     def navlink(currentpath: String, descr: String): Elem =
-      if (request.getPathInfo == currentpath) <li class="active"><strong>{descr}</strong></li>
-      else  <li><a href={request.getContextPath + request.getServletPath + currentpath}>{descr}</a></li>
+      if (request.getPathInfo == currentpath) <li class="active">
+        <strong>
+          {descr}
+        </strong>
+      </li>
+      else <li>
+        <a href={request.getContextPath + request.getServletPath + currentpath}>
+          {descr}
+        </a>
+      </li>
 
-    navlink("../", "About") ++ navlink(IncrementalConstructionInputView.path, "Incremental Construction") ++
+    navlink("/../", "About") ++ navlink(IncrementalConstructionInputView.path, "Incremental Construction") ++
       navlink(MatcherEntryView.path, "Matcher") ++ navlink(AutomaticDiscoveryView.path, "Automatic Construction")
   }
 
-  def reqInfo(req: HttpServletRequest) : String = req.getRequestURL + "?" + req.getQueryString + ":" + req.getParameterMap
+  def reqInfo(req: HttpServletRequest): String = req.getRequestURL + "?" + req.getQueryString + ":" + req.getParameterMap
 
 }

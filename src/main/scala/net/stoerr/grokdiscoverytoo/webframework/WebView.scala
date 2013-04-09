@@ -15,11 +15,6 @@ trait WebView extends TableMaker {
   val title: String
 
   /** action of the form, e.g. "/match" */
-<<<<<<< .mine
-  /** action of the form, e.g. "/match" */
-=======
-  /** action of the form, e.g. "/do/match" */
->>>>>>> .theirs
   val action: String
 
   /** If this returns something, we will use the returned view. */
@@ -35,7 +30,5 @@ trait WebView extends TableMaker {
     </h4> <form class="ym-form ym-full" action={fullpath(action)} method="post">
       {inputform}
     </form> ++ result
-
-  def fullpath(relurl : String) = request.getContextPath + request.getServletPath + relurl
 
 }

@@ -17,7 +17,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
   val form = MatcherForm(request)
 
   override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
-  else Some(Left(MatcherEntryView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
+  else Some(Left(fullpath(MatcherEntryView.path) + "?example=" + RandomTryLibrary.randomExampleNumber()))
 
   override def maintext: NodeSeq = <p>
     Please enter some loglines for which you want to check a grok pattern and then press bla blu bla
@@ -90,5 +90,5 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
 }
 
 object MatcherEntryView {
-  val path = "/do/match"
+  val path = "/match"
 }
