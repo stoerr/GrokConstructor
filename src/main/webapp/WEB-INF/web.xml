@@ -14,11 +14,11 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>library</servlet-name>
-        <url-pattern>/service/*</url-pattern>
+        <url-pattern>/groklib/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>web</servlet-name>
-        <url-pattern>/web/*</url-pattern>
+        <url-pattern>/do/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <!-- We don't use sessions. -->

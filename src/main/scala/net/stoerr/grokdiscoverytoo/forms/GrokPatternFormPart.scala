@@ -18,7 +18,7 @@ trait GrokPatternFormPart extends WebForm {
   val grokadditionalinput = InputText("grokadditional")
 
   private def keyToGrokLink(key: String): (String, NodeSeq) =
-    key -> <a href={"/service/grok/" + key}>
+    key -> <a href={"/groklib/" + key}>
       {key}
     </a>
 

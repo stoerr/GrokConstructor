@@ -1,9 +1,8 @@
 package net.stoerr.grokdiscoverytoo.incremental
 
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.webframework.WebView
+import net.stoerr.grokdiscoverytoo.webframework.{WebViewWithHeaderAndSidebox, WebView}
 import scala.xml.{Text, NodeSeq}
-import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary, RandomTryLibrary}
 import collection.immutable.NumericRange
 
@@ -12,7 +11,7 @@ import collection.immutable.NumericRange
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 02.03.13
  */
-class IncrementalConstructionStepView(val request: HttpServletRequest) extends WebView {
+class IncrementalConstructionStepView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
 
   override val title: String = "Incremental Construction of Grok Patterns in progress"
   override val action: String = IncrementalConstructionStepView.path
@@ -24,13 +23,15 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       Some(Left(IncrementalConstructionInputView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
     else None
 
-  def inputform: NodeSeq =
-    submit("Go!") ++
-      form.constructedRegex.inputText("Constructed regular expression so far: ", 180, false) ++
-      form.loglines.hiddenField ++
-      form.constructedRegex.hiddenField ++
-      form.grokhiddenfields ++
-      form.multlinehiddenfields
+  def maintext: NodeSeq = <p>Please select the next component of the regular expression. You may provide a name for it if it is something to be kept.</p> ++ submit("Go!")
+
+  def sidebox: NodeSeq = <span/>
+
+  def formparts: NodeSeq = form.constructedRegex.inputText("Constructed regular expression so far: ", 180, false) ++
+    form.loglines.hiddenField ++
+    form.constructedRegex.hiddenField ++
+    form.grokhiddenfields ++
+    form.multlinehiddenfields
 
   // TODO missing: add extra patterns by hand later
 
@@ -47,12 +48,12 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   }
 
   val currentJoniRegex = new JoniRegex(GrokPatternLibrary.replacePatterns(currentRegex, form.grokPatternLibrary))
-  val loglinesSplitted: Array[(String, String)] = form.loglines.valueSplitToLines.get.map({
+  val loglinesSplitted: Seq[(String, String)] = form.multlineFilter(form.loglines.valueSplitToLines.get).map({
     line =>
       val jmatch = currentJoniRegex.matchStartOf(line)
       (jmatch.get.matched, jmatch.get.rest)
   })
-  val loglineRests: Array[String] = loglinesSplitted.map(_._2)
+  val loglineRests: Seq[String] = loglinesSplitted.map(_._2)
 
   override def result: NodeSeq = {
     table(
@@ -118,5 +119,5 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 }
 
 object IncrementalConstructionStepView {
-  val path = "/constructionstep"
+  val path = "/do/constructionstep"
 }

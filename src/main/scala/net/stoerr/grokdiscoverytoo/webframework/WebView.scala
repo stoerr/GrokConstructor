@@ -8,13 +8,18 @@ import xml.NodeSeq
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 15.02.13
  */
-trait WebView {
+trait WebView extends TableMaker {
 
   val request: HttpServletRequest
 
   val title: String
 
   /** action of the form, e.g. "/match" */
+<<<<<<< .mine
+  /** action of the form, e.g. "/match" */
+=======
+  /** action of the form, e.g. "/do/match" */
+>>>>>>> .theirs
   val action: String
 
   /** If this returns something, we will use the returned view. */

@@ -10,10 +10,10 @@ class GrokLibraryServlet extends HttpServlet {
 
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
     val path = request.getPathInfo
-    if (path.startsWith("/grok/")) {
+    if (path.startsWith("/")) {
       response.setContentType("text/plain")
       response.setStatus(HttpServletResponse.SC_OK)
-      GrokPatternLibrary.grokSource(path.substring(6)).getLines().foreach(response.getWriter.println(_))
+      GrokPatternLibrary.grokSource(path.substring(1)).getLines().foreach(response.getWriter.println(_))
     }
   }
 

@@ -7,7 +7,7 @@ import xml.{Node, Text, NodeSeq}
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 28.02.13
  */
-object TableMaker {
+trait TableMaker {
 
   implicit def stringToNode(str: String): Node = new Text(str)
 

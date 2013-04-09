@@ -1,11 +1,10 @@
 package net.stoerr.grokdiscoverytoo.automatic
 
-import net.stoerr.grokdiscoverytoo.webframework.WebView
+import net.stoerr.grokdiscoverytoo.webframework.WebViewWithHeaderAndSidebox
 import xml.NodeSeq
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.webframework.TableMaker._
 import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView.{RegexPart, NamedRegex, FixedString}
-import net.stoerr.grokdiscoverytoo.{GrokPatternLibrary, JoniRegex, StartMatch}
+import net.stoerr.grokdiscoverytoo.{RandomTryLibrary, GrokPatternLibrary, JoniRegex, StartMatch}
 
 /**
  * We try to find all sensible regular expressions consisting of grok patterns and fixed strings that
@@ -16,25 +15,35 @@ import net.stoerr.grokdiscoverytoo.{GrokPatternLibrary, JoniRegex, StartMatch}
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 08.03.13
  */
-class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebView {
+class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
 
   val form = AutomaticDiscoveryForm(request)
 
   override val title: String = "Automatic grok discovery"
   override val action: String = AutomaticDiscoveryView.path
 
-  override def inputform: NodeSeq = <p>Please enter some loglines for which you want generate possible grok patterns and then press
-    {submit("Go!")}
-    You can also just try this out with a
-    {buttonanchor(fullpath(action) + "?randomize", "random example.")}
-  </p> ++
-    form.loglinesEntry ++
-    form.grokpatternEntry
+  def maintext: NodeSeq = <p>Please enter some loglines for which you want generate possible grok patterns and then press</p> ++
+    submit("Go!")
 
-  override def result: NodeSeq = form.loglines.valueSplitToLines.map(_.toList).map(matchingRegexpStructures).map(resultTable).getOrElse(<span/>)
+  def sidebox: NodeSeq = <p>You can also just try this out with a</p> ++ buttonanchor(action + "?randomize", "random example")
+
+  def formparts: NodeSeq = form.loglinesEntry ++ form.grokpatternEntry
+
+  override def result: NodeSeq = {
+    val linesOpt = form.loglines.valueSplitToLines.map(form.multlineFilter(_))
+    linesOpt.map(_.toList).map(matchingRegexpStructures).map(resultTable).getOrElse(<span/>)
+  }
+
+  if (null != request.getParameter("randomize")) {
+    val trial = RandomTryLibrary.example(RandomTryLibrary.randomExampleNumber())
+    form.loglines.value = Some(trial.loglines)
+    form.multlineRegex.value = trial.multline
+    form.multlineNegate.values = List(form.multlineNegate.name)
+    form.groklibs.values = List("grok-patterns")
+  }
 
   def resultTable(results: Iterator[List[RegexPart]]): xml.Node = table(
-    rowheader("Possible grok regex combinations that match all lines") ++ results.toList.map {
+    rowheader("Possible grok regex combinations that match all lines") ++ results.take(200).toList.map {
       result =>
         row(result map {
           case FixedString(str) => <span>
@@ -60,7 +69,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebView {
 
   /** We try at most this many calls to avoid endless loops because of
     * the combinatorical explosion */
-  var callCountdown = 10000
+  var callCountdown = 1000
 
   def matchingRegexpStructures(lines: List[String]): Iterator[List[RegexPart]] = {
     if (callCountdown <= 0) return Iterator(List(FixedString("SEARCH TRUNCATED")))
@@ -91,7 +100,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebView {
 
 object AutomaticDiscoveryView {
 
-  val path = "/automatic"
+  val path = "/do/automatic"
 
   sealed trait RegexPart
 
