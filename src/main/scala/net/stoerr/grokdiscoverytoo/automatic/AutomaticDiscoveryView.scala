@@ -26,7 +26,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebView {
   override def inputform: NodeSeq = <p>Please enter some loglines for which you want generate possible grok patterns and then press
     {submit("Go!")}
     You can also just try this out with a
-    {buttonanchor(action + "?randomize", "random example.")}
+    {buttonanchor(fullpath(action) + "?randomize", "random example.")}
   </p> ++
     form.loglinesEntry ++
     form.grokpatternEntry
@@ -91,7 +91,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebView {
 
 object AutomaticDiscoveryView {
 
-  val path = "/web/automatic"
+  val path = "/automatic"
 
   sealed trait RegexPart
 

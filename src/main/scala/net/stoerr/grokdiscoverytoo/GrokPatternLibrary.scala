@@ -21,7 +21,7 @@ object GrokPatternLibrary {
   }
 
   def grokSource(location: String): Source = {
-    if (!location.matches("^[a-z-]+$")) throw new IllegalArgumentException("Invalid path " + location)
+    if (!location.matches("^[a-z-]+$")) throw new IllegalArgumentException("Invalid fullpath " + location)
     val stream: BufferedSource = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("/grok/" + location))
     if (null == stream) throw new IllegalArgumentException("Could not find " + location)
     return stream

@@ -118,5 +118,5 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 }
 
 object IncrementalConstructionStepView {
-  val path = "/web/constructionstep"
+  val path = "/constructionstep"
 }

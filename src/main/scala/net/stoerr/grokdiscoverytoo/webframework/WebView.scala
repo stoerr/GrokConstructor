@@ -14,7 +14,7 @@ trait WebView {
 
   val title: String
 
-  /** action of the form, e.g. "/web/match" */
+  /** action of the form, e.g. "/match" */
   val action: String
 
   /** If this returns something, we will use the returned view. */
@@ -27,9 +27,10 @@ trait WebView {
   def body: NodeSeq =
     <h4>
       {title}
-    </h4> <form class="ym-form ym-full" action={action} method="post">
+    </h4> <form class="ym-form ym-full" action={fullpath(action)} method="post">
       {inputform}
     </form> ++ result
 
+  def fullpath(relurl : String) = request.getContextPath + request.getServletPath + relurl
 
 }

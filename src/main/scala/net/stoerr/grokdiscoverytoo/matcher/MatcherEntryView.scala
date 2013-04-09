@@ -86,7 +86,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
       <div class="ym-38 ym-gr">
         <div class="box info">
           <p>
-            You can also just try this out with a</p>{buttonanchor(action + "?randomize", "random example")}
+            You can also just try this out with a</p>{buttonanchor(fullpath(action) + "?randomize", "random example")}
         </div>
       </div>
     </div> ++
@@ -100,5 +100,5 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebView {
 }
 
 object MatcherEntryView {
-  val path = "/web/match"
+  val path = "/match"
 }

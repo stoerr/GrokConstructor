@@ -29,7 +29,7 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
     <p>Please enter some loglines you want to construct a grok pattern for and then press
       {submit("Go!")}
       You can also just fill this with a
-      {buttonanchor(action + "?randomize", "random example.")}
+      {buttonanchor(fullpath(IncrementalConstructionInputView.path) + "?randomize", "random example.")}
     </p> ++
       form.loglinesEntry ++
       form.grokpatternEntry ++
@@ -42,5 +42,5 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
 }
 
 object IncrementalConstructionInputView {
-  val path = "/web/construction"
+  val path = "/construction"
 }

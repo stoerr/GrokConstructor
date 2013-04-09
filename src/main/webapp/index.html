@@ -25,55 +25,17 @@
         <div class="ym-hlist">
             <ul>
                 <li class="active"><strong>About</strong></li>
-                <li><a href="/web/construction">Incremental Construction</a></li>
-                <li><a href="/web/match">Matcher</a></li>
-                <li><a href="/web/automatic">Automatic Construction</a></li>
+                <li><a href="web/construction">Incremental Construction</a></li>
+                <li><a href="web/match">Matcher</a></li>
+                <li><a href="web/automatic">Automatic Construction</a></li>
                 <li><a href="#">Link</a></li>
             </ul>
         </div>
 </nav>
 <div id="main">
 
-<form action="/service/discover" method="post">
-    <table>
-        <tr>
-            <td>Please enter some loglines and then press <input type="submit" value="Go!"/></td>
-        </tr>
-        <tr>
-            <td>Some loglines we need to match (as varied as possible):</td>
-        </tr>
-        <tr>
-            <td><textarea rows="10" cols="120" name="loglines"></textarea></td>
-        </tr>
-        <tr>
-            <td>Grok Patterns from <a href="http://logstash.net/">logstash</a> v.1.19 :
-                <input type="checkbox" checked="checked" name="grok" value="grok-patterns" id="grok-patterns" /> <label for="grok-patterns"><a href="/service/grok/grok-patterns">grok-patterns</a> </label>
-                <input type="checkbox" name="grok" value="firewalls" id="firewalls" /><label for="firewalls"><a href="/service/grok/firewalls">firewalls</a></label>
-                <input type="checkbox" name="grok" value="haproxy" id="haproxy" /><label for="haproxy"><a href="/service/grok/haproxy">haproxy</a></label>
-                <input type="checkbox" name="grok" value="java" id="java" /><label for="java"><a href="/service/grok/java">java</a></label>
-                <input type="checkbox" name="grok" value="linux-syslog" id="linux-syslog"/><label for="linux-syslog"><a href="/service/grok/linux-syslog">linux-syslog</a> </label>
-                <input type="checkbox" name="grok" value="nagios" id="nagios" /><label for="nagios"><a href="/service/grok/nagios">nagios</a></label>
-                <input type="checkbox" name="grok" value="ruby" id="ruby" /><label for="ruby"><a href="/service/grok/ruby">ruby</a></label>
-                and some
-                <input type="checkbox" checked="checked" name="grok" value="extras" id="extras" /><label for="extras"><a href="/service/grok/extras">extras</a></label>
-                from me.
-            </td>
-        </tr>
-        <tr>
-            <td>Additional patterns (example below):</td>
-        </tr>
-        <tr>
-            <td><textarea rows="20" cols="180" name="patterns"></textarea></td>
-        </tr>
-        <tr>
-            <td>Example patterns:</td>
-        </tr>
-        <tr>
-            <td><textarea rows="2" cols="180" disabled="disabled">WORD \b\w+\b
-                USERNAME [a-zA-Z0-9_-]+</textarea></td>
-        </tr>
-    </table>
-</form>
+    <p>TODO DESCRIPTION Lorem ipsum etc.</p>
+
 <p>If you like it please tell <a href="http://www.stoerr.net/">me</a>, as this mightily encourages further improvements
     to this service.
     If you want to make me really happy please include suggestions, bugs, regular expressions you found useful, real
