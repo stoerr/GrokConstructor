@@ -35,9 +35,9 @@
     </div>
     </header>
     <nav id="nav">
-    <div class="ym-hlist">
+    <div class="ym-hlist"><ul>
       <%=request.getAttribute("navigation")%>
-    </div>
+    </ul></div>
     </nav>
     <div id="main">
       <div class="ym-wbox">

@@ -22,9 +22,6 @@ trait WebView {
 
   def inputform: NodeSeq
 
-  def navigation: NodeSeq = <a class="ym-button ym-next" href="#">Read More</a> ++
-    <a class="ym-button ym-next" href="#">Read More</a>
-
   def result: NodeSeq
 
   def body: NodeSeq =

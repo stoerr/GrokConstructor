@@ -4,6 +4,7 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
 import net.stoerr.grokdiscoverytoo.matcher.MatcherEntryView
 import net.stoerr.grokdiscoverytoo.incremental.{IncrementalConstructionStepView, IncrementalConstructionInputView}
 import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView
+import scala.xml.{Elem, NodeSeq}
 
 /**
  * Servlet that forwards the request to a controller and displays the view.
@@ -17,19 +18,20 @@ class WebDispatcher extends HttpServlet {
   }
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    val vieworredirect: Either[String, WebView] = giveView(req.getPathInfo, req)
+    val vieworredirect: Either[String, WebView] = giveView(req)
     vieworredirect match {
       case Left(url) =>
         resp.sendRedirect(url)
       case Right(view) =>
         req.setAttribute("title", view.title)
         req.setAttribute("body", view.body)
+        req.setAttribute("navigation", navigation(req))
         getServletContext.getRequestDispatcher("/jsp/frame.jsp").forward(req, resp)
     }
   }
 
-  def giveView(path: String, request: HttpServletRequest): Either[String, WebView] = {
-    val view = ("/web" + path) match {
+  def giveView(request: HttpServletRequest): Either[String, WebView] = {
+    val view = (request.getServletPath + request.getPathInfo) match {
       case MatcherEntryView.path => new MatcherEntryView(request)
       case IncrementalConstructionInputView.path => new IncrementalConstructionInputView(request)
       case IncrementalConstructionStepView.path => new IncrementalConstructionStepView(request)
@@ -41,4 +43,14 @@ class WebDispatcher extends HttpServlet {
       case None => Right(view)
     }
   }
+
+  def navigation(request: HttpServletRequest): NodeSeq = {
+    def navlink(path: String, descr: String): Elem =
+      if (request.getServletPath + request.getPathInfo == path) <li class="active"><strong>{descr}</strong></li>
+      else  <li><a href={path}>{descr}</a></li>
+
+    navlink("/", "About") ++ navlink(IncrementalConstructionInputView.path, "Incremental Construction") ++
+      navlink(MatcherEntryView.path, "Matcher") ++ navlink(AutomaticDiscoveryView.path, "Automatic Construction")
+  }
+
 }
