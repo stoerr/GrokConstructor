@@ -18,21 +18,21 @@ trait GrokPatternFormPart extends WebForm {
   val grokadditionalinput = InputText("grokadditional")
 
   private def keyToGrokLink(key: String): (String, NodeSeq) =
-    key -> <a href={"/groklib/" + key}>
+    key -> <a href={request.getContextPath + "/groklib/" + key}>
       {key}
     </a>
 
   def grokpatternEntry =
     <div class="ym-fbox-text">
       <label>
-        Grok Patterns from
+        Please mark the libraries of grok Patterns from
         <a href="http://logstash.net/">logstash</a>
-        v.1.19 :</label>
+        v.1.19 which you want to use:</label>
     </div> ++ groklibs.checkboxes(GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap) ++
       <div class="ym-fbox-text">
         <label>and some extras from me</label>
       </div> ++ extralibs.checkboxes(GrokPatternLibrary.extrapatternnames.map(keyToGrokLink).toMap) ++
-      grokadditionalinput.inputTextArea("Additional grok patterns:", 5, 180)
+      grokadditionalinput.inputTextArea("You can also provide some additional grok patterns in the same format:", 5, 180)
 
   def grokhiddenfields: NodeSeq = groklibs.hiddenField ++ extralibs.hiddenField ++ grokadditionalinput.hiddenField
 

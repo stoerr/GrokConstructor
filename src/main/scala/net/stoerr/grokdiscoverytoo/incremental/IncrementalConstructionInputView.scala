@@ -27,7 +27,12 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
     form.groklibs.values = List("grok-patterns")
   }
 
-  def maintext: NodeSeq = <p>Please enter some loglines you want to construct a grok pattern for and then press</p> ++ submit("Go!")
+  def maintext: NodeSeq = <p>You can provide a number of log file lines and step by step construct a grok pattern
+    that matches all of these lines. In each step you select or input a pattern that matches the next logical segment
+    of the log line. This can either be a fixed string (e.g. a separator), a (possibly named) pattern from the grok
+    pattern library, or a pattern you explicitly specify.</p> ++
+     <p>Please enter some loglines for which you want to create a grok pattern, mark the pattern libraries you want to
+      draw your patterns from and then press</p> ++ submit("Go!")
 
   def sidebox: NodeSeq = <p>You can also just fill this with a</p> ++ buttonanchor(IncrementalConstructionInputView.path + "?randomize", "random example.")
 

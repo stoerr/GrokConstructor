@@ -24,7 +24,7 @@ trait MultlineFormPart extends WebForm {
   val multlineNegate = InputMultipleChoice("multlinenegate")
 
   def multlineEntry: NodeSeq =
-    multlineRegex.inputText("Multline Regex", 80) ++
+    multlineRegex.inputText("If you want to use the multline filter please specify the used regex:", 80) ++
       multlineNegate.checkboxes(Map(negatekey -> <span>negate the multline regex</span>))
 
   def multlinehiddenfields: NodeSeq = multlineRegex.hiddenField ++ multlineNegate.hiddenField

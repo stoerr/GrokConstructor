@@ -22,7 +22,13 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
   override val title: String = "Automatic grok discovery"
   override val action: String = AutomaticDiscoveryView.path
 
-  def maintext: NodeSeq = <p>Please enter some loglines for which you want generate possible grok patterns and then press</p> ++
+  def maintext: NodeSeq = <p>
+    This was <a href="http://www.stoerr.net/">my</a> first attempt to support creating grok expressions.
+    It generates potentially all regular expressions that consist of fixed strings for things that are not alphanumeric and grok patterns from the library, and match all of a given
+    set of logfile lines. If there are several patterns from the grok library that match the same strings in every log line they are grouped together and presented as a drop down list.
+    Unfortunately, the number of possible regular expressions grows exponentially with the length of the lines, such that this is not really usable in practice. Thus, the result list is cut
+    off at 200 results. </p> ++ <p>
+    Please enter some loglines for which you want generate possible grok patterns and then press</p> ++
     submit("Go!")
 
   def sidebox: NodeSeq = <p>You can also just try this out with a</p> ++ buttonanchor(AutomaticDiscoveryView.path + "?randomize", "random example")
@@ -46,7 +52,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
   }
 
   def resultTable(results: Iterator[List[RegexPart]]): xml.Node = table(
-    rowheader("Possible grok regex combinations that match all lines") ++ results.take(200).toList.map {
+    rowheader("At most 200 possible grok regex combinations that match all lines") ++ results.take(200).toList.map {
       result =>
         row(result map {
           case FixedString(str) => <span>

@@ -10,7 +10,7 @@ import xml.{Text, NodeSeq, Elem}
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 16.02.13
  */
-trait WebForm {
+trait WebForm extends TableMaker {
 
   val request: HttpServletRequest
 
@@ -42,12 +42,12 @@ trait WebForm {
 
     def hiddenField: Elem = <input type="hidden" name={name} id={name} value={value.orNull}/>
 
-    def radiobutton(value: String, description: NodeSeq): NodeSeq = <span>
+    def radiobutton(value: String, description: NodeSeq): NodeSeq = <div>
       <input type="radio" name={name} value={value}
              id={name}/> <label for={name}>
         {description}
       </label>
-    </span>
+    </div>
 
   }
 
