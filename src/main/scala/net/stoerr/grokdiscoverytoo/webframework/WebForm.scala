@@ -20,7 +20,7 @@ trait WebForm extends TableMaker {
 
   /** An input that has (at most) a single value, like a text field, a set of radio buttons, a drop down list. */
   case class InputText(name: String) extends WebFormElement {
-    var value: Option[String] = Option(request.getParameter(name))
+    var value: Option[String] = Option(request.getParameter(name)).filterNot(_.isEmpty)
 
     def valueSplitToLines: Option[Array[String]] = value.map(_.split("\r?\n"))
 

@@ -16,8 +16,6 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   override val title: String = "Incremental Construction of Grok Patterns in progress"
   override val action: String = IncrementalConstructionStepView.path
 
-  val form = IncrementalConstructionForm(request)
-
   override def doforward: Option[Either[String, WebView]] =
     if (null != request.getParameter("randomize"))
       Some(Left(IncrementalConstructionInputView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
@@ -30,6 +28,9 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   def sidebox: NodeSeq = <span/>
 
   override def result: NodeSeq = <span/>
+
+
+  val form = IncrementalConstructionForm(request)
 
   def formparts: NodeSeq = form.constructedRegex.inputText("Constructed regular expression so far: ", 180, false) ++
     form.loglines.hiddenField ++
@@ -75,7 +76,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
             {'»' + p + '«'}
           </code>) ++ <br/>).reduceOption(_ ++ _).getOrElse(<span/>)
         ) ++ rowheader2("or select one of the following expressions from the grok library that matches a segment of the log lines:") ++
-        row2(form.nameOfNextPart.inputText("Optional, name for the grok expression", 20)) ++
+        row2(form.nameOfNextPart.inputText("Optional: give name for the grok expression to retrieve it's match value", 20)) ++
         rowheader2("Grok expression", "Matches at the start of the rest of the loglines") ++
         groknameListToMatchesCleanedup.map(grokoption) ++
         rowheader2("or you can input a regex that will match the next part of all logfile lines:") ++

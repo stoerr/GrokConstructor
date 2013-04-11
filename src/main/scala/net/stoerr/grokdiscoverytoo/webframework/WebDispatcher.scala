@@ -36,6 +36,10 @@ class WebDispatcher extends HttpServlet {
     } catch {
       case e: Exception =>
         logger.error(reqInfo(req), e)
+        val writer = resp.getWriter
+        writer.println("OUCH! AGH! AAAH! BUG! Please contact Hans-Peter Stoerr www.stoerr.net with the following:\n\n")
+        e.printStackTrace(writer)
+        writer.println("\n\nRequest Info:\n" + reqInfo(req))
     }
   }
 
