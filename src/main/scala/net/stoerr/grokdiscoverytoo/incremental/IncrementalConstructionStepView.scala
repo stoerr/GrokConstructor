@@ -3,7 +3,7 @@ package net.stoerr.grokdiscoverytoo.incremental
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokdiscoverytoo.webframework.{WebViewWithHeaderAndSidebox, WebView}
 import scala.xml.{Text, NodeSeq}
-import net.stoerr.grokdiscoverytoo.{JoniRegex, GrokPatternLibrary, RandomTryLibrary}
+import net.stoerr.grokdiscoverytoo.{JoniRegexQuoter, JoniRegex, GrokPatternLibrary, RandomTryLibrary}
 import collection.immutable.NumericRange
 
 /**
@@ -70,9 +70,9 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
             {rest}
           </code>)
         }) ++ <table border="1">
-      {rowheader2("To choose a continuation of your regular expression you can either choose a fixed string that is common to all log file lines as a separator:") ++
+      {rowheader2("To choose a continuation of your regular expression you can either choose a fixed string that is common to all log file line rests as a separator:") ++
         row2(
-          commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(p, <code>
+          commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(JoniRegexQuoter.quote(p), <code>
             {'»' + p + '«'}
           </code>) ++ <br/>).reduceOption(_ ++ _).getOrElse(<span/>)
         ) ++ rowheader2("or select one of the following expressions from the grok library that matches a segment of the log lines:") ++

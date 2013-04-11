@@ -68,3 +68,7 @@ case class JoniRegex(regex: String) {
   * @param rest the part of the string after the match */
 case class StartMatch(length: Int, matched: String, rest: String)
 
+object JoniRegexQuoter {
+  /** Quotes a string such that it can serve as a literal expression */ // [.(|?*+{^$
+  def quote(str: String) : String = str.replaceAll("([.|?*+{^$(\\[\\\\])", "\\\\$1")
+}

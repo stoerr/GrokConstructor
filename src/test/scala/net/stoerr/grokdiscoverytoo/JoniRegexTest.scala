@@ -66,4 +66,14 @@ class JoniRegexTest extends FlatSpec with ShouldMatchers {
     rnamed.findIn("nixda") should equal(None)
   }
 
+  "JoniRegexQuoter.quote" should "turn a string into a regular expression that only matches the string" in {
+    import JoniRegexQuoter.quote
+
+    quote("bla") should equal("bla")
+    val allspecialchars = "bla[.(|?*+{^$blu\\"
+    quote(allspecialchars) should equal("bla\\[\\.\\(\\|\\?\\*\\+\\{\\^\\$blu\\\\")
+    val matched = new JoniRegex(quote(allspecialchars)).matchStartOf(allspecialchars)
+    matched.get.rest should equal("")
+  }
+
 }
