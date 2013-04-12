@@ -20,7 +20,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
   val form = AutomaticDiscoveryForm(request)
 
   override val title: String = "Automatic grok discovery"
-  override val action: String = AutomaticDiscoveryView.path
+  override def action: String = AutomaticDiscoveryView.path
 
   def maintext: NodeSeq = <p>
     This was <a href="http://www.stoerr.net/">my</a> first attempt to support creating grok expressions.

@@ -5,6 +5,7 @@ import net.stoerr.grokdiscoverytoo.webframework.{WebViewWithHeaderAndSidebox, We
 import scala.xml.{Text, NodeSeq}
 import net.stoerr.grokdiscoverytoo.{JoniRegexQuoter, JoniRegex, GrokPatternLibrary, RandomTryLibrary}
 import collection.immutable.NumericRange
+import net.stoerr.grokdiscoverytoo.matcher.MatcherEntryView
 
 /**
  * Performs a step in the incremental construction of the grok pattern.
@@ -14,16 +15,20 @@ import collection.immutable.NumericRange
 class IncrementalConstructionStepView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
 
   override val title: String = "Incremental Construction of Grok Patterns in progress"
-  override val action: String = IncrementalConstructionStepView.path
+  override def action: String =
+    if (!constructionDone) IncrementalConstructionStepView.path
+    else MatcherEntryView.path
 
   override def doforward: Option[Either[String, WebView]] =
     if (null != request.getParameter("randomize"))
       Some(Left(IncrementalConstructionInputView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
     else None
 
-  def maintext: NodeSeq = <p>Please select the next component for the grok pattern.
+  def maintext: NodeSeq = if (!constructionDone) <p>Please select the next component for the grok pattern.
     You can select can either select a fixed string (e.g. a separator), a (possibly named) pattern from the grok
     pattern library, or a pattern you explicitly specify. Make your selection and press</p> ++ submit("Continue!")
+  else <p>All log lines are successfully matched. You can copy the regular expression from the form field below.
+  You can also try out the constructed regex by calling the matcher.</p> ++ submit("Go to matcher")
 
   def sidebox: NodeSeq = <span/>
 
@@ -59,9 +64,10 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       (jmatch.get.matched, jmatch.get.rest)
   })
   val loglineRests: Seq[String] = loglinesSplitted.map(_._2)
+  val constructionDone = loglineRests.forall(_.isEmpty)
 
   def selectionPart: NodeSeq = {
-    table(
+    val alreadymatchedtable = table(
       rowheader2("Already matched", "Unmatched rest of the loglines to match") ++
         loglinesSplitted.map {
           case (start, rest) => row2(<code>
@@ -70,7 +76,8 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
             {rest}
           </code>)
         }
-    ) ++
+    )
+    if (!constructionDone) { alreadymatchedtable ++
       formsection("To choose a continuation of your regular expression you can either choose a fixed string that is common to all log file line rests as a separator:") ++
       <div class="ym-fbox-check">{commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(JoniRegexQuoter.quote(p), <code>
             {'»' + p + '«'}
@@ -83,6 +90,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       formsection("or you can input a regex that will match the next part of all logfile lines:") ++
       <div class="ym-fbox-check">{form.nextPart.radiobutton(form.nextPartPerHandMarker, "continue with handmade regex")}</div> ++
       form.nextPartPerHand.inputText("regular expression for next component:", 170)
+    } else alreadymatchedtable
   }
 
   private def commonprefixesOfLoglineRests: Iterator[String] = {

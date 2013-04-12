@@ -12,7 +12,7 @@ import scala.collection.immutable.NumericRange
  */
 class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
   override val title: String = "Test grok patterns"
-  override val action = MatcherEntryView.path
+  override def action = MatcherEntryView.path
 
   val form = MatcherForm(request)
 

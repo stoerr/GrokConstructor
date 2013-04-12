@@ -12,7 +12,7 @@ import net.stoerr.grokdiscoverytoo.RandomTryLibrary
  */
 class IncrementalConstructionInputView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
   val title: String = "Incremental Construction of Grok Patterns"
-  val action: String = IncrementalConstructionStepView.path
+  def action: String = IncrementalConstructionStepView.path
 
   val form = IncrementalConstructionForm(request)
 

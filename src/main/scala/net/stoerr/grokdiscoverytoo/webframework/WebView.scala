@@ -15,7 +15,7 @@ trait WebView extends TableMaker {
   val title: String
 
   /** action of the form, e.g. "/match" */
-  val action: String
+  def action: String
 
   /** If this returns something, we will use the returned view. */
   def doforward: Option[Either[String, WebView]] = None
