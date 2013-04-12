@@ -69,21 +69,20 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
           </code>, <code>
             {rest}
           </code>)
-        }) ++ <table border="1">
-      {rowheader2("To choose a continuation of your regular expression you can either choose a fixed string that is common to all log file line rests as a separator:") ++
-        row2(
-          commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(JoniRegexQuoter.quote(p), <code>
+        }
+    ) ++
+      formsection("To choose a continuation of your regular expression you can either choose a fixed string that is common to all log file line rests as a separator:") ++
+      <div class="ym-fbox-check">{commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(JoniRegexQuoter.quote(p), <code>
             {'»' + p + '«'}
-          </code>) ++ <br/>).reduceOption(_ ++ _).getOrElse(<span/>)
-        ) ++ rowheader2("or select one of the following expressions from the grok library that matches a segment of the log lines:") ++
-        row2(form.nameOfNextPart.inputText("Optional: give name for the grok expression to retrieve it's match value", 20)) ++
+          </code>)).reduceOption(_ ++ _).getOrElse(<span/>)}</div> ++
+      formsection("or select one of the following expressions from the grok library that matches a segment of the log lines:") ++
+      form.nameOfNextPart.inputText("Optional: give name for the grok expression to retrieve it's match value", 20) ++
+      table(
         rowheader2("Grok expression", "Matches at the start of the rest of the loglines") ++
-        groknameListToMatchesCleanedup.map(grokoption) ++
-        rowheader2("or you can input a regex that will match the next part of all logfile lines:") ++
-        row2(
-          form.nextPart.radiobutton(form.nextPartPerHandMarker, "continue") ++ form.nextPartPerHand.inputText("with:", 170)
-        )}
-    </table>
+          groknameListToMatchesCleanedup.map(grokoption)) ++
+      formsection("or you can input a regex that will match the next part of all logfile lines:") ++
+      <div class="ym-fbox-check">{form.nextPart.radiobutton(form.nextPartPerHandMarker, "continue with handmade regex")}</div> ++
+      form.nextPartPerHand.inputText("regular expression for next component:", 170)
   }
 
   private def commonprefixesOfLoglineRests: Iterator[String] = {
@@ -114,9 +113,11 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   def grokoption(grokopt: (List[String], List[String])) = grokopt match {
     case (groknames, restlinematches) =>
       row2(
+        <div class="ym-fbox-check">{
         groknames.map(grokname =>
           form.nextPart.radiobutton("%{" + grokname + "}", <code/>.copy(child = new Text("%{" + grokname + "}"))))
-          .reduce(_ ++ _), <pre/>.copy(child = new Text(restlinematches.mkString("\n")))
+          .reduce(_ ++ _)}
+        </div>, <pre/>.copy(child = new Text(restlinematches.mkString("\n")))
       )
   }
 

@@ -10,16 +10,12 @@ import xml.NodeSeq
 abstract class WebViewWithHeaderAndSidebox extends WebView {
 
   override def inputform: NodeSeq =
-    <div class="ym-grid">
-      <div class="ym-g75 ym-gl">
-        <div class="box info">
+    <div class="ym-grid ym-equalize">
+      <div class="ym-g75 ym-gl box info">
           {maintext}
-        </div>
       </div>
-      <div class="ym-g25 ym-gr">
-        <div class="box info">
+      <div class="ym-g25 ym-gr box info">
           {sidebox}
-        </div>
       </div>
     </div> ++ formparts
 

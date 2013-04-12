@@ -73,4 +73,6 @@ trait TableMaker {
     {text}
   </a>
 
+  def formsection(title: String) = <h6 class="ym-fbox-heading">{title}</h6>
+
 }
