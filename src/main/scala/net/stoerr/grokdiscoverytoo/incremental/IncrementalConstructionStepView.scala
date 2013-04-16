@@ -5,6 +5,7 @@ import net.stoerr.grokdiscoverytoo.webframework.{WebViewWithHeaderAndSidebox, We
 import scala.xml.{Text, NodeSeq}
 import net.stoerr.grokdiscoverytoo.{JoniRegexQuoter, JoniRegex, GrokPatternLibrary, RandomTryLibrary}
 import collection.immutable.NumericRange
+import net.stoerr.grokdiscoverytoo.matcher.MatcherEntryView
 
 /**
  * Performs a step in the incremental construction of the grok pattern.
@@ -19,13 +20,17 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   override def doforward: Option[Either[String, WebView]] =
     if (null != request.getParameter("randomize"))
       Some(Left(IncrementalConstructionInputView.path + "?example=" + RandomTryLibrary.randomExampleNumber()))
-    else None
+    else if (null != request.getParameter("matchrests")) {
+      val view = new MatcherEntryView(request)
+      view.form.loglines.value = Some(loglineRests.mkString("\n"))
+      Some(Right(view))
+    } else None
 
   def maintext: NodeSeq = <p>Please select the next component for the grok pattern.
     You can select can either select a fixed string (e.g. a separator), a (possibly named) pattern from the grok
     pattern library, or a pattern you explicitly specify. Make your selection and press</p> ++ submit("Continue!")
 
-  def sidebox: NodeSeq = <span/>
+  def sidebox: NodeSeq = <p>To try out how regular expressions on the unmatched rests press</p> ++ submit("Match restlines!", "matchrests", "_blank")
 
   override def result: NodeSeq = <span/>
 
@@ -72,16 +77,20 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
         }
     ) ++
       formsection("To choose a continuation of your regular expression you can either choose a fixed string that is common to all log file line rests as a separator:") ++
-      <div class="ym-fbox-check">{commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(JoniRegexQuoter.quote(p), <code>
-            {'»' + p + '«'}
-          </code>)).reduceOption(_ ++ _).getOrElse(<span/>)}</div> ++
+      <div class="ym-fbox-check">
+        {commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(JoniRegexQuoter.quote(p), <code>
+        {'»' + p + '«'}
+      </code>)).reduceOption(_ ++ _).getOrElse(<span/>)}
+      </div> ++
       formsection("or select one of the following expressions from the grok library that matches a segment of the log lines:") ++
       form.nameOfNextPart.inputText("Optional: give name for the grok expression to retrieve it's match value", 20) ++
       table(
         rowheader2("Grok expression", "Matches at the start of the rest of the loglines") ++
           groknameListToMatchesCleanedup.map(grokoption)) ++
       formsection("or you can input a regex that will match the next part of all logfile lines:") ++
-      <div class="ym-fbox-check">{form.nextPart.radiobutton(form.nextPartPerHandMarker, "continue with handmade regex")}</div> ++
+      <div class="ym-fbox-check">
+        {form.nextPart.radiobutton(form.nextPartPerHandMarker, "continue with handmade regex")}
+      </div> ++
       form.nextPartPerHand.inputText("regular expression for next component:", 170)
   }
 
@@ -113,8 +122,8 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   def grokoption(grokopt: (List[String], List[String])) = grokopt match {
     case (groknames, restlinematches) =>
       row2(
-        <div class="ym-fbox-check">{
-        groknames.map(grokname =>
+        <div class="ym-fbox-check">
+          {groknames.map(grokname =>
           form.nextPart.radiobutton("%{" + grokname + "}", <code/>.copy(child = new Text("%{" + grokname + "}"))))
           .reduce(_ ++ _)}
         </div>, <pre/>.copy(child = new Text(restlinematches.mkString("\n")))
