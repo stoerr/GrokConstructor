@@ -73,14 +73,14 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
           case (start, rest) => row2(<code>
             {start}
           </code>, <code>
-            {rest}
+            {visibleWhitespaces(rest)}
           </code>)
         }
     )
     if (!constructionDone) { alreadymatchedtable ++
       formsection("To choose a continuation of your regular expression you can either choose a fixed string that is common to all log file line rests as a separator:") ++
       <div class="ym-fbox-check">{commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(JoniRegexQuoter.quote(p), <code>
-            {'»' + p + '«'}
+            {'»' + visibleWhitespaces(p) + '«'}
           </code>)).reduceOption(_ ++ _).getOrElse(<span/>)}</div> ++
       formsection("or select one of the following expressions from the grok library that matches a segment of the log lines:") ++
       form.nameOfNextPart.inputText("Optional: give name for the grok expression to retrieve it's match value", 20) ++
@@ -125,7 +125,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
         groknames.map(grokname =>
           form.nextPart.radiobutton("%{" + grokname + "}", <code/>.copy(child = new Text("%{" + grokname + "}"))))
           .reduce(_ ++ _)}
-        </div>, <pre/>.copy(child = new Text(restlinematches.mkString("\n")))
+        </div>, <pre/>.copy(child = new Text(visibleWhitespaces(restlinematches.mkString("\n"))))
       )
   }
 

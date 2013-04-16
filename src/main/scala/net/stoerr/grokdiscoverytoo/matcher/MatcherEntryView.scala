@@ -57,12 +57,12 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
               val (jmatch, subregex) = longestMatchOfRegexPrefix(pat, line)
               row2(warn("NOT MATCHED")) ++
                 row2("Longest prefix that matches", subregex) ++ {
-                for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, nameResult)
+                for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
               } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
                 ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
             case Some(jmatch) =>
               row2("MATCHED") ++ {
-                for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, nameResult)
+                for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
               } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
                 ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
           }

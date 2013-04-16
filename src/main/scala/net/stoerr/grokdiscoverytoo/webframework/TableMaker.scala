@@ -75,4 +75,7 @@ trait TableMaker {
 
   def formsection(title: String) = <h6 class="ym-fbox-heading">{title}</h6>
 
+  /** Makes whitespaces visible: replaces space by center dot and tab by right arrow towards bar */
+  def visibleWhitespaces(str: String) = str.replaceAll(" ","\u00B7").replaceAll("\t","\u21E5")
+
 }
