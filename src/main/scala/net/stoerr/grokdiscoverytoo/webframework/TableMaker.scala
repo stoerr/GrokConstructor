@@ -67,13 +67,17 @@ trait TableMaker {
     </th>
   </tr>
 
-  def submit(text: String) = <input type="submit" class="save ym-button ym-next" value={text} id="submit" name="submit"/>
+  def submit(text: String, name: String = "submit", target: String = "_self") =
+      <input type="submit" class="save ym-button ym-next" value={text}
+             id={name} name={name} formtarget={target}/>
 
   def buttonanchor(link: String, text: String) = <a href={fullpath(link)} class="ym-button ym-add">
     {text}
   </a>
 
-  def formsection(title: String) = <h6 class="ym-fbox-heading">{title}</h6>
+  def formsection(title: String) = <h6 class="ym-fbox-heading">
+    {title}
+  </h6>
 
   /** Makes whitespaces visible: replaces space by center dot and tab by right arrow towards bar */
   def visibleWhitespaces(str: String) = str.replaceAll(" ","\u00B7").replaceAll("\t","\u21E5")
