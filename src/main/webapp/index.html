@@ -40,6 +40,35 @@
             <a href="do/automatic">An attempt at automatic construction of the full expression</a>
         </p>
 
+        <h4>What is this about?</h4>
+
+        <p><a href="http://logstash.net/">Logstash</a> is a tool to collect log files from various sources, parse them
+            into a JSON
+            format
+            and put them into one or more databases, index engines and so forth. In the simplest case you can
+            slurp log files from the filesystem, parse them using grok - a collection of named regular expressions - and
+            put them into the integrated elastic search engine with a simple web frontend to search them.
+            In my experience the hardest part is to get the regular expressions for parsing the log files right.
+            The <a href="http://grokdebug.herokuapp.com/">Grok debugger</a> can help you test your regular expressions
+            and provides
+            Grok Discovery that sometimes can suggest regular expressions. This site, GrokDiscovery<sup>2</sup> (read:
+            Grok Discovery Too) goes beyond that by providing an incremental construction process that helps you to
+            construct a regular expression
+            that matches all of a set of given log lines, and provides you a matcher where you can simultaneously try
+            out your regular expression on several log lines.
+        </p>
+
+        <p>This page gives you a description of the individual applications; if you already know your way around you can
+            also
+            just go to the <a href="do/construction">incremental construction of grok expressions</a>, the
+            <a href="do/match">matcher to try out grok expressions on a couple of log lines</a>, or the
+            <a href="do/automatic">attempt at automatic construction of the full expression</a>.
+        </p>
+
+        <h4>About the Incremental Construction</h4>
+
+        <p></p>
+
         <p>If you like it please tell <a href="http://www.stoerr.net/">me</a>, as this mightily encourages further
             improvements
             to this service.
