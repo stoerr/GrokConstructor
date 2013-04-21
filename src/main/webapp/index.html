@@ -44,6 +44,8 @@
             If you want to know more beforehand, read on.
         </p>
 
+        <h4>Table of contents</h4>
+
         <h4>What is this about?</h4>
 
         <p><a href="http://logstash.net/">Logstash</a> is a tool to collect log files from various sources, parse them
@@ -62,16 +64,14 @@
             out your regular expression on several log lines.
         </p>
 
-        <p>This page gives you a description of the individual applications; if you already know your way around you can
-            also
-            just go to the <a href="do/construction">incremental construction of grok expressions</a>, the
-            <a href="do/match">matcher to try out grok expressions on a couple of log lines</a>, or the
-            <a href="do/automatic">attempt at automatic construction of the full expression</a>.
-        </p>
-
         <h4>Incremental Construction</h4>
 
-        <p></p>
+        <p>As input you provide a number of log lines and select the libraries of grok patterns you want to choose from.
+            It is possible to give additional grok patterns as well. A regular expression that matches all given log
+            lines simultaneously is then constructed step by step.
+            In each step you are prompted to select either a common prefix of the yet unmatched rests of the log lines,
+            or select one of the patterns from the grok library that matches a start segment of all rests of the log
+            lines.</p>
 
         <p>If you like it please tell <a href="http://www.stoerr.net/">me</a>, as this mightily encourages further
             improvements
