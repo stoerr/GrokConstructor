@@ -39,7 +39,7 @@
             right now you can just use the main menu to go to the applications. There is
             a short explanation at the top, and you can call up a random example to try things out.
             <br/><a href="do/construction">Incremental construction of grok expressions</a><br/>
-            <a href="do/match">Try out grok expressions on a couple of log lines</a><br/>
+            <a href="do/match">The matcher: Try out grok expressions on a couple of log lines</a><br/>
             <a href="do/automatic">An attempt at automatic construction of grok regular expressions</a><br/>
             If you want to know more beforehand, read on.
         </p>
@@ -67,11 +67,30 @@
         <h4>Incremental Construction</h4>
 
         <p>As input you provide a number of log lines and select the libraries of grok patterns you want to choose from.
-            It is possible to give additional grok patterns as well. A regular expression that matches all given log
-            lines simultaneously is then constructed step by step.
+            It is possible to give additional grok patterns as well. Starting from <code>\A</code> we step by step
+            construct a regular expression that matches all log lines simultaneously.
             In each step you are prompted to select either a common prefix of the yet unmatched rests of the log lines,
             or select one of the patterns from the grok library that matches a start segment of all rests of the log
-            lines.</p>
+            lines, or input a pattern that matches the next segment. In each case the next segment is usually the next
+            logigal entity to be parsed in the lines.</p>
+
+        <h4>Matcher</h4>
+
+        <p>The matcher allows you to check whether a regular expression matches all of a given set of log lines,
+            and </p>
+
+        <h4>Automatic Construction</h4>
+
+        <p>This was my first attempt at this; it is included more for fun than for usefulness. The idea is to find all 
+        </p>
+
+        <h4>Common features</h4>
+
+        <p>All services are session-less. Thus, you can open arbitrarily many windows simultaneously without conflicts.
+            Applying a <a href="http://logstash.net/docs/1.1.10/filters/multiline">multline filter</a> to collect
+            several lines that compose one log message (e.g. the message and a stacktrace) is also supported.</p>
+
+        <h4>Contact</h4>
 
         <p>If you like it please tell <a href="http://www.stoerr.net/">me</a>, as this mightily encourages further
             improvements
