@@ -33,81 +33,136 @@
     </nav>
     <div id="main">
 
-        <h4>Impatient? Or you already know your way around?</h4>
+        <div class="ym-grid">
+            <div class="ym-g66 ym-gl">
+                <div class="ym-gbox">
+                    <h3>What is this about?</h3>
 
-        <p><a href="http://en.wikipedia.org/wiki/Wikipedia:Too_long;_didn%27t_read">TLDR</a>? If you want to get started
-            right now you can just use the main menu to go to the applications. There is
-            a short explanation at the top, and you can call up a random example to try things out.
-            <br/><a href="do/construction">Incremental construction of grok expressions</a><br/>
-            <a href="do/match">The matcher: Try out grok expressions on a couple of log lines</a><br/>
-            <a href="do/automatic">An attempt at automatic construction of grok regular expressions</a><br/>
-            If you want to know more beforehand, read on.
-        </p>
+                    <p><a href="http://logstash.net/">Logstash</a> is a tool to collect log files from various sources,
+                        parse them
+                        into a JSON
+                        format
+                        and put them into one or more databases, index engines and so forth. In the simplest case you
+                        can
+                        slurp log files from the filesystem, parse them using grok - a collection of named regular
+                        expressions - and
+                        put them into the integrated elastic search engine with a simple web frontend to search them.
+                        In my experience the hardest part is to get the regular expressions for parsing the log files
+                        right.
+                        The <a href="http://grokdebug.herokuapp.com/">Grok debugger</a> can help you test your regular
+                        expressions
+                        and provides
+                        Grok Discovery that sometimes can suggest regular expressions. This site,
+                        GrokDiscovery<sup>2</sup> (read:
+                        Grok Discovery Too) goes beyond that by providing an incremental construction process that helps
+                        you to
+                        construct a regular expression
+                        that matches all of a set of given log lines, and provides you a matcher where you can
+                        simultaneously try
+                        out your regular expression on several log lines.
+                    </p>
+                </div>
+            </div>
+            <div class="ym-g33 ym-gr">
+                <div class="ym-gbox">
+                    <div class="box info">
+                        <h3>Impatient? Know it?</h3>
 
-        <h4>Table of contents</h4>
+                        <p><a href="http://en.wikipedia.org/wiki/Wikipedia:Too_long;_didn%27t_read">TLDR</a>? If you
+                            want to get started
+                            right now you can just use the main menu to go to the applications. There is
+                            a short explanation at the top, and you can call up a random example to try things out.
+                            If you want to know more beforehand, read on.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ym-gbox"><h2>The applications</h2></div>
+        <div class="ym-grid">
+            <div class="ym-g33 ym-gl">
+                <div class="ym-gbox">
+                    <h3>Incremental Construction</h3>
 
-        <h4>What is this about?</h4>
+                    <p>For the <a href="do/construction">incremental construction of grok expressions</a> you provide as
+                        input
+                        a number of log lines and select the libraries of grok patterns you want to choose from.
+                        It is possible to give additional grok patterns as well. Starting from <code>\A</code> we step
+                        by step
+                        construct a regular expression that matches all log lines simultaneously.
+                        In each step you are prompted to select either a common prefix of the yet unmatched rests of the
+                        log lines,
+                        or select one of the patterns from the grok library that matches a start segment of all rests of
+                        the log
+                        lines, or input a pattern that matches the next segment. In each case the next segment is
+                        usually the next
+                        logigal entity to be parsed in the lines.</p>
+                </div>
+            </div>
+            <div class="ym-g33 ym-gl">
+                <div class="ym-gbox">
+                    <h3>Matcher</h3>
 
-        <p><a href="http://logstash.net/">Logstash</a> is a tool to collect log files from various sources, parse them
-            into a JSON
-            format
-            and put them into one or more databases, index engines and so forth. In the simplest case you can
-            slurp log files from the filesystem, parse them using grok - a collection of named regular expressions - and
-            put them into the integrated elastic search engine with a simple web frontend to search them.
-            In my experience the hardest part is to get the regular expressions for parsing the log files right.
-            The <a href="http://grokdebug.herokuapp.com/">Grok debugger</a> can help you test your regular expressions
-            and provides
-            Grok Discovery that sometimes can suggest regular expressions. This site, GrokDiscovery<sup>2</sup> (read:
-            Grok Discovery Too) goes beyond that by providing an incremental construction process that helps you to
-            construct a regular expression
-            that matches all of a set of given log lines, and provides you a matcher where you can simultaneously try
-            out your regular expression on several log lines.
-        </p>
+                    <p>The matcher allows you to <a href="do/match">try out grok expressions on a couple of log
+                        lines</a>.</p>
+                </div>
+            </div>
+            <div class="ym-g33 ym-gr">
+                <div class="ym-gbox">
+                    <h3>Automatic Construction</h3>
 
-        <h4>Incremental Construction</h4>
+                    <p>My first attempt was to try <a href="do/automatic">automatic construction of grok regular
+                        expressions</a>.
+                        It is included more for fun than for usefulness. The idea is to find all
+                    </p>
+                </div>
+            </div>
+        </div>
 
-        <p>As input you provide a number of log lines and select the libraries of grok patterns you want to choose from.
-            It is possible to give additional grok patterns as well. Starting from <code>\A</code> we step by step
-            construct a regular expression that matches all log lines simultaneously.
-            In each step you are prompted to select either a common prefix of the yet unmatched rests of the log lines,
-            or select one of the patterns from the grok library that matches a start segment of all rests of the log
-            lines, or input a pattern that matches the next segment. In each case the next segment is usually the next
-            logigal entity to be parsed in the lines.</p>
+        <div class="ym-grid">
+            <div class="ym-g33 ym-gl">
+                <div class="ym-gbox">
+                    <h3>Common features</h3>
 
-        <h4>Matcher</h4>
+                    <p>All services are session-less. Thus, you can open arbitrarily many windows simultaneously without
+                        conflicts.
+                        Applying a <a href="http://logstash.net/docs/1.1.10/filters/multiline">multline filter</a> to
+                        collect
+                        several lines that compose one log message (e.g. the message and a stacktrace) is also
+                        supported.</p>
+                </div>
+            </div>
+            <div class="ym-g33 ym-gl">
+                <div class="ym-gbox">
+                    <h3>Contact</h3>
 
-        <p>The matcher allows you to check whether a regular expression matches all of a given set of log lines,
-            and </p>
+                    <p>If you like it please tell <a href="http://www.stoerr.net/">me</a>, as this mightily encourages
+                        further
+                        improvements
+                        to this service.
+                        If you want to make me really happy please include suggestions, bugs, regular expressions you
+                        found useful,
+                        real
+                        life examples where
+                        the service gives particularily good or bad results, or some CSS that would make these pages
+                        look halfway
+                        decent.
+                        :-)</p>
+                </div>
+            </div>
+            <div class="ym-g33 ym-gl">
+                <div class="ym-gbox">
+                    <h3>DISCLAIMER</h3>
 
-        <h4>Automatic Construction</h4>
+                    <p>This is done just for fun and you don't pay me for this, thus you get absolutely and utterly and
+                        completely no
+                        warranties of any kind to the extend permitted by law. Even if the program jumps out of your
+                        screen and
+                        chews at your leg.</p>
+                </div>
+            </div>
+        </div>
 
-        <p>This was my first attempt at this; it is included more for fun than for usefulness. The idea is to find all 
-        </p>
-
-        <h4>Common features</h4>
-
-        <p>All services are session-less. Thus, you can open arbitrarily many windows simultaneously without conflicts.
-            Applying a <a href="http://logstash.net/docs/1.1.10/filters/multiline">multline filter</a> to collect
-            several lines that compose one log message (e.g. the message and a stacktrace) is also supported.</p>
-
-        <h4>Contact</h4>
-
-        <p>If you like it please tell <a href="http://www.stoerr.net/">me</a>, as this mightily encourages further
-            improvements
-            to this service.
-            If you want to make me really happy please include suggestions, bugs, regular expressions you found useful,
-            real
-            life examples where
-            the service gives particularily good or bad results, or some CSS that would make these pages look halfway
-            decent.
-            :-)</p>
-
-        <h4>DISCLAIMER</h4>
-
-        <p>This is done just for fun and you don't pay me for this, thus you get absolutely and utterly and
-            completely no
-            warranties of any kind to the extend permitted by law. Even if the program jumps out of your screen and
-            chews at your leg.</p>
 
     </div>
     <footer>
