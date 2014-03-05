@@ -6,6 +6,7 @@ import net.stoerr.grokdiscoverytoo.incremental.{IncrementalConstructionStepView,
 import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView
 import scala.xml.{Elem, NodeSeq}
 import org.slf4j.LoggerFactory
+import scala.collection.JavaConversions
 
 /**
  * Servlet that forwards the request to a controller and displays the view.
@@ -74,6 +75,9 @@ class WebDispatcher extends HttpServlet {
       navlink(MatcherEntryView.path, "Matcher") ++ navlink(AutomaticDiscoveryView.path, "Automatic Construction")
   }
 
-  def reqInfo(req: HttpServletRequest): String = req.getRequestURL + "?" + req.getQueryString + ":" + req.getParameterMap
+  def reqInfo(req: HttpServletRequest): String = {
+    import JavaConversions._
+    req.getRequestURL + "?" + req.getQueryString + ":" + req.getParameterMap.mapValues(java.util.Arrays.asList(_))
+  }
 
 }

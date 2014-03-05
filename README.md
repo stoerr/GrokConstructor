@@ -9,5 +9,7 @@ that match a whole set of logfile lines by using groks patterns and fixed string
 Status: works in parts.
 
 TODO:
-- Remove selection of grok libraries for matcher and construction.
-- Call matcher from incremental construction with the rests of the lines.
+- Error handling in incremental matching
+
+TODO eventually:
+- Move error box on top of page
