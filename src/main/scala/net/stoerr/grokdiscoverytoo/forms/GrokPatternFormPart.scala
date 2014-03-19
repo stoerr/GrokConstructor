@@ -25,9 +25,11 @@ trait GrokPatternFormPart extends WebForm {
   def grokpatternEntry =
     <div class="ym-fbox-text">
       <label>
-        Please mark the libraries of grok Patterns from
+        Please mark the libraries of
+        <a href="http://logstash.net/docs/1.1.9/filters/grok">grok Patterns</a>
+        from
         <a href="http://logstash.net/">logstash</a>
-        v.1.19 which you want to use:</label>
+        v.1.1.9 which you want to use:</label>
     </div> ++ groklibs.checkboxes(GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap) ++
       <div class="ym-fbox-text">
         <label>and some extras from me</label>

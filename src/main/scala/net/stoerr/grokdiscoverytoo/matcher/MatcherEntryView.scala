@@ -65,7 +65,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
                 } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
                   ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
               case Some(jmatch) =>
-                row2("MATCHED") ++ {
+                row2(<b>MATCHED</b>) ++ {
                   for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
                 } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
                   ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
