@@ -62,11 +62,6 @@
             <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>7.6.0.v20120127</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -133,7 +128,7 @@
                         </connector>
                     </connectors>
                     <webApp>
-                        <contextPath>/GrokDiscoveryToo</contextPath>
+                        <contextPath>/</contextPath>
                     </webApp>
                 </configuration>
             </plugin>

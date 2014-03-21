@@ -13,6 +13,7 @@ class GrokLibraryServlet extends HttpServlet {
     if (path.startsWith("/")) {
       response.setContentType("text/plain")
       response.setStatus(HttpServletResponse.SC_OK)
+      response.setDateHeader("Expires", System.currentTimeMillis() + 86400000L)
       GrokPatternLibrary.grokSource(path.substring(1)).getLines().foreach(response.getWriter.println(_))
     }
   }

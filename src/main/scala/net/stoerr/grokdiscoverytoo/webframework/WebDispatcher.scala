@@ -32,6 +32,9 @@ class WebDispatcher extends HttpServlet {
           req.setAttribute("title", view.title)
           req.setAttribute("body", view.body)
           req.setAttribute("navigation", navigation(req))
+          resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+          resp.setHeader("Pragma", "no-cache"); // HTTP 1.0
+          resp.setDateHeader("Expires", 0);
           getServletContext.getRequestDispatcher("/jsp/frame.jsp").forward(req, resp)
       }
     } catch {

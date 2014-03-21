@@ -12,6 +12,14 @@
         <servlet-name>web</servlet-name>
         <servlet-class>net.stoerr.grokdiscoverytoo.webframework.WebDispatcher</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>org.eclipse.jetty.servlet.DefaultServlet</servlet-class>
+        <init-param>
+            <param-name>cacheControl</param-name>
+            <param-value>max-age=3600,public</param-value>
+        </init-param>
+    </servlet>
     <servlet-mapping>
         <servlet-name>library</servlet-name>
         <url-pattern>/groklib/*</url-pattern>
