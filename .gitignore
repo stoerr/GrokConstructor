@@ -12,3 +12,6 @@ project/plugins/project/
 #IDEA specifics
 .idea/
 *.iml
+/.classpath
+/.project
+/.settings
