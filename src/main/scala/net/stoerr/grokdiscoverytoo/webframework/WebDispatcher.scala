@@ -6,7 +6,6 @@ import net.stoerr.grokdiscoverytoo.incremental.{IncrementalConstructionStepView,
 import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView
 import scala.xml.{Elem, NodeSeq}
 import org.slf4j.LoggerFactory
-import scala.collection.JavaConversions
 
 /**
  * Servlet that forwards the request to a controller and displays the view.
@@ -41,7 +40,8 @@ class WebDispatcher extends HttpServlet {
       case e: Exception =>
         logger.error(reqInfo(req), e)
         val writer = resp.getWriter
-        writer.println("OUCH! AGH! AAAH! BUG! Please contact Hans-Peter Stoerr www.stoerr.net with the following:\n\n")
+        writer.println("OUCH! AGH! AAAH! BUG! Please contact Hans-Peter Stoerr www.stoerr.net with the following, or "
+          + "open an issue on https://github.com/stoerr/GrokDiscoveryToo/issues:\n\n")
         e.printStackTrace(writer)
         writer.println("\n\nRequest Info:\n" + reqInfo(req))
     }
@@ -79,8 +79,7 @@ class WebDispatcher extends HttpServlet {
   }
 
   def reqInfo(req: HttpServletRequest): String = {
-    import JavaConversions._
-    req.getRequestURL + "?" + req.getQueryString + ":" + req.getParameterMap.mapValues(java.util.Arrays.asList(_))
+    req.getRequestURL + "?" + req.getQueryString + ":" + req.getParameterMap
   }
 
 }
