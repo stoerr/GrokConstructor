@@ -14,7 +14,7 @@ import org.joni.exception.SyntaxException
 class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
   override val title: String = "Test grok patterns"
 
-  override def action = MatcherEntryView.path
+  override def action = MatcherEntryView.path + "#result"
 
   val form = MatcherForm(request)
 
@@ -27,7 +27,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
   </p> ++ submit("Go!")
 
   override def sidebox: NodeSeq = <p>
-    You can also just try this out with a</p> ++ buttonanchor(action + "?randomize", "random example")
+    You can also just try this out with a</p> ++ buttonanchor(MatcherEntryView.path + "?randomize", "random example")
 
   override def formparts: NodeSeq = form.loglinesEntry ++
     form.patternEntry ++

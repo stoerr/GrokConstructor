@@ -29,6 +29,8 @@ trait WebView extends TableMaker {
       {title}
     </h4> <form class="ym-form ym-full" action={fullpath(action)} method="post">
       {inputform}
-    </form> ++ result
+    </form> ++ <a id="result">
+      <span/>
+    </a> ++ result
 
 }
