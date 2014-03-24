@@ -18,4 +18,3 @@ TODO:
 TODO eventually:
 - Move error box on top of page
 - AutomaticDiscoveryView: use simpler examples such that the output makes sense.
-- Check all grok libraries on first call

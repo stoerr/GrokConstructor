@@ -52,8 +52,8 @@ trait WebForm extends TableMaker {
   }
 
   /** An input that can have several values at once. That is, a set of checkboxes. */
-  case class InputMultipleChoice(name: String, keysToText: Map[String, NodeSeq]) extends WebFormElement {
-    var values: List[String] = Option(request.getParameterValues(name)).getOrElse(Array()).toList
+  case class InputMultipleChoice(name: String, keysToText: Map[String, NodeSeq], defaultKeys: Seq[String]) extends WebFormElement {
+    var values: List[String] = Option(request.getParameterValues(name)).map(_.toList).getOrElse(defaultKeys.toList)
 
     def checkboxes: Elem = <div class="ym-fbox-check">
       {for ((key, description) <- keysToText.toList) yield

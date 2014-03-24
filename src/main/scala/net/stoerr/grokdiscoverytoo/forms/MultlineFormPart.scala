@@ -21,7 +21,7 @@ trait MultlineFormPart extends WebForm {
   /** Whether to negate the multlineRegex: if false we will append
     * lines that do <em>not</em> match the filter, else we will append
     * lines that do match the filter. */
-  val multlineNegate = InputMultipleChoice("multlinenegate", Map(negatekey -> <span>negate the multline regex</span>))
+  val multlineNegate = InputMultipleChoice("multlinenegate", Map(negatekey -> <span>negate the multline regex</span>), List())
 
   def multlineEntry: NodeSeq =
     multlineRegex.inputText("If you want to use logstash's multline filter please specify the used regex:", 80) ++

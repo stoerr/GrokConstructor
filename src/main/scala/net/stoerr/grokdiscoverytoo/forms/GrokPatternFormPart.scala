@@ -11,9 +11,9 @@ import xml.NodeSeq
  */
 trait GrokPatternFormPart extends WebForm {
 
-  val groklibs = InputMultipleChoice("groklibs", GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap)
+  val groklibs = InputMultipleChoice("groklibs", GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap, GrokPatternLibrary.grokpatternnames)
 
-  val extralibs = InputMultipleChoice("grokextralibs", GrokPatternLibrary.extrapatternnames.map(keyToGrokLink).toMap)
+  val extralibs = InputMultipleChoice("grokextralibs", GrokPatternLibrary.extrapatternnames.map(keyToGrokLink).toMap, List())
 
   val grokadditionalinput = InputText("grokadditional")
 
