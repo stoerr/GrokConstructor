@@ -62,7 +62,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
             {"%{" + patterns(0) + "}"}
           </span>
           case NamedRegex(patterns) => <select>
-            {patterns map {
+            {patterns.sorted map {
               pattern => <option>
                 {"%{" + pattern + "}"}
               </option>

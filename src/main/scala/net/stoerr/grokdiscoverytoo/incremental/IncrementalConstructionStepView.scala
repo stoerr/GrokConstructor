@@ -132,7 +132,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
     case (groknames, restlinematches) =>
       row2(
         <div class="ym-fbox-check">
-          {groknames.map(grokname =>
+          {groknames.sorted.map(grokname =>
           form.nextPart.radiobutton("%{" + grokname + "}", <code/>.copy(child = new Text("%{" + grokname + "}"))))
           .reduce(_ ++ _)}
         </div>, <pre/>.copy(child = new Text(visibleWhitespaces(restlinematches.mkString("\n"))))
