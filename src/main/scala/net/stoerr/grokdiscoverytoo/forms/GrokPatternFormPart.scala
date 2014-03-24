@@ -11,9 +11,9 @@ import xml.NodeSeq
  */
 trait GrokPatternFormPart extends WebForm {
 
-  val groklibs = InputMultipleChoice("groklibs")
+  val groklibs = InputMultipleChoice("groklibs", GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap)
 
-  val extralibs = InputMultipleChoice("grokextralibs")
+  val extralibs = InputMultipleChoice("grokextralibs", GrokPatternLibrary.extrapatternnames.map(keyToGrokLink).toMap)
 
   val grokadditionalinput = InputText("grokadditional")
 
@@ -30,10 +30,10 @@ trait GrokPatternFormPart extends WebForm {
         from
         <a href="http://logstash.net/">logstash</a>
         v.1.1.9 which you want to use:</label>
-    </div> ++ groklibs.checkboxes(GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap) ++
+    </div> ++ groklibs.checkboxes ++
       <div class="ym-fbox-text">
         <label>and some extras from me</label>
-      </div> ++ extralibs.checkboxes(GrokPatternLibrary.extrapatternnames.map(keyToGrokLink).toMap) ++
+      </div> ++ extralibs.checkboxes ++
       grokadditionalinput.inputTextArea("You can also provide some additional grok patterns in the same format:", 5, 180)
 
   def grokhiddenfields: NodeSeq = groklibs.hiddenField ++ extralibs.hiddenField ++ grokadditionalinput.hiddenField

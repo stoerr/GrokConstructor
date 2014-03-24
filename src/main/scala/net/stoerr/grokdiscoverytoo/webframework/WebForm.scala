@@ -52,10 +52,10 @@ trait WebForm extends TableMaker {
   }
 
   /** An input that can have several values at once. That is, a set of checkboxes. */
-  case class InputMultipleChoice(name: String) extends WebFormElement {
+  case class InputMultipleChoice(name: String, keysToText: Map[String, NodeSeq]) extends WebFormElement {
     var values: List[String] = Option(request.getParameterValues(name)).getOrElse(Array()).toList
 
-    def checkboxes(keysToText: Map[String, NodeSeq]): Elem = <div class="ym-fbox-check">
+    def checkboxes: Elem = <div class="ym-fbox-check">
       {for ((key, description) <- keysToText.toList) yield
           <input type="checkbox" checked={if (values.contains(key)) "checked" else null} name={name} id={name + "-" + key} value={key}/> ++
           <label for={name + "-" + key}>
