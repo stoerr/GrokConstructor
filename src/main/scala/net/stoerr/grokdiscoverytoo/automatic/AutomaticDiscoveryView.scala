@@ -36,8 +36,8 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
   def formparts: NodeSeq = form.loglinesEntry ++ form.grokpatternEntry
 
   override def result: NodeSeq = {
-    val linesOpt = form.loglines.valueSplitToLines.map(form.multlineFilter(_))
-    linesOpt.map(_.toList).map(matchingRegexpStructures).map(resultTable).getOrElse(<span/>)
+    val linesOpt = form.multlineFilter(form.loglines.valueSplitToLines).toList
+    resultTable(matchingRegexpStructures(linesOpt))
   }
 
   override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None

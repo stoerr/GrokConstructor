@@ -22,7 +22,7 @@ trait WebForm extends TableMaker {
   case class InputText(name: String) extends WebFormElement {
     var value: Option[String] = Option(request.getParameter(name)).filterNot(_.isEmpty)
 
-    def valueSplitToLines: Option[Array[String]] = value.map(_.split("\r?\n"))
+    def valueSplitToLines: Array[String] = value.map(_.split("\r?\n")).getOrElse(Array())
 
     def inputText(label: String, cols: Int, enabled: Boolean = true): Elem =
       <div class="ym-fbox-text">

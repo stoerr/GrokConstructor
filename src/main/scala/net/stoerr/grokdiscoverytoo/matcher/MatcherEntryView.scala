@@ -52,7 +52,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
     try {
       val regex = new JoniRegex(patternGrokked)
       try {
-      val lines: Seq[String] = form.multlineFilter(form.loglines.valueSplitToLines.get)
+        val lines: Seq[String] = form.multlineFilter(form.loglines.valueSplitToLines)
       return <hr/> ++ <table class="bordertable narrow">
         {for (line <- lines) yield {
           rowheader2(line) ++ {
