@@ -2,6 +2,7 @@ package net.stoerr.grokdiscoverytoo
 
 import util.matching.Regex
 import scala.io.{BufferedSource, Source}
+import java.io.InputStream
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -22,8 +23,9 @@ object GrokPatternLibrary {
 
   def grokSource(location: String): Source = {
     if (!location.matches("^[a-z-]+$")) throw new IllegalArgumentException("Invalid fullpath " + location)
-    val stream: BufferedSource = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("/grok/" + location))
-    if (null == stream) throw new IllegalArgumentException("Could not find " + location)
+    val inputStream: InputStream = getClass.getResourceAsStream("/grok/" + location)
+    if (null == inputStream) throw new IllegalArgumentException("Could not find " + location)
+    val stream: BufferedSource = Source.fromInputStream(inputStream)
     return stream
   }
 

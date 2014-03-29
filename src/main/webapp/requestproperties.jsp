@@ -27,7 +27,7 @@
         Collections.sort(vals, String.CASE_INSENSITIVE_ORDER);
         return vals;
     }
-    
+
     public String escape(Object obj) {
         return (""+String.valueOf(obj)).replace("&", "&amp;").replaceAll("<", "&lt;");
     }
@@ -163,6 +163,23 @@ app.clusterNodeId / tomcat.jvmroute
         while (it.hasNext()) {
             String name = (String) it.next();
             Object obj = session.getAttribute(name);
+    %>
+    <tr>
+        <td><%=name%></td>
+        <td><%=escape(obj)%></td>
+    </tr>
+    <%
+        }
+    %>
+</table>
+<%-- ============================================================  --%>
+<h2>System properties:</h2>
+<table border="1" width="100%">
+    <%
+        it = sortedValues(System.getProperties().keys()).iterator();
+        while (it.hasNext()) {
+            String name = (String) it.next();
+            Object obj = System.getProperty(name);
     %>
     <tr>
         <td><%=name%></td>

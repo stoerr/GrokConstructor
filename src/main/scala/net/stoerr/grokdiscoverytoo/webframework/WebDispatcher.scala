@@ -5,7 +5,7 @@ import net.stoerr.grokdiscoverytoo.matcher.MatcherEntryView
 import net.stoerr.grokdiscoverytoo.incremental.{IncrementalConstructionStepView, IncrementalConstructionInputView}
 import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView
 import scala.xml.{Elem, NodeSeq}
-import org.slf4j.LoggerFactory
+import java.util.logging.{Level, Logger}
 
 /**
  * Servlet that forwards the request to a controller and displays the view.
@@ -14,14 +14,14 @@ import org.slf4j.LoggerFactory
  */
 class WebDispatcher extends HttpServlet {
 
-  val logger = LoggerFactory.getLogger(getClass)
+  val logger = Logger.getLogger("WebDispatcher")
 
   override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
     doGet(req, resp)
   }
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    logger.info("Processing request {}", reqInfo(req))
+    logger.fine("Processing request " + reqInfo(req))
     try {
       val vieworredirect: Either[String, WebView] = giveView(req)
       vieworredirect match {
@@ -38,7 +38,7 @@ class WebDispatcher extends HttpServlet {
       }
     } catch {
       case e: Exception =>
-        logger.error(reqInfo(req), e)
+        logger.log(Level.SEVERE, reqInfo(req), e)
         val writer = resp.getWriter
         writer.println("OUCH! AGH! AAAH! BUG! Please contact Hans-Peter Stoerr www.stoerr.net with the following, or "
           + "open an issue on https://github.com/stoerr/GrokDiscoveryToo/issues:\n\n")
