@@ -1,9 +1,9 @@
-package net.stoerr.grokdiscoverytoo.webframework
+package net.stoerr.grokconstructor.webframework
 
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
-import net.stoerr.grokdiscoverytoo.matcher.MatcherEntryView
-import net.stoerr.grokdiscoverytoo.incremental.{IncrementalConstructionStepView, IncrementalConstructionInputView}
-import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView
+import net.stoerr.grokconstructor.matcher.MatcherEntryView
+import net.stoerr.grokconstructor.incremental.{IncrementalConstructionStepView, IncrementalConstructionInputView}
+import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
 import scala.xml.{Elem, NodeSeq}
 import java.util.logging.{Level, Logger}
 
@@ -41,7 +41,7 @@ class WebDispatcher extends HttpServlet {
         logger.log(Level.SEVERE, reqInfo(req), e)
         val writer = resp.getWriter
         writer.println("OUCH! AGH! AAAH! BUG! Please contact Hans-Peter Stoerr www.stoerr.net with the following, or "
-          + "open an issue on https://github.com/stoerr/GrokDiscoveryToo/issues:\n\n")
+          + "open an issue on https://github.com/stoerr/GrokConstructor/issues:\n\n")
         e.printStackTrace(writer)
         writer.println("\n\nRequest Info:\n" + reqInfo(req))
     }

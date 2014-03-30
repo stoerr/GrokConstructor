@@ -1,9 +1,9 @@
-package net.stoerr.grokdiscoverytoo.incremental
+package net.stoerr.grokconstructor.incremental
 
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.webframework.{WebView, WebViewWithHeaderAndSidebox}
+import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
 import xml.NodeSeq
-import net.stoerr.grokdiscoverytoo.RandomTryLibrary
+import net.stoerr.grokconstructor.RandomTryLibrary
 
 /**
  * Entry for the start parameters for the incremental construction of grok patterns.

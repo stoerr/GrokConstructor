@@ -1,4 +1,4 @@
-package net.stoerr.grokdiscoverytoo
+package net.stoerr.grokconstructor
 
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
 

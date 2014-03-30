@@ -2,10 +2,12 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.stoerr</groupId>
-    <artifactId>GrokDiscoveryToo</artifactId>
+    <artifactId>GrokConstructor</artifactId>
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <description>GrokDiscovery rethought</description>
+    <description>Semi-automatic incremental construction and debugging of regular expressions for grok to parse logfiles
+        for logstash http://logstash.net/ . Deployed at http://grokconstructor.appspot.com/ .
+    </description>
 
     <properties>
         <appengine.app.version>1</appengine.app.version>

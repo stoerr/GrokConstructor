@@ -1,6 +1,6 @@
-package net.stoerr.grokdiscoverytoo.forms
+package net.stoerr.grokconstructor.forms
 
-import net.stoerr.grokdiscoverytoo.webframework.WebForm
+import net.stoerr.grokconstructor.webframework.WebForm
 
 /**
  * Form for input of some loglines.

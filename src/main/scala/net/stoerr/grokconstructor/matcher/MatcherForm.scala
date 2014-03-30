@@ -1,8 +1,8 @@
-package net.stoerr.grokdiscoverytoo.matcher
+package net.stoerr.grokconstructor.matcher
 
-import net.stoerr.grokdiscoverytoo.webframework.WebForm
+import net.stoerr.grokconstructor.webframework.WebForm
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.forms.{MultlineFormPart, LoglinesFormPart, GrokPatternFormPart}
+import net.stoerr.grokconstructor.forms.{MultlineFormPart, LoglinesFormPart, GrokPatternFormPart}
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>

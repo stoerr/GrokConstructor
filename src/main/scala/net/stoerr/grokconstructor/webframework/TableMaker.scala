@@ -1,4 +1,4 @@
-package net.stoerr.grokdiscoverytoo.webframework
+package net.stoerr.grokconstructor.webframework
 
 import xml.{Node, Text, NodeSeq}
 import javax.servlet.http.HttpServletRequest
@@ -80,6 +80,6 @@ trait TableMaker {
   </h6>
 
   /** Makes whitespaces visible: replaces space by center dot and tab by right arrow towards bar */
-  def visibleWhitespaces(str: String) = str.replaceAll(" ","\u00B7").replaceAll("\t","\u21E5")
+  def visibleWhitespaces(str: String) = str.replaceAll(" ", "\u00B7").replaceAll("\t", "\u21E5")
 
 }

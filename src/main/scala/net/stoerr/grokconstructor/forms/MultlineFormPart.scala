@@ -1,8 +1,8 @@
-package net.stoerr.grokdiscoverytoo.forms
+package net.stoerr.grokconstructor.forms
 
-import net.stoerr.grokdiscoverytoo.webframework.WebForm
+import net.stoerr.grokconstructor.webframework.WebForm
 import xml.NodeSeq
-import net.stoerr.grokdiscoverytoo.JoniRegex
+import net.stoerr.grokconstructor.JoniRegex
 
 /**
  * Form-Part that simulates http://logstash.net/docs/1.1.9/filters/multiline .

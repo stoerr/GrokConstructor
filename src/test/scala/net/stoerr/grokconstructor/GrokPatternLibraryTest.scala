@@ -1,4 +1,4 @@
-package net.stoerr.grokdiscoverytoo
+package net.stoerr.grokconstructor
 
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FlatSpec

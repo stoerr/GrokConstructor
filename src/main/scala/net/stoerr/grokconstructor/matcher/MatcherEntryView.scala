@@ -1,8 +1,8 @@
-package net.stoerr.grokdiscoverytoo.matcher
+package net.stoerr.grokconstructor.matcher
 
-import net.stoerr.grokdiscoverytoo.webframework.{WebViewWithHeaderAndSidebox, WebView}
+import net.stoerr.grokconstructor.webframework.{WebViewWithHeaderAndSidebox, WebView}
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.{RandomTryLibrary, JoniRegex, GrokPatternLibrary}
+import net.stoerr.grokconstructor.{RandomTryLibrary, JoniRegex, GrokPatternLibrary}
 import xml.NodeSeq
 import scala.collection.immutable.NumericRange
 import org.joni.exception.SyntaxException
@@ -53,35 +53,39 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
       val regex = new JoniRegex(patternGrokked)
       try {
         val lines: Seq[String] = form.multlineFilter(form.loglines.valueSplitToLines)
-      return <hr/> ++ <table class="bordertable narrow">
-        {for (line <- lines) yield {
-          rowheader2(line) ++ {
-            regex.findIn(line) match {
-              case None =>
-                val (jmatch, subregex) = longestMatchOfRegexPrefix(pat, line)
-                row2(warn("NOT MATCHED")) ++
-                  row2("Longest prefix that matches", subregex) ++ {
-                  for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
-                } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
-                  ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
-              case Some(jmatch) =>
-                row2(<b>MATCHED</b>) ++ {
-                  for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
-                } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
-                  ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
+        return <hr/> ++ <table class="bordertable narrow">
+          {for (line <- lines) yield {
+            rowheader2(line) ++ {
+              regex.findIn(line) match {
+                case None =>
+                  val (jmatch, subregex) = longestMatchOfRegexPrefix(pat, line)
+                  row2(warn("NOT MATCHED")) ++
+                    row2("Longest prefix that matches", subregex) ++ {
+                    for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
+                  } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
+                    ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
+                case Some(jmatch) =>
+                  row2(<b>MATCHED</b>) ++ {
+                    for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
+                  } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
+                    ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
+              }
             }
-          }
-        }}
-      </table>
+          }}
+        </table>
       } catch {
         case multlineSyntaxException: SyntaxException =>
-            return <hr/> ++ <p class="box error">Syntaxfehler in the pattern for the multline filter {form.multlineRegex.value.get}:
+          return <hr/> ++ <p class="box error">Syntaxfehler in the pattern for the multline filter
+            {form.multlineRegex.value.get}
+            :
             <br/>{multlineSyntaxException.getMessage}
           </p>
       }
     } catch {
       case patternSyntaxException: SyntaxException =>
-          return <hr/> ++ <p class="box error">Syntaxfehler in the given pattern {pat}:
+        return <hr/> ++ <p class="box error">Syntaxfehler in the given pattern
+          {pat}
+          :
           <br/>{patternSyntaxException.getMessage}
         </p>
     }

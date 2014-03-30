@@ -1,7 +1,7 @@
-package net.stoerr.grokdiscoverytoo.automatic
+package net.stoerr.grokconstructor.automatic
 
-import net.stoerr.grokdiscoverytoo.webframework.WebForm
-import net.stoerr.grokdiscoverytoo.forms.{MultlineFormPart, GrokPatternFormPart, LoglinesFormPart}
+import net.stoerr.grokconstructor.webframework.WebForm
+import net.stoerr.grokconstructor.forms.{MultlineFormPart, GrokPatternFormPart, LoglinesFormPart}
 import javax.servlet.http.HttpServletRequest
 
 /**

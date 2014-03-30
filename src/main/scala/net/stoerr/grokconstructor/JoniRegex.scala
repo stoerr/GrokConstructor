@@ -1,6 +1,6 @@
-package net.stoerr.grokdiscoverytoo
+package net.stoerr.grokconstructor
 
-import org.joni.{CaptureTreeNode, NameEntry, Matcher, Regex}
+import org.joni.{NameEntry, Matcher, Regex}
 import org.jcodings.specific.UTF8Encoding
 
 /**
@@ -69,6 +69,7 @@ case class JoniRegex(regex: String) {
 case class StartMatch(length: Int, matched: String, rest: String)
 
 object JoniRegexQuoter {
-  /** Quotes a string such that it can serve as a literal expression */ // [.(|?*+{^$
-  def quote(str: String) : String = str.replaceAll("([.|?*+{^$(\\[\\\\])", "\\\\$1")
+  /** Quotes a string such that it can serve as a literal expression */
+  // [.(|?*+{^$
+  def quote(str: String): String = str.replaceAll("([.|?*+{^$(\\[\\\\])", "\\\\$1")
 }

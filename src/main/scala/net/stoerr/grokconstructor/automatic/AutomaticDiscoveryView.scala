@@ -1,10 +1,10 @@
-package net.stoerr.grokdiscoverytoo.automatic
+package net.stoerr.grokconstructor.automatic
 
-import net.stoerr.grokdiscoverytoo.webframework.{WebView, WebViewWithHeaderAndSidebox}
+import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
 import xml.NodeSeq
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.automatic.AutomaticDiscoveryView.{RegexPart, NamedRegex, FixedString}
-import net.stoerr.grokdiscoverytoo.{RandomTryLibrary, GrokPatternLibrary, JoniRegex, StartMatch}
+import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView.{RegexPart, NamedRegex, FixedString}
+import net.stoerr.grokconstructor.{RandomTryLibrary, GrokPatternLibrary, JoniRegex, StartMatch}
 
 /**
  * We try to find all sensible regular expressions consisting of grok patterns and fixed strings that
@@ -20,14 +20,17 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
   val form = AutomaticDiscoveryForm(request)
 
   override val title: String = "Automatic grok discovery"
+
   override def action: String = AutomaticDiscoveryView.path
 
   def maintext: NodeSeq = <p>
-    This was <a href="http://www.stoerr.net/">my</a> first attempt to support creating grok expressions.
+    This was
+    <a href="http://www.stoerr.net/">my</a>
+    first attempt to support creating grok expressions.
     It generates potentially all regular expressions that consist of fixed strings for things that are not alphanumeric and grok patterns from the library, and match all of a given
     set of logfile lines. If there are several patterns from the grok library that match the same strings in every log line they are grouped together and presented as a drop down list.
     Unfortunately, the number of possible regular expressions grows exponentially with the length of the lines, such that this is not really usable in practice. Thus, the result list is cut
-    off at 200 results. </p> ++ <p>
+    off at 200 results.</p> ++ <p>
     Please enter some loglines for which you want generate possible grok patterns and then press</p> ++
     submit("Go!")
 

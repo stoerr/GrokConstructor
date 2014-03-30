@@ -1,7 +1,7 @@
-package net.stoerr.grokdiscoverytoo.forms
+package net.stoerr.grokconstructor.forms
 
-import net.stoerr.grokdiscoverytoo.webframework.WebForm
-import net.stoerr.grokdiscoverytoo.GrokPatternLibrary
+import net.stoerr.grokconstructor.webframework.WebForm
+import net.stoerr.grokconstructor.GrokPatternLibrary
 import xml.NodeSeq
 
 /**

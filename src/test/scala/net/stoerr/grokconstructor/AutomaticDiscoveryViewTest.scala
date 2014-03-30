@@ -1,7 +1,7 @@
-package net.stoerr.grokdiscoverytoo
+package net.stoerr.grokconstructor
 
 import automatic.AutomaticDiscoveryView
-import automatic.AutomaticDiscoveryView.{NamedRegex, FixedString}
+import automatic.AutomaticDiscoveryView.FixedString
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FlatSpec
 import org.junit.runner.RunWith

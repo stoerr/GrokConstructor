@@ -1,4 +1,4 @@
-package net.stoerr.grokdiscoverytoo.matcher
+package net.stoerr.grokconstructor.matcher
 
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
@@ -7,7 +7,7 @@ import org.scalatest.FlatSpec
 import javax.servlet.http.HttpServletRequest
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
-import net.stoerr.grokdiscoverytoo.forms.MultlineFormPart
+import net.stoerr.grokconstructor.forms.MultlineFormPart
 
 /**
  * Tests the functionality of MultlineFormPart

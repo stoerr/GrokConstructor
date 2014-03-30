@@ -1,7 +1,7 @@
-package net.stoerr.grokdiscoverytoo.incremental
+package net.stoerr.grokconstructor.incremental
 
-import net.stoerr.grokdiscoverytoo.forms.{GrokPatternFormPart, MultlineFormPart, LoglinesFormPart}
-import net.stoerr.grokdiscoverytoo.webframework.WebForm
+import net.stoerr.grokconstructor.forms.{GrokPatternFormPart, MultlineFormPart, LoglinesFormPart}
+import net.stoerr.grokconstructor.webframework.WebForm
 import javax.servlet.http.HttpServletRequest
 
 /**

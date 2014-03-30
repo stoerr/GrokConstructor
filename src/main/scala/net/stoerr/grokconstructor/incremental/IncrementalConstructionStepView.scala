@@ -1,11 +1,11 @@
-package net.stoerr.grokdiscoverytoo.incremental
+package net.stoerr.grokconstructor.incremental
 
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokdiscoverytoo.webframework.{WebViewWithHeaderAndSidebox, WebView}
+import net.stoerr.grokconstructor.webframework.{WebViewWithHeaderAndSidebox, WebView}
 import scala.xml.{Text, NodeSeq}
-import net.stoerr.grokdiscoverytoo.{JoniRegexQuoter, JoniRegex, GrokPatternLibrary, RandomTryLibrary}
+import net.stoerr.grokconstructor.{JoniRegexQuoter, JoniRegex, GrokPatternLibrary, RandomTryLibrary}
 import collection.immutable.NumericRange
-import net.stoerr.grokdiscoverytoo.matcher.MatcherEntryView
+import net.stoerr.grokconstructor.matcher.MatcherEntryView
 
 /**
  * Performs a step in the incremental construction of the grok pattern.
