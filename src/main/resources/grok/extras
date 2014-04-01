@@ -1,3 +1,0 @@
-# Some extra patterns from me (www.stoerr.net)
-# annoying english datestamp format used in apache error log. Parseable with EEE MMM dd HH:mm:ss yyyy
-DATESTAMP_EN %{DAY} %{MONTH} %{MONTHDAY} %{TIME} %{YEAR}

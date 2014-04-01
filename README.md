@@ -20,3 +20,5 @@ TODO:
 TODO eventually:
 - Move error box on top of page
 - AutomaticDiscoveryView: use simpler examples such that the output makes sense.
+- Quoting and unquoting of patterns for logstash.conf
+
