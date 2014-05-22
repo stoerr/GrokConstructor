@@ -10,7 +10,8 @@ import java.io.InputStream
  */
 object GrokPatternLibrary {
 
-  val grokpatternnames = List("firewalls", "grok-patterns", "haproxy", "java", "linux-syslog", "nagios", "ruby")
+  val grokpatternnames = List("firewalls", "grok-patterns", "haproxy", "java", "junos", "linux-syslog", "mcollective",
+    "mcollective-patterns", "mongodb", "nagios", "postgresql", "redis", "ruby")
 
   val extrapatternnames = List("extras")
 

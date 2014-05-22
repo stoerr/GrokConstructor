@@ -24,10 +24,10 @@ trait GrokPatternFormPart extends WebForm {
     <div class="ym-fbox-text">
       <label>
         Please mark the libraries of
-        <a href="http://logstash.net/docs/1.1.9/filters/grok">grok Patterns</a>
+        <a href="http://logstash.net/docs/1.4.1/filters/grok">grok Patterns</a>
         from
         <a href="http://logstash.net/">logstash</a>
-        v.1.1.9 which you want to use:</label>
+        v.1.4.1 which you want to use:</label>
     </div> ++ groklibs.checkboxes ++
       grokadditionalinput.inputTextArea("You can also provide some additional grok patterns in the same format:", 5, 180)
 
