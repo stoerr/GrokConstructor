@@ -1,8 +1,9 @@
 package net.stoerr.grokconstructor
 
-import util.matching.Regex
-import scala.io.{BufferedSource, Source}
 import java.io.InputStream
+
+import scala.io.{BufferedSource, Source}
+import scala.util.matching.Regex
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -43,12 +44,12 @@ object GrokPatternLibrary {
     * (arbitrarily) 10 times to allow recursions but to not allow infinite loops. */
   def replacePatterns(grokregex: String, grokMap: Map[String, String]): String = {
     var substituted = grokregex
-    val grokReference = """%\{(\w+)(:(\w+))?\}""".r
+    val grokReference = """%\{(\w+)(?::(\w+)(?::(?:int|float))?)?\}""".r
     0 until 10 foreach {
       _ =>
         substituted = grokReference replaceAllIn(substituted, {
           m =>
-            "(?" + Option(m.group(3)).map(Regex.quoteReplacement).map("<" + _ + ">").getOrElse(":") +
+            "(?" + Option(m.group(2)).map(Regex.quoteReplacement).map("<" + _ + ">").getOrElse(":") +
               Regex.quoteReplacement(grokMap(m.group(1))) + ")"
         })
     }

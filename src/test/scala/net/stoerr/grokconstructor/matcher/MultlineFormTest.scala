@@ -1,13 +1,14 @@
 package net.stoerr.grokconstructor.matcher
 
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.FlatSpec
 import javax.servlet.http.HttpServletRequest
-import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito._
+
 import net.stoerr.grokconstructor.forms.MultlineFormPart
+import org.junit.runner.RunWith
+import org.mockito.Mockito._
+import org.scalatest.FlatSpec
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.mock.MockitoSugar
 
 /**
  * Tests the functionality of MultlineFormPart
@@ -22,6 +23,7 @@ class MultlineFormTest extends FlatSpec with ShouldMatchers with MockitoSugar {
   "MultlineFormPart.multlineFilter" should "correctly parse multlines" in {
     val mockreq = mock[HttpServletRequest]
     when(mockreq.getParameter("multline")).thenReturn("^-")
+    when(mockreq.getParameter("multlinenegate")).thenReturn("")
     val form = new MockForm(mockreq)
     form.multlineFilter(List()) should equal(List())
     form.multlineFilter(List("a")) should equal(List("a"))

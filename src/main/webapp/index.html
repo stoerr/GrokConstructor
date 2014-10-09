@@ -38,9 +38,18 @@
                 <div class="ym-gbox">
                     <h3>What is this about?</h3>
 
-                    <p><a href="http://logstash.net/">Logstash</a> is a tool to collect log files from various sources,
+                    <p><a href="https://github.com/stoerr/GrokConstructor">GrokConstructor</a>
+                        is a helper for testing and incremental construction of regular expressions
+                        for the <a href="http://logstash.net/docs/latest/filters/grok">grok</a> filter
+                        that parses logfile lines for <a href="http://logstash.net/">Logstash</a>.</p>
+
+                    <p>
+                        <a href="http://logstash.net/">Logstash</a>, part of the
+                        <a href="http://www.elasticsearch.org/overview/">ELK-Stack</a>,
+                        is a tool to collect log files from various sources,
                         parse them into a JSON format and put them into one or more databases, index engines and so
-                        forth. In the simplest case you can slurp log files from the filesystem, parse them using grok -
+                        forth - often <a href="http://www.elasticsearch.org/">elasticsearch</a>.
+                        In the simplest case you can slurp log files from the filesystem, parse them using grok -
                         a collection of named <a href="http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt">regular
                             expressions</a> - and put them into the integrated elastic search
                         engine with a simple web frontend to search them. In my experience the hardest part is to get
@@ -67,6 +76,10 @@
                             use the main menu to go to the applications. There is a short explanation at the top, and
                             you can call up a random example to try things out. If you want to know more beforehand,
                             read on.
+                        </p>
+
+                        <p>Please contact <a href="http://www.stoerr.net/">me</a> for bugs, suggestions or praise, or
+                            <a href="https://github.com/stoerr/GrokConstructor/issues">create an issue on GitHub</a>.
                         </p>
                     </div>
                 </div>

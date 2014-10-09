@@ -12,10 +12,16 @@ that match a whole set of logfile lines by using groks patterns and fixed string
 Use it on http://grokconstructor.appspot.com/ - there is also a good description, and you can use it on
 some examples or for your own log lines you want to match.
 
+To run locally, build with
+mvn clean install
+and start with
+mvn appengine:devserver
+. It runs on http://localhost:9090/
+
 Status: beta.
 
 TODO:
-- Error handling in incremental matching
+- Better error handling in incremental matching
 
 TODO eventually:
 - Move error box on top of page
