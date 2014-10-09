@@ -1,11 +1,13 @@
 package net.stoerr.grokconstructor.matcher
 
-import net.stoerr.grokconstructor.webframework.{WebViewWithHeaderAndSidebox, WebView}
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokconstructor.{RandomTryLibrary, JoniRegex, GrokPatternLibrary}
-import xml.NodeSeq
-import scala.collection.immutable.NumericRange
+
+import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
+import net.stoerr.grokconstructor.{GrokPatternLibrary, JoniRegex, RandomTryLibrary}
 import org.joni.exception.SyntaxException
+
+import scala.collection.immutable.NumericRange
+import scala.xml.NodeSeq
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -13,10 +15,9 @@ import org.joni.exception.SyntaxException
  */
 class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
   override val title: String = "Test grok patterns"
+  val form = MatcherForm(request)
 
   override def action = MatcherEntryView.path + "#result"
-
-  val form = MatcherForm(request)
 
   override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
   else Some(Left(fullpath(MatcherEntryView.path) + "?example=" + RandomTryLibrary.randomExampleNumber()))
@@ -32,27 +33,25 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
   override def formparts: NodeSeq = form.loglinesEntry ++
     form.patternEntry ++
     form.grokpatternEntry ++
-    form.multlineEntry
+    form.multilineEntry
 
   if (null != request.getParameter("example")) {
     val trial = RandomTryLibrary.example(request.getParameter("example").toInt)
     form.loglines.value = Some(trial.loglines)
     form.pattern.value = Some(trial.pattern)
-    form.multlineRegex.value = trial.multline
-    form.multlineNegate.values = List()
+    form.multilineRegex.value = trial.multiline
+    form.multilineNegate.values = List()
     form.groklibs.values = List("grok-patterns")
   }
 
   override def result = form.pattern.value.map(showResult(_)).getOrElse(<span/>)
-
-  private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
   def showResult(pat: String): NodeSeq = {
     val patternGrokked = GrokPatternLibrary.replacePatterns(pat, form.grokPatternLibrary)
     try {
       val regex = new JoniRegex(patternGrokked)
       try {
-        val lines: Seq[String] = form.multlineFilter(form.loglines.valueSplitToLines)
+        val lines: Seq[String] = form.multilineFilter(form.loglines.valueSplitToLines)
         return <hr/> ++ <table class="bordertable narrow">
           {for (line <- lines) yield {
             rowheader2(line) ++ {
@@ -74,11 +73,11 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
           }}
         </table>
       } catch {
-        case multlineSyntaxException: SyntaxException =>
-          return <hr/> ++ <p class="box error">Syntaxfehler in the pattern for the multline filter
-            {form.multlineRegex.value.get}
+        case multilineSyntaxException: SyntaxException =>
+          return <hr/> ++ <p class="box error">Syntaxfehler in the pattern for the multiline filter
+            {form.multilineRegex.value.get}
             :
-            <br/>{multlineSyntaxException.getMessage}
+            <br/>{multilineSyntaxException.getMessage}
           </p>
       }
     } catch {
@@ -90,6 +89,8 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
         </p>
     }
   }
+
+  private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
   private def longestMatchOfRegexPrefix(pattern: String, line: String): (JoniRegex#JoniMatch, String) = {
     val found: (Option[JoniRegex#JoniMatch], String) = NumericRange.inclusive(pattern.length - 1, 0, -1).toIterator

@@ -51,10 +51,10 @@
                         forth - often <a href="http://www.elasticsearch.org/">elasticsearch</a>.
                         In the simplest case you can slurp log files from the filesystem, parse them using grok -
                         a collection of named <a href="http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt">regular
-                            expressions</a> - and put them into the integrated elastic search
+                        expressions</a> - and put them into the integrated elastic search
                         engine with a simple web frontend to search them. In my experience the hardest part is to get
                         the regular expressions for parsing the log files right. The <a
-                                href="http://grokdebug.herokuapp.com/">Grok debugger</a> can help you test your regular
+                            href="http://grokdebug.herokuapp.com/">Grok debugger</a> can help you test your regular
                         expressions and provides Grok Discovery that sometimes can suggest regular expressions. This
                         site, GrokConstructor, goes beyond that by providing an
                         incremental construction process that helps you to construct a regular expression that matches
@@ -150,7 +150,8 @@
                         without
                         conflicts.</p>
 
-                    <p> Applying a <a href="http://logstash.net/docs/1.1.10/filters/multiline">multline filter</a> to
+                    <p> Applying a <a href="http://logstash.net/docs/latest/filters/multiline">multiline filter</a>
+                        or <a href="http://logstash.net/docs/latest/codecs/multiline">multiline codec</a> to
                         collect several lines that comprise one log message (e.g. the message and a stacktrace) is also
                         supported.</p>
                 </div>

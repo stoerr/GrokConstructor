@@ -1,10 +1,12 @@
 package net.stoerr.grokconstructor.automatic
 
-import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
-import xml.NodeSeq
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView.{RegexPart, NamedRegex, FixedString}
-import net.stoerr.grokconstructor.{RandomTryLibrary, GrokPatternLibrary, JoniRegex, StartMatch}
+
+import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView.{FixedString, NamedRegex, RegexPart}
+import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
+import net.stoerr.grokconstructor.{GrokPatternLibrary, JoniRegex, RandomTryLibrary, StartMatch}
+
+import scala.xml.NodeSeq
 
 /**
  * We try to find all sensible regular expressions consisting of grok patterns and fixed strings that
@@ -17,9 +19,15 @@ import net.stoerr.grokconstructor.{RandomTryLibrary, GrokPatternLibrary, JoniReg
  */
 class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
 
-  val form = AutomaticDiscoveryForm(request)
-
+  lazy val namedRegexps: Map[String, JoniRegex] = form.grokPatternLibrary.map {
+    case (name, regex) => (name -> new JoniRegex(GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary)))
+  }
+  lazy val namedRegexpsList: List[(String, JoniRegex)] = namedRegexps.toList
   override val title: String = "Automatic grok discovery"
+  val form = AutomaticDiscoveryForm(request)
+  /** We try at most this many calls to avoid endless loops because of
+    * the combinatorical explosion */
+  var callCountdown = 1000
 
   override def action: String = AutomaticDiscoveryView.path
 
@@ -36,23 +44,23 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
 
   def sidebox: NodeSeq = <p>You can also just try this out with a</p> ++ buttonanchor(AutomaticDiscoveryView.path + "?randomize", "random example")
 
+  if (null != request.getParameter("example")) {
+    val trial = RandomTryLibrary.example(request.getParameter("example").toInt)
+    form.loglines.value = Some(trial.loglines)
+    form.multilineRegex.value = trial.multiline
+    form.multilineNegate.values = List(form.multilineNegate.name)
+    form.groklibs.values = List("grok-patterns")
+  }
+
   def formparts: NodeSeq = form.loglinesEntry ++ form.grokpatternEntry
 
   override def result: NodeSeq = {
-    val linesOpt = form.multlineFilter(form.loglines.valueSplitToLines).toList
+    val linesOpt = form.multilineFilter(form.loglines.valueSplitToLines).toList
     resultTable(matchingRegexpStructures(linesOpt))
   }
 
   override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
   else Some(Left(fullpath(AutomaticDiscoveryView.path) + "?example=" + RandomTryLibrary.randomExampleNumber()))
-
-  if (null != request.getParameter("example")) {
-    val trial = RandomTryLibrary.example(request.getParameter("example").toInt)
-    form.loglines.value = Some(trial.loglines)
-    form.multlineRegex.value = trial.multline
-    form.multlineNegate.values = List(form.multlineNegate.name)
-    form.groklibs.values = List("grok-patterns")
-  }
 
   def resultTable(results: Iterator[List[RegexPart]]): xml.Node = table(
     rowheader("At most 200 possible grok regex combinations that match all lines") ++ results.take(200).toList.map {
@@ -73,15 +81,6 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
           </select>
         })
     })
-
-  lazy val namedRegexps: Map[String, JoniRegex] = form.grokPatternLibrary.map {
-    case (name, regex) => (name -> new JoniRegex(GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary)))
-  }
-  lazy val namedRegexpsList: List[(String, JoniRegex)] = namedRegexps.toList
-
-  /** We try at most this many calls to avoid endless loops because of
-    * the combinatorical explosion */
-  var callCountdown = 1000
 
   def matchingRegexpStructures(lines: List[String]): Iterator[List[RegexPart]] = {
     if (callCountdown <= 0) return Iterator(List(FixedString("SEARCH TRUNCATED")))
@@ -114,12 +113,6 @@ object AutomaticDiscoveryView {
 
   val path = "/automatic"
 
-  sealed trait RegexPart
-
-  case class FixedString(str: String) extends RegexPart
-
-  case class NamedRegex(regexps: List[String]) extends RegexPart
-
   /** The longest string that is a prefix of all lines. */
   def biggestCommonPrefixExceptDigitsOrLetters(lines: List[String]): String =
     if (lines.size != 1) lines.reduce(commonPrefixExceptDigitsOrLetters)
@@ -127,5 +120,11 @@ object AutomaticDiscoveryView {
 
   def commonPrefixExceptDigitsOrLetters(str1: String, str2: String) =
     wrapString(str1).zip(wrapString(str2)).takeWhile(p => (p._1 == p._2 && !p._1.isLetterOrDigit)).map(_._1).mkString("")
+
+  sealed trait RegexPart
+
+  case class FixedString(str: String) extends RegexPart
+
+  case class NamedRegex(regexps: List[String]) extends RegexPart
 
 }

@@ -10,8 +10,6 @@ import scala.util.Random
  */
 object RandomTryLibrary {
 
-  case class Trial(loglines: String, pattern: String, multline: Option[String])
-
   private val trials = List(
     Trial( """2013-02-28 09:57:56,662 WARN  CreateSomethingActivationKey - WhateverException for User 49-123-345678 {{rid,US8cFAp5eZgAABwUItEAAAAI_dev01_443}{realsid,60A9772A136B9912B6FF0C3627A47090.dev1-a}}
              |2013-02-28 09:57:56,663 INFO  LMLogger - ERR1700 - u:null failures: 0  - Technical error {{rid,US8cFAp5eZgAABwUItEAAAAI_dev01_443}{realsid,60A9772A136B9912B6FF0C3627A47090.dev1-a}}
@@ -22,7 +20,7 @@ object RandomTryLibrary {
              |	at oracle.jdbc.driver.T4CTTIoer.processError(T4CTTIoer.java:396)
              |2013-02-28 10:04:35,723 INFO  EntryFilter - Fresh on request /portalservices/foobarwhatever {{rid,US8dogp5eZgAABwXPGEAAAAL_dev01_443}{realsid,56BA2AD41D9BB28AFCEEEFF927EE61C2.dev1-a}}""".stripMargin,
       """\A%{TIMESTAMP_ISO8601:timestamp}\s+%{LOGLEVEL:loglevel}\s+(?<logger>(?:[a-zA-Z0-9-]+\.)*[A-Za-z0-9$]+)\s+(-\s+)?(?=(?<msgnr>[A-Z]+[0-9]{4,5}))*%{DATA:message}({({[^}]+},?\s*)*})?\s*$(?<stacktrace>(?m:.*))?""",
-      Some( """^201""")),
+      Some( """^(?!201)""")),
     Trial( """"URzbUwp5eZgAAAAaqIAAAAAa" | 4.3.2.1 - - - [14/Feb/2013:13:40:51 +0100] "GET /cpc HTTP/1.1" 302 -
              |"URzbTwp5eZgAAAAWlbUAAAAV" | 4.3.2.1 - - - [14/Feb/2013:13:40:47 +0100] "GET /cpc/finish.do?cd=true&mea_d=0&targetPage=%2Fcpc%2F HTTP/1.1" 200 5264
              |"URzbUwp5eZgAAAAaqIEAAAAa" | 4.3.2.1 - - - [14/Feb/2013:13:40:51 +0100] "GET /cpc/ HTTP/1.1" 302 -
@@ -46,5 +44,7 @@ object RandomTryLibrary {
   def example(i: Int): Trial = trials(i)
 
   def randomExampleNumber() = Random.nextInt(trials.length)
+
+  case class Trial(loglines: String, pattern: String, multiline: Option[String])
 
 }

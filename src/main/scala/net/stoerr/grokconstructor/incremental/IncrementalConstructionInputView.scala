@@ -1,9 +1,11 @@
 package net.stoerr.grokconstructor.incremental
 
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
-import xml.NodeSeq
+
 import net.stoerr.grokconstructor.RandomTryLibrary
+import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
+
+import scala.xml.NodeSeq
 
 /**
  * Entry for the start parameters for the incremental construction of grok patterns.
@@ -12,10 +14,9 @@ import net.stoerr.grokconstructor.RandomTryLibrary
  */
 class IncrementalConstructionInputView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
   val title: String = "Incremental Construction of Grok Patterns"
+  val form = IncrementalConstructionForm(request)
 
   def action: String = IncrementalConstructionStepView.path
-
-  val form = IncrementalConstructionForm(request)
 
   override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
   else Some(Left(fullpath(IncrementalConstructionInputView.path) + "?example=" + RandomTryLibrary.randomExampleNumber()))
@@ -23,8 +24,8 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
   if (null != request.getParameter("example")) {
     val trial = RandomTryLibrary.example(request.getParameter("example").toInt)
     form.loglines.value = Some(trial.loglines)
-    form.multlineRegex.value = trial.multline
-    form.multlineNegate.values = List(form.multlineNegate.name)
+    form.multilineRegex.value = trial.multiline
+    form.multilineNegate.values = List(form.multilineNegate.name)
     form.groklibs.values = List("grok-patterns")
   }
 
@@ -37,7 +38,7 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
 
   def sidebox: NodeSeq = <p>You can also just fill this with a</p> ++ buttonanchor(IncrementalConstructionInputView.path + "?randomize", "random example.")
 
-  def formparts: NodeSeq = form.loglinesEntry ++ form.grokpatternEntry ++ form.multlineEntry
+  def formparts: NodeSeq = form.loglinesEntry ++ form.grokpatternEntry ++ form.multilineEntry
 
   // missing: extra patterns by hand
 

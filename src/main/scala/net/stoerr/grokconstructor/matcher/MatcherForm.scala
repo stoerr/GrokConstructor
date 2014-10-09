@@ -1,14 +1,15 @@
 package net.stoerr.grokconstructor.matcher
 
-import net.stoerr.grokconstructor.webframework.WebForm
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokconstructor.forms.{MultlineFormPart, LoglinesFormPart, GrokPatternFormPart}
+
+import net.stoerr.grokconstructor.forms.{GrokPatternFormPart, LoglinesFormPart, MultilineFormPart}
+import net.stoerr.grokconstructor.webframework.WebForm
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 17.02.13
  */
-case class MatcherForm(request: HttpServletRequest) extends WebForm with GrokPatternFormPart with MultlineFormPart with LoglinesFormPart {
+case class MatcherForm(request: HttpServletRequest) extends WebForm with GrokPatternFormPart with MultilineFormPart with LoglinesFormPart {
 
   val pattern = InputText("pattern")
 
