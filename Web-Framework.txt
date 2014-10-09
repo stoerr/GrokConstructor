@@ -1,8 +1,12 @@
-Since IntelliJ Community Edition does not have a web framework plugin for scala at the moments and
+Since IntelliJ Community Edition does not have a web framework plugin for scala at the moment and
 I don't currently know either Play nor Lift and both seem to be annoying without a plugin, I decide
 to roll my own mini-framework for now.
 
 Basic idea: The interesting parts of the page are done in Scala classes with its XML mode,
-since then I have code completion for that. (OTOH, if you don't know HTML by heart, a HTML completion is
-very valuable as well. But I can't have both right now.) There is a JSP for the frame of the page. It
-takes various parts from to-Stringable request attributes.
+since then I have code completion for that. (OTOH, if you don't know all details of HTML by heart, a
+HTML completion is very valuable as well. But I can't have both right now.)
+This approach also allows for massively DRY code.
+There is a JSP for the frame of the page. It takes various parts from to-Stringable request attributes.
+
+Everything is stateless here - both to conserve server resources and to allow opening multiple windows.
+Thus, everything needed is transmitted in hidden fields.
