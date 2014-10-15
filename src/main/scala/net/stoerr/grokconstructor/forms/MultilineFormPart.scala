@@ -23,7 +23,7 @@ trait MultilineFormPart extends WebForm {
   private val negatekey = "negate"
 
   def multilineEntry: NodeSeq =
-    multilineRegex.inputText("If you want to use logstash's <a href=\"http://logstash.net/docs/latest/filters/multiline\">multiline filter</a> please specify the used regex:", 80) ++
+    multilineRegex.inputText("If you want to use logstash's multiline filter please specify the used regex:", 80) ++
       multilineNegate.checkboxes
 
   def multilinehiddenfields: NodeSeq = multilineRegex.hiddenField ++ multilineNegate.hiddenField

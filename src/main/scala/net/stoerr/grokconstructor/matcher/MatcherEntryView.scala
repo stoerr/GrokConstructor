@@ -22,8 +22,11 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
   override def doforward: Option[Either[String, WebView]] = if (null == request.getParameter("randomize")) None
   else Some(Left(fullpath(MatcherEntryView.path) + "?example=" + RandomTryLibrary.randomExampleNumber()))
 
-  override def maintext: NodeSeq = <p>This tries to parse a set of given logfile lines with a given grok regular expression and prints
-    the matches for named patterns for each log line.</p> ++ <p>Please enter some loglines for which you want to check a grok pattern,
+  override def maintext: NodeSeq = <p>This tries to parse a set of given logfile lines with a given
+    <a href="http://logstash.net/docs/latest/filters/grok">grok regular expression</a> and prints
+    the matches for named patterns for each log line. You can also apply a
+    <a href="http://logstash.net/docs/latest/filters/multiline">multiline filter</a> first.</p> ++
+  <p>Please enter some loglines for which you want to check a grok pattern,
     the grok expression that should match these, mark the pattern libraries you draw your patterns from and then press
   </p> ++ submit("Go!")
 

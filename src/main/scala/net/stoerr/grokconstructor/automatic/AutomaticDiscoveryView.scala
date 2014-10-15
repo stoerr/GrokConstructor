@@ -34,11 +34,11 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
   def maintext: NodeSeq = <p>
     This was
     <a href="http://www.stoerr.net/">my</a>
-    first attempt to support creating grok expressions.
+    first attempt to support creating <a href="http://logstash.net/docs/latest/filters/grok">grok expressions</a>.
     It generates potentially all regular expressions that consist of fixed strings for things that are not alphanumeric and grok patterns from the library, and match all of a given
     set of logfile lines. If there are several patterns from the grok library that match the same strings in every log line they are grouped together and presented as a drop down list.
     Unfortunately, the number of possible regular expressions grows exponentially with the length of the lines, such that this is not really usable in practice. Thus, the result list is cut
-    off at 200 results.</p> ++ <p>
+    off at 200 results. <a href="http://en.wiktionary.org/wiki/your_mileage_may_vary">YMMV</a>. </p> ++ <p>
     Please enter some loglines for which you want generate possible grok patterns and then press</p> ++
     submit("Go!")
 

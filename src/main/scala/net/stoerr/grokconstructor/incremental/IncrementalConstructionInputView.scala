@@ -29,10 +29,12 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
     form.groklibs.values = List("grok-patterns")
   }
 
-  def maintext: NodeSeq = <p>You can provide a number of log file lines and step by step construct a grok pattern
+  def maintext: NodeSeq = <p>You can provide a number of log file lines and step by step construct a
+    <a href="http://logstash.net/docs/latest/filters/grok">grok pattern</a>
     that matches all of these lines. In each step you select or input a pattern that matches the next logical segment
     of the log line. This can either be a fixed string (e.g. a separator), a (possibly named) pattern from the grok
-    pattern library, or a pattern you explicitly specify.</p> ++
+    pattern library, or a pattern you explicitly specify.
+    You can also apply a <a href="http://logstash.net/docs/latest/filters/multiline">multiline filter</a> first.</p> ++
     <p>In the form below, please enter some loglines for which you want to create a grok pattern, mark the pattern
       libraries you want to draw your patterns from and then press</p> ++ submit("Go!")
 
