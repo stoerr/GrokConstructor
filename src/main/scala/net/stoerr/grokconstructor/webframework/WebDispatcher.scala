@@ -1,11 +1,15 @@
 package net.stoerr.grokconstructor.webframework
 
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
-import net.stoerr.grokconstructor.matcher.MatcherEntryView
-import net.stoerr.grokconstructor.incremental.{IncrementalConstructionStepView, IncrementalConstructionInputView}
-import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
-import scala.xml.{Elem, NodeSeq}
 import java.util.logging.{Level, Logger}
+import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
+
+import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
+import net.stoerr.grokconstructor.incremental.{IncrementalConstructionInputView, IncrementalConstructionStepView}
+import net.stoerr.grokconstructor.matcher.MatcherEntryView
+
+import scala.collection.JavaConversions
+import scala.collection.JavaConversions._
+import scala.xml.{Elem, NodeSeq}
 
 /**
  * Servlet that forwards the request to a controller and displays the view.
@@ -79,7 +83,8 @@ class WebDispatcher extends HttpServlet {
   }
 
   def reqInfo(req: HttpServletRequest): String = {
-    req.getRequestURL + "?" + req.getQueryString + ":" + req.getParameterMap
+    req.getRequestURL + "?" + req.getQueryString + ":" +
+      req.getParameterMap.mapValues(_.asInstanceOf[Array[String]].mkString("\n"))
   }
 
 }
