@@ -14,8 +14,6 @@ object GrokPatternLibrary {
   val grokpatternnames = List("firewalls", "grok-patterns", "haproxy", "java", "junos", "linux-syslog", "mcollective",
     "mcollective-patterns", "mongodb", "nagios", "postgresql", "redis", "ruby")
 
-  val extrapatternnames = List("extras")
-
   def mergePatternLibraries(libraries: List[String], extrapatterns: Option[String]): Map[String, String] = {
     val extrapatternlines: Iterator[String] = extrapatterns.map(Source.fromString(_).getLines()).getOrElse(Iterator())
     val grokPatternSources = for (grokfile <- libraries) yield grokSource(grokfile).getLines()

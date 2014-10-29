@@ -14,6 +14,7 @@
 <meta http-equiv="content-style-type" content="text/css" />
 <meta http-equiv="content-script-type" content="text/javascript" />
 <meta name="revisit-after" content="31 days" />
+<meta name="robots" content="index, nofollow" />
 <link href="../css/styles.css" rel="stylesheet" type="text/css" />
 <!--[if lte IE 7]>
     <link href="yaml/core/iehacks.css" rel="stylesheet" type="text/css"/>
