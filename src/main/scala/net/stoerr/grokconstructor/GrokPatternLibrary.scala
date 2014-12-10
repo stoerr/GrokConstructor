@@ -46,12 +46,19 @@ object GrokPatternLibrary {
     0 until 10 foreach {
       _ =>
         substituted = grokReference replaceAllIn(substituted, {
-          m =>
+          m => {
+            val patternName = m.group(1)
+            if (!grokMap.contains(patternName)) throw new GrokPatternNameUnknownException(patternName, m.group(0))
             "(?" + Option(m.group(2)).map(Regex.quoteReplacement).map("<" + _ + ">").getOrElse(":") +
-              Regex.quoteReplacement(grokMap(m.group(1))) + ")"
+              Regex.quoteReplacement(grokMap(patternName)) + ")"
+          }
         })
     }
     substituted
   }
 
+}
+
+class GrokPatternNameUnknownException(val patternname: String, val pattern: String) extends RuntimeException {
+  override def toString(): String = "Grok pattern name " + patternname + " unknown at " + pattern
 }

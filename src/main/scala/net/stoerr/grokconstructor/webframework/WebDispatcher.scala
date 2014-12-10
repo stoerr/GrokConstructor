@@ -7,7 +7,6 @@ import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
 import net.stoerr.grokconstructor.incremental.{IncrementalConstructionInputView, IncrementalConstructionStepView}
 import net.stoerr.grokconstructor.matcher.MatcherEntryView
 
-import scala.collection.JavaConversions
 import scala.collection.JavaConversions._
 import scala.xml.{Elem, NodeSeq}
 
@@ -43,11 +42,7 @@ class WebDispatcher extends HttpServlet {
     } catch {
       case e: Exception =>
         logger.log(Level.SEVERE, reqInfo(req), e)
-        val writer = resp.getWriter
-        writer.println("OUCH! AGH! AAAH! BUG! Please contact Hans-Peter Stoerr www.stoerr.net with the following, or "
-          + "open an issue on https://github.com/stoerr/GrokConstructor/issues:\n\n")
-        e.printStackTrace(writer)
-        writer.println("\n\nRequest Info:\n" + reqInfo(req))
+        errorPage(req, resp, e);
     }
   }
 
@@ -85,6 +80,47 @@ class WebDispatcher extends HttpServlet {
   def reqInfo(req: HttpServletRequest): String = {
     req.getRequestURL + "?" + req.getQueryString + ":" +
       req.getParameterMap.mapValues(_.asInstanceOf[Array[String]].mkString("\n"))
+  }
+
+  def errorPage(req: HttpServletRequest, resp: HttpServletResponse, e: Exception): Unit = {
+    val writer = resp.getWriter
+    writer.println(
+      """
+        | <h1>OUCH!</h1>
+        | <p>I'm sorry, but you have encountered a bug or missing nice display of an error message in the application.
+        | Please contact Hans-Peter St&ouml;rr (<a href="http://www.stoerr.net/">www.stoerr.net</a>
+        |  <script type="text/javascript" language="javascript">
+        |<!--
+        |// Email obfuscator script 2.1 by Tim Williams, University of Arizona
+        |// Random encryption key feature by Andrew Moulden, Site Engineering Ltd
+        |// This code is freeware provided these four comment lines remain intact
+        |// A wizard to generate this code is at http://www.jottings.com/obfuscator/
+        |{ coded = "wTyLbnnN@vnLb40.NS"
+        |  key = "TVMD2qg4GEz6JIjNKbkX1sCcByd9AW8FieUftQlSRLowu3Opx5anZYvH7rPm0h"
+        |  shift=coded.length
+        |  link=""
+        |  for (i=0; i<coded.length; i++) {
+        |    if (key.indexOf(coded.charAt(i))==-1) {
+        |      ltr = coded.charAt(i)
+        |      link += (ltr)
+        |    }
+        |    else {
+        |      ltr = (key.indexOf(coded.charAt(i))-shift+key.length) % key.length
+        |      link += (key.charAt(ltr))
+        |    }
+        |  }
+        |document.write("<a href='mailto:"+link+"'>"+link+"</a>")
+        |}
+        |//-->
+        |</script>)
+        | with a copy of this page, or open an issue on
+        | <a href="https://github.com/stoerr/GrokConstructor/issues">https://github.com/stoerr/GrokConstructor/issues</a> .
+        | </p><pre>
+      """.stripMargin)
+    writer.println("\nError message: " + e + "\n")
+    writer.println("\nRequest Info:\n" + reqInfo(req) + "\n\n")
+    e.printStackTrace(writer)
+    writer.println("\n</pre>")
   }
 
 }

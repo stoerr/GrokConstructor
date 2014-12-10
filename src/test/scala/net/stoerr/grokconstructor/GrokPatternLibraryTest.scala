@@ -32,7 +32,7 @@ class GrokPatternLibraryTest extends FlatSpec with ShouldMatchers {
     GrokPatternLibrary.replacePatterns("%{BU:foo}%{BLA:bar}", Map("BU" -> "XYZ", "BLA" -> "HU%{BU}HA")) should equal("(?<foo>XYZ)(?<bar>HU(?:XYZ)HA)")
     evaluating {
       GrokPatternLibrary.replacePatterns("%{NIX}", Map())
-    } should produce[NoSuchElementException]
+    } should produce[GrokPatternNameUnknownException]
   }
 
 }

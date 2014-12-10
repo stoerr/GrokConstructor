@@ -3,7 +3,7 @@ package net.stoerr.grokconstructor.matcher
 import javax.servlet.http.HttpServletRequest
 
 import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
-import net.stoerr.grokconstructor.{GrokPatternLibrary, JoniRegex, RandomTryLibrary}
+import net.stoerr.grokconstructor.{GrokPatternLibrary, GrokPatternNameUnknownException, JoniRegex, RandomTryLibrary}
 import org.joni.exception.SyntaxException
 
 import scala.collection.immutable.NumericRange
@@ -50,8 +50,8 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
   override def result = form.pattern.value.map(showResult(_)).getOrElse(<span/>)
 
   def showResult(pat: String): NodeSeq = {
-    val patternGrokked = GrokPatternLibrary.replacePatterns(pat, form.grokPatternLibrary)
     try {
+      val patternGrokked = GrokPatternLibrary.replacePatterns(pat, form.grokPatternLibrary)
       val regex = new JoniRegex(patternGrokked)
       try {
         val lines: Seq[String] = form.multilineFilter(form.loglines.valueSplitToLines)
@@ -90,6 +90,13 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
           :
           <br/>{patternSyntaxException.getMessage}
         </p>
+      case patternUnknownException: GrokPatternNameUnknownException => {
+        return <hr/> ++ <p class="box error">This grok pattern has an unknown name
+          {patternUnknownException.patternname}
+          :
+          {patternUnknownException.pattern}
+        </p>
+      }
     }
   }
 
