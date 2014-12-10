@@ -3,8 +3,7 @@
  * central stylesheet - adapted from layout example "flexible-grids"
  */
 
-/* Google Font API */
-@import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,400italic,700|Droid+Sans:700);
+@import url(fonts.css);
 
 /* import core styles | Basis-Stylesheets einbinden */
 @import url(../yaml/core/base.css);
@@ -17,4 +16,4 @@
 @import url(../yaml/screen/screen-FULLPAGE-layout.css);
 
 /* import print layout | Druck-Layout einbinden */
-@import url(../yaml/print/print.css);
+/* @import url(../yaml/print/print.css); */

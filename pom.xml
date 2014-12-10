@@ -100,6 +100,40 @@
                     <port>9090</port>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.4</version>
+                <executions>
+                    <execution>
+                        <id>default-minify</id>
+                        <phase>package</phase>
+                        <!-- When omitted defaults to 'process-resources' -->
+                        <configuration>
+                            <charset>UTF-8</charset>
+                            <!-- <cssSourceDir>src/main/webapp/css</cssSourceDir> -->
+                            <cssSourceFiles>
+                                <cssSourceFile>fonts.css</cssSourceFile>
+                                <cssSourceFile>../yaml/core/base.css</cssSourceFile>
+                                <cssSourceFile>../yaml/navigation/hlist.css</cssSourceFile>
+                                <cssSourceFile>../yaml/forms/gray-theme.css</cssSourceFile>
+                                <cssSourceFile>../yaml/screen/typography.css</cssSourceFile>
+                                <cssSourceFile>../yaml/screen/screen-FULLPAGE-layout.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>combinedstyles.css</cssFinalFile>
+                            <!-- <jsSourceDir>js</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>file-1.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>script.js</jsFinalFile>
+                            <jsEngine>CLOSURE</jsEngine> -->
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

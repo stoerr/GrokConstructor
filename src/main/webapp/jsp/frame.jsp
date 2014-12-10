@@ -15,9 +15,10 @@
 <meta http-equiv="content-script-type" content="text/javascript" />
 <meta name="revisit-after" content="31 days" />
 <meta name="robots" content="index, nofollow" />
-<link href="../css/styles.css" rel="stylesheet" type="text/css" />
+<!-- <link href="../css/styles.css" rel="stylesheet" type="text/css" /> -->
+<link href="../css/combinedstyles.min.css" rel="stylesheet" type="text/css"/>
 <!--[if lte IE 7]>
-    <link href="yaml/core/iehacks.css" rel="stylesheet" type="text/css"/>
+    <link href="yaml/core/iehacks.min.css" rel="stylesheet" type="text/css"/>
     <![endif]-->
 
 <!--[if lt IE 9]>

@@ -4,6 +4,9 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <display-name>GrokConstructor</display-name>
     <description>Guesses Grok patterns from a number of loglines</description>
+    <listener>
+        <listener-class>net.stoerr.grokconstructor.WarmupListener</listener-class>
+    </listener>
     <servlet>
         <servlet-name>library</servlet-name>
         <servlet-class>net.stoerr.grokconstructor.GrokLibraryServlet</servlet-class>
