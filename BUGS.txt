@@ -1,3 +1,10 @@
+Neccesary Optimizations:
+- minimize CSS files into one CSS file (too many now)
+- better error message when %{nonexistingkey} is giben
+- more userfriendly error message
+- why is match so slow?
+- favicon.ico
+
 Broken Multline Regex:
 org.joni.exception.SyntaxException: premature end of char-class
 	at net.stoerr.grokconstructor.JoniRegex.<init>(JoniRegex.scala:16)

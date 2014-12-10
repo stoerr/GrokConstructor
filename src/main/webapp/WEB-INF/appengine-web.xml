@@ -13,4 +13,15 @@
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
+
+    <static-files>
+        <include path="/**.png" expiration="31d"/>
+        <include path="/**.jpg" expiration="31d"/>
+        <include path="/**.ico" expiration="31d"/>
+        <include path="/**.css" expiration="31d"/>
+        <include path="/**.html" expiration="7d"/>
+    </static-files>
+
+    <sessions-enabled>false</sessions-enabled>
+
 </appengine-web-app>

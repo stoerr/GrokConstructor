@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <display-name>GrokConstructor</display-name>
     <description>Guesses Grok patterns from a number of loglines</description>
     <servlet>
         <servlet-name>library</servlet-name>
         <servlet-class>net.stoerr.grokconstructor.GrokLibraryServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>web</servlet-name>
         <servlet-class>net.stoerr.grokconstructor.webframework.WebDispatcher</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>library</servlet-name>
