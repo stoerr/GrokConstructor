@@ -1,17 +1,7 @@
+Downloading logs:
+https://cloud.google.com/appengine/docs/java/tools/uploadinganapp#Downloading_Logs
+
 Neccesary Optimizations:
-- why is match so slow?
-- Preloading of all classes(?)
+- Why are the log lines in the dashboard cut off????
 
 Broken Multline Regex:
-org.joni.exception.SyntaxException: premature end of char-class
-	at net.stoerr.grokconstructor.JoniRegex.<init>(JoniRegex.scala:16)
-	at net.stoerr.grokconstructor.forms.MultilineFormPart$class.net$stoerr$grokconstructor$forms$MultilineFormPart$$continuationLine(MultilineFormPart.scala:49)
-	at net.stoerr.grokconstructor.forms.MultilineFormPart$$anonfun$1.apply(MultilineFormPart.scala:33)
-	at net.stoerr.grokconstructor.forms.MultilineFormPart$$anonfun$1.apply(MultilineFormPart.scala:33)
-	at net.stoerr.grokconstructor.forms.MultilineFormPart$class.multilineFilter(MultilineFormPart.scala:33)
-	at net.stoerr.grokconstructor.incremental.IncrementalConstructionForm.multilineFilter(IncrementalConstructionForm.scala:13)
-	at net.stoerr.grokconstructor.incremental.IncrementalConstructionStepView.<init>(IncrementalConstructionStepView.scala:23)
-	at net.stoerr.grokconstructor.webframework.WebDispatcher.giveView(WebDispatcher.scala:57)
-	at net.stoerr.grokconstructor.webframework.WebDispatcher.doGet(WebDispatcher.scala:29)
-	at net.stoerr.grokconstructor.webframework.WebDispatcher.doPost(WebDispatcher.scala:23)
-

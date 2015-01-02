@@ -20,6 +20,7 @@
         <include path="/**.ico" expiration="31d"/>
         <include path="/**.css" expiration="31d"/>
         <include path="/**.html" expiration="7d"/>
+        <include path="/**.txt" expiration="7d"/>
     </static-files>
 
     <sessions-enabled>false</sessions-enabled>

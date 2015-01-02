@@ -22,11 +22,14 @@ Status: beta.
 
 TODO:
 - Better error handling in incremental matching
+- Give definition of grok patterns as title on pattern selections.
 
 TODO eventually:
 - Move error box on top of page
 - AutomaticDiscoveryView: use simpler examples such that the output makes sense.
 - Quoting and unquoting of patterns for logstash.conf
-- Describe how to run it locally.
 - Clarify licence.
+
+https://cloud.google.com/appengine/docs/java/tools/maven :
+mvn help:describe -DgroupId=com.google.appengine -DartifactId=appengine-maven-plugin -Ddetail=true
 

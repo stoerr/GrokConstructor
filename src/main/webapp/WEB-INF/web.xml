@@ -26,7 +26,7 @@
         <url-pattern>/do/*</url-pattern>
     </servlet-mapping>
     <session-config>
-        <!-- We don't use sessions. -->
+        <!-- We don't use sessions - smallest value. -->
         <session-timeout>1</session-timeout>
     </session-config>
 </web-app>

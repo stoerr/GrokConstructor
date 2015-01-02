@@ -41,7 +41,7 @@ class WebDispatcher extends HttpServlet {
       }
     } catch {
       case e: Exception =>
-        logger.log(Level.SEVERE, reqInfo(req), e)
+        logger.log(Level.SEVERE, e + " for " + reqInfo(req), e)
         errorPage(req, resp, e);
     }
   }
@@ -78,7 +78,7 @@ class WebDispatcher extends HttpServlet {
   }
 
   def reqInfo(req: HttpServletRequest): String = {
-    req.getRequestURL + "?" + req.getQueryString + ":" +
+    req.getRequestURL + "?" + req.getQueryString + ":\n" +
       req.getParameterMap.mapValues(_.asInstanceOf[Array[String]].mkString("\n"))
   }
 
