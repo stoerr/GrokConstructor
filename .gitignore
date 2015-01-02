@@ -1,3 +1,27 @@
+# https://github.com/GoogleCloudPlatform/appengine-guestbook-java/blob/master/.gitignore
+hotspot.log
+*.iml
+*.ipr
+*.iws
+.gradle/
+build/
+target/
+classes/
+/var
+pom.xml.versionsBackup
+test-output/
+/atlassian-ide-plugin.xml
+.idea
+.DS_Store
+.classpath
+.settings
+.project
+temp-testng-customsuite.xml
+test-output
+.externalToolBuilders
+*~
+
+#
 *.class
 *.log
 

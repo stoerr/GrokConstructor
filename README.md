@@ -23,6 +23,7 @@ Status: beta.
 TODO:
 - Better error handling in incremental matching
 - Give definition of grok patterns as title on pattern selections.
+- Send mail for bugreports
 
 TODO eventually:
 - Move error box on top of page
