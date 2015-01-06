@@ -1,6 +1,6 @@
 package net.stoerr.grokconstructor
 
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
+import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -14,6 +14,7 @@ class GrokLibraryServlet extends HttpServlet {
       response.setContentType("text/plain")
       response.setStatus(HttpServletResponse.SC_OK)
       response.setDateHeader("Expires", System.currentTimeMillis() + 86400000L)
+      response.setHeader("Pragma", "Public");
       GrokPatternLibrary.grokSource(path.substring(1)).getLines().foreach(response.getWriter.println(_))
     }
   }

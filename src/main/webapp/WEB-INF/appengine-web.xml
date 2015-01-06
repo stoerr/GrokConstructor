@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <!-- see https://cloud.google.com/appengine/docs/java/config/appconfig -->
+
     <application>grokconstructor</application>
     <version>${appengine.app.version}</version>
     <threadsafe>true</threadsafe>
@@ -15,12 +17,24 @@
     </system-properties>
 
     <static-files>
-        <include path="/**.png" expiration="31d"/>
-        <include path="/**.jpg" expiration="31d"/>
-        <include path="/**.ico" expiration="31d"/>
-        <include path="/**.css" expiration="31d"/>
-        <include path="/**.html" expiration="7d"/>
-        <include path="/**.txt" expiration="7d"/>
+        <include path="/**.png" expiration="31d">
+            <http-header name="Pragma" value="Public"/>
+        </include>
+        <include path="/**.jpg" expiration="31d">
+            <http-header name="Pragma" value="Public"/>
+        </include>
+        <include path="/**.ico" expiration="31d">
+            <http-header name="Pragma" value="Public"/>
+        </include>
+        <include path="/**.css" expiration="31d">
+            <http-header name="Pragma" value="Public"/>
+        </include>
+        <include path="/**.html" expiration="7d">
+            <http-header name="Pragma" value="Public"/>
+        </include>
+        <include path="/**.txt" expiration="7d">
+            <http-header name="Pragma" value="Public"/>
+        </include>
     </static-files>
 
     <sessions-enabled>false</sessions-enabled>
