@@ -30,8 +30,8 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   val groknameToMatches: List[(String, List[String])] = for {
     grokname <- form.grokPatternLibrary.keys.toList
     regex = new JoniRegex(GrokPatternLibrary.replacePatterns("%{" + grokname + "}", form.grokPatternLibrary))
-    restlinematchOptions = loglineRests.map(regex.matchStartOf(_))
-    if (restlinematchOptions.find(_.isEmpty)).isEmpty
+    restlinematchOptions = loglineRests.map(regex.matchStartOf)
+    if restlinematchOptions.find(_.isEmpty).isEmpty
     restlinematches: List[String] = restlinematchOptions.map(_.get.matched).toList
   } yield (grokname, restlinematches)
 
@@ -65,7 +65,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   override def result: NodeSeq = <span/>
 
-  def formparts: NodeSeq = form.constructedRegex.inputText("Constructed regular expression so far: ", 180, false) ++
+  def formparts: NodeSeq = form.constructedRegex.inputText("Constructed regular expression so far: ", 180, enabled = false) ++
     form.loglines.hiddenField ++
     form.constructedRegex.hiddenField ++
     form.grokhiddenfields ++

@@ -1,7 +1,9 @@
 package net.stoerr.grokconstructor.webframework
 
-import xml.{Node, Text, NodeSeq}
 import javax.servlet.http.HttpServletRequest
+
+import scala.language.implicitConversions
+import scala.xml.{Node, NodeSeq, Text}
 
 /**
  * Some helper functions to create tables

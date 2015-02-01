@@ -20,7 +20,7 @@ import scala.xml.NodeSeq
 class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
 
   lazy val namedRegexps: Map[String, JoniRegex] = form.grokPatternLibrary.map {
-    case (name, regex) => (name -> new JoniRegex(GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary)))
+    case (name, regex) => name -> new JoniRegex(GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary))
   }
   lazy val namedRegexpsList: List[(String, JoniRegex)] = namedRegexps.toList
   override val title: String = "Automatic grok discovery"
@@ -91,7 +91,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
       val restlines = lines.map(_.substring(commonPrefix.length))
       return matchingRegexpStructures(restlines).map(FixedString(commonPrefix) :: _)
     } else {
-      val regexpand = for ((name, regex) <- namedRegexpsList) yield (name, lines.map(regex.matchStartOf(_)))
+      val regexpand = for ((name, regex) <- namedRegexpsList) yield (name, lines.map(regex.matchStartOf))
       val candidatesThatMatchAllLines = regexpand.filter(_._2.find(_.isEmpty).isEmpty)
       val candidates = candidatesThatMatchAllLines.filterNot(_._2.find(_.get.length > 0).isEmpty)
       val candidateToMatches = candidates.map {

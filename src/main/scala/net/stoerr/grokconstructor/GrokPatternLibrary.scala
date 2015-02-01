@@ -25,8 +25,7 @@ object GrokPatternLibrary {
     if (!location.matches("^[a-z-]+$")) throw new IllegalArgumentException("Invalid fullpath " + location)
     val inputStream: InputStream = getClass.getResourceAsStream("/grok/" + location)
     if (null == inputStream) throw new IllegalArgumentException("Could not find " + location)
-    val stream: BufferedSource = Source.fromInputStream(inputStream)
-    return stream
+    Source.fromInputStream(inputStream)
   }
 
   /** Reads the patterns from a source */
@@ -34,7 +33,7 @@ object GrokPatternLibrary {
     val cleanedupLines = src.filterNot(_.trim.isEmpty).filterNot(_.startsWith("#"))
     val grokLine = "(\\w+) (.*)".r
     cleanedupLines.map {
-      case grokLine(name, grokregex) => (name -> grokregex)
+      case grokLine(name, grokregex) => name -> grokregex
     }.toMap
   }
 
@@ -60,5 +59,5 @@ object GrokPatternLibrary {
 }
 
 class GrokPatternNameUnknownException(val patternname: String, val pattern: String) extends RuntimeException {
-  override def toString(): String = "Grok pattern name " + patternname + " unknown at " + pattern
+  override def toString: String = "Grok pattern name " + patternname + " unknown at " + pattern
 }

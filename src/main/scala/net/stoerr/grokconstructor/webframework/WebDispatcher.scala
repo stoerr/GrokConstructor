@@ -34,9 +34,9 @@ class WebDispatcher extends HttpServlet {
           req.setAttribute("title", view.title)
           req.setAttribute("body", view.body)
           req.setAttribute("navigation", navigation(req))
-          resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-          resp.setHeader("Pragma", "no-cache"); // HTTP 1.0
-          resp.setDateHeader("Expires", 0);
+          resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1
+          resp.setHeader("Pragma", "no-cache") // HTTP 1.0
+          resp.setDateHeader("Expires", 0)
           getServletContext.getRequestDispatcher("/jsp/frame.jsp").forward(req, resp)
       }
     } catch {
@@ -47,7 +47,7 @@ class WebDispatcher extends HttpServlet {
   }
 
   def giveView(request: HttpServletRequest): Either[String, WebView] = {
-    val view = (request.getPathInfo) match {
+    val view = request.getPathInfo match {
       case MatcherEntryView.path => new MatcherEntryView(request)
       case IncrementalConstructionInputView.path => new IncrementalConstructionInputView(request)
       case IncrementalConstructionStepView.path => new IncrementalConstructionStepView(request)

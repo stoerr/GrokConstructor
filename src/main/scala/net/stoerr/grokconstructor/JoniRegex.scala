@@ -1,7 +1,7 @@
 package net.stoerr.grokconstructor
 
-import org.joni.{NameEntry, Matcher, Regex}
 import org.jcodings.specific.UTF8Encoding
+import org.joni.{Matcher, NameEntry, Regex}
 
 /**
  * Very rudimentary just-what-I-need wrapper for org.joni.Regex. I am deeply sorry to use something
@@ -41,12 +41,12 @@ case class JoniRegex(regex: String) {
     def namedgroups: Map[String, String] = {
       val reg = matcher.getRegion
       if (0 >= compiledRegex.numberOfNames()) Map()
-      else (new JLIterator[NameEntry](compiledRegex.namedBackrefIterator()).toList.map {
+      else new JLIterator[NameEntry](compiledRegex.namedBackrefIterator()).toList.map {
         nameEntry =>
           val backref = compiledRegex.nameToBackrefNumber(nameEntry.name, nameEntry.nameP, nameEntry.nameEnd, reg)
           val name = new String(nameEntry.name.slice(nameEntry.nameP, nameEntry.nameEnd))
           name -> new String(bytes.slice(reg.beg(backref), reg.end(backref)))
-      }).toMap
+      }.toMap
     }
 
     def regex = JoniRegex.this.regex
