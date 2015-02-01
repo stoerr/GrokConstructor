@@ -16,11 +16,12 @@ trait MultilineFormPart extends WebForm {
   /** If non empty, we will put the loglines through a
     * http://logstash.net/docs/latest/filters/multiline filter */
   val multilineRegex = InputText("multiline")
+
+  private val negatekey = "negate"
   /** Whether to negate the multilineRegex: if false we will append
     * lines that do <em>not</em> match the filter, else we will append
     * lines that do match the filter. */
   val multilineNegate = InputMultipleChoice("multilinenegate", Map(negatekey -> <span>negate the multiline regex</span>), List())
-  private val negatekey = "negate"
 
   def multilineEntry: NodeSeq =
     multilineRegex.inputText("If you want to use logstash's multiline filter please specify the used regex:", 80) ++
