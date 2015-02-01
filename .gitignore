@@ -34,7 +34,7 @@ project/boot/
 project/plugins/project/
 
 #IDEA specifics
-.idea/
+.idea
 *.iml
 /.classpath
 /.project
