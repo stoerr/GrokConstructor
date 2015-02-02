@@ -31,9 +31,7 @@
   <div class="ym-wrapper">
     <header>
     <div class="ym-wbox">
-      <h1>
-        Grok Discovery<sup>2</sup>
-      </h1>
+      <h1>Grok Constructor</h1>
     </div>
     </header>
     <nav id="nav">

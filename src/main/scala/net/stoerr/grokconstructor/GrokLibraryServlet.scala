@@ -14,7 +14,7 @@ class GrokLibraryServlet extends HttpServlet {
       response.setContentType("text/plain")
       response.setStatus(HttpServletResponse.SC_OK)
       response.setDateHeader("Expires", System.currentTimeMillis() + 86400000L)
-      response.setHeader("Pragma", "Public");
+      response.setHeader("Pragma", "Public")
       GrokPatternLibrary.grokSource(path.substring(1)).getLines().foreach(response.getWriter.println)
     }
   }
