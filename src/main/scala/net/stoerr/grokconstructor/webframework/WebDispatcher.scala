@@ -77,18 +77,14 @@ class WebDispatcher extends HttpServlet {
       navlink(MatcherEntryView.path, "Matcher") ++ navlink(AutomaticDiscoveryView.path, "Automatic Construction")
   }
 
-  def reqInfo(req: HttpServletRequest): String = {
-    req.getRequestURL + "?" + req.getQueryString + ":\n" +
-      req.getParameterMap.mapValues(_.asInstanceOf[Array[String]].mkString("\n"))
-  }
-
   def errorPage(req: HttpServletRequest, resp: HttpServletResponse, e: Exception): Unit = {
     val writer = resp.getWriter
     writer.println(
       """
         | <h1>OUCH!</h1>
         | <p>I'm sorry, but you have encountered a bug or missing nice display of an error message in the application.
-        | Please contact Hans-Peter St&ouml;rr (<a href="http://www.stoerr.net/">www.stoerr.net</a>
+        | If you can't guess the problem from the error message,
+        | please contact Hans-Peter St&ouml;rr (<a href="http://www.stoerr.net/">www.stoerr.net</a>
         |  <script type="text/javascript" language="javascript">
         |<!--
         |// Email obfuscator script 2.1 by Tim Williams, University of Arizona
@@ -121,6 +117,11 @@ class WebDispatcher extends HttpServlet {
     writer.println("\nRequest Info:\n" + reqInfo(req) + "\n\n")
     e.printStackTrace(writer)
     writer.println("\n</pre>")
+  }
+
+  def reqInfo(req: HttpServletRequest): String = {
+    req.getRequestURL + "?" + req.getQueryString + ":\n" +
+      req.getParameterMap.mapValues(_.asInstanceOf[Array[String]].mkString("\n"))
   }
 
 }

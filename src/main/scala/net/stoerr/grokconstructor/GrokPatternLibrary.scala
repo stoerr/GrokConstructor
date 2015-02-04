@@ -2,7 +2,7 @@ package net.stoerr.grokconstructor
 
 import java.io.InputStream
 
-import scala.io.{BufferedSource, Source}
+import scala.io.Source
 import scala.util.matching.Regex
 
 /**
@@ -34,6 +34,8 @@ object GrokPatternLibrary {
     val grokLine = "(\\w+) (.*)".r
     cleanedupLines.map {
       case grokLine(name, grokregex) => name -> grokregex
+      case other => sys.error("Can't understand the following line in the additional grok patterns - " +
+        "it doesn't seem to be a normal line for a grok pattern file consisting of a key, a space and a definition:\n" + other)
     }.toMap
   }
 

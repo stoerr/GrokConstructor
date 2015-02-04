@@ -10,3 +10,10 @@ There is a JSP for the frame of the page. It takes various parts from to-Stringa
 
 Everything is stateless here - both to conserve server resources and to allow opening multiple windows.
 Thus, everything needed is transmitted in hidden fields.
+
+
+Error handling:
+Uncaught exceptions will display a generic error page in WebDispatcher with request info, a stacktrace and all.
+Common errors during processing are caught in the processing methods (e.g. MatcherEntryView.showResult), but
+that's difficult if the exception is created in the constructor / variable initializations.
+
