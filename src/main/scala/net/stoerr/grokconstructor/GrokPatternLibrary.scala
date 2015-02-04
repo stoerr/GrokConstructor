@@ -35,7 +35,7 @@ object GrokPatternLibrary {
     cleanedupLines.map {
       case grokLine(name, grokregex) => name -> grokregex
       case other => sys.error("Can't understand the following line in the additional grok patterns - " +
-        "it doesn't seem to be a normal line for a grok pattern file consisting of a key, a space and a definition:\n" + other)
+        "it doesn't seem to be a normal line for a grok pattern file consisting of a key, a space and a definition:\n\n" + other)
     }.toMap
   }
 
