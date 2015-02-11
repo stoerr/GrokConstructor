@@ -1,0 +1,35 @@
+- !!! Log4j Conversion pattern to grok regex converter
+(perhaps later also logback: http://logback.qos.ch/manual/layouts.html - quite different! ,
+java.util.logging http://docs.oracle.com/javase/7/docs/api/java/util/logging/SimpleFormatter.html - also quite different)
+
+https://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html
+
+% format_modifiers conversion_caracter
+
+%c -> category
+%C -> classname
+%d ->
+%d{HH:mm:ss,SSS} or %d{dd MMM yyyy HH:mm:ss,SSS}, kein specifier -> iso8601
+%d{ISO8601} %d{ABSOLUTE} %{DATE}
+ABSOLUTE = "HH:mm:ss,SSS" , DATE = "dd MMM yyyy HH:mm:ss,SSS" , ISO8601 = "yyyy-MM-dd HH:mm:ss,SSS"
+Bsp: \A%{TIMESTAMP_ISO8601:timestamp}
+(%F -> filename)
+(%l -> location : usually consists of the fully qualified name of the calling method followed by the callers source the file name and line number between parentheses.)
+(%L-> linenumber)
+%m -> message : %{DATA:message} or %{GREEDYDATA:message}"
+(%M -> methodname)
+%n -> line separator "\n" oder "\r\n"
+%p -> loglevel / priority  : %{LOGLEVEL:loglevel}
+%r -> relativeTime (number of milliseconds elapsed from the construction of the layout until the creation of the logging event.)
+%x NDC
+$X{key} -> key (from MDC)
+%% -> percent sign
+
+format_modifiers = [left_justification_flag][minimum_field_width][.][maximum_field_width]
+left_justification_flag = - for left justification (pad on the right) , not present -> right justification (pad on the left)
+Bsp: $20c, %-20c , %.30c, %20.30c, %-20.30c
+
+	date {
+		type => "log4j"
+		match => ["timestamp", "ISO8601", "yyyy-MM-dd HH:mm:ss,SSS"]
+	}

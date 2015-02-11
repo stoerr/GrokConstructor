@@ -4,4 +4,4 @@ https://cloud.google.com/appengine/docs/java/tools/uploadinganapp#Downloading_Lo
 Neccesary Optimizations:
 - Why are the log lines in the dashboard cut off????
 
-Broken Multline Regex:
+- suggest issues for suggestions.

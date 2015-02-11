@@ -24,6 +24,7 @@ TODO:
 - Better error handling in incremental matching
 - Give definition of grok patterns as title on pattern selections.
 - Send mail for bugreports
+- !!! Log4j Conversion pattern to grok regex converter
 
 TODO eventually:
 - Move error box on top of page

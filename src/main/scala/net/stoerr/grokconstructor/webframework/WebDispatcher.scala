@@ -111,6 +111,9 @@ class WebDispatcher extends HttpServlet {
         |</script>)
         | with a copy of this page, or open an issue on
         | <a href="https://github.com/stoerr/GrokConstructor/issues">https://github.com/stoerr/GrokConstructor/issues</a> .
+        | </p><p>
+        | Please remember that you can always press the back button to fix what was wrong - there is no state on the
+        | server, only in the page shown in the browser.
         | </p><pre>
       """.stripMargin)
     writer.println("\nError message: " + e + "\n")
