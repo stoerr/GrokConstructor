@@ -4,13 +4,13 @@
     <groupId>net.stoerr</groupId>
     <artifactId>GrokConstructor</artifactId>
     <packaging>war</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <description>Semi-automatic incremental construction and debugging of regular expressions for grok to parse logfiles
         for logstash http://logstash.net/ . Deployed at http://grokconstructor.appspot.com/ .
     </description>
 
     <properties>
-        <appengine.app.version>1</appengine.app.version>
+        <appengine.app.version>${pom.version}</appengine.app.version>
         <appengine.target.version>1.9.17</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -36,6 +36,11 @@
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-xml</artifactId>
             <version>2.11.0-M4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json4s</groupId>
+            <artifactId>json4s-native_2.11</artifactId>
+            <version>3.2.11</version>
         </dependency>
 
         <dependency>

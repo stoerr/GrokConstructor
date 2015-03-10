@@ -7,7 +7,7 @@ import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
 import net.stoerr.grokconstructor.incremental.{IncrementalConstructionInputView, IncrementalConstructionStepView}
 import net.stoerr.grokconstructor.matcher.MatcherEntryView
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConversions
 import scala.xml.{Elem, NodeSeq}
 
 /**
@@ -18,6 +18,7 @@ import scala.xml.{Elem, NodeSeq}
 class WebDispatcher extends HttpServlet {
 
   val logger = Logger.getLogger("WebDispatcher")
+  implicit val formats = Serialization.formats(NoTypeHints)
 
   override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
     doGet(req, resp)
@@ -77,6 +78,10 @@ class WebDispatcher extends HttpServlet {
       navlink(MatcherEntryView.path, "Matcher") ++ navlink(AutomaticDiscoveryView.path, "Automatic Construction")
   }
 
+  import org.json4s._
+  import org.json4s.native.Serialization
+  import org.json4s.native.Serialization.write
+
   def errorPage(req: HttpServletRequest, resp: HttpServletResponse, e: Exception): Unit = {
     val writer = resp.getWriter
     writer.println(
@@ -123,8 +128,9 @@ class WebDispatcher extends HttpServlet {
   }
 
   def reqInfo(req: HttpServletRequest): String = {
-    req.getRequestURL + "?" + req.getQueryString + ":\n" +
-      req.getParameterMap.mapValues(_.asInstanceOf[Array[String]].mkString("\n"))
+    val parameterMap = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
+    req.getRequestURL + "?" + req.getQueryString + ":\n" + write(parameterMap)
+    // req.getParameterMap.mapValues(_.asInstanceOf[Array[String]].mkString("\n"))
   }
 
 }

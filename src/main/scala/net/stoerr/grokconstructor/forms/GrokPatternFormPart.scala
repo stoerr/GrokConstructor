@@ -24,9 +24,10 @@ trait GrokPatternFormPart extends WebForm {
         <a href="http://logstash.net/docs/latest/filters/grok">grok Patterns</a>
         from
         <a href="http://logstash.net/">logstash</a>
-        v.1.4.1 which you want to use:</label>
+        v.1.4.2 which you want to use:</label>
     </div> ++ groklibs.checkboxes ++
-      grokadditionalinput.inputTextArea("You can also provide some additional grok patterns in the same format:", 5, 180)
+      grokadditionalinput.inputTextArea("You can also provide some additional grok patterns in the same format " +
+        "as the pattern files linked above (i.e., on each line you give a pattern name, a space and the pattern):", 5, 180)
 
   def grokhiddenfields: NodeSeq = groklibs.hiddenField ++ grokadditionalinput.hiddenField
 
