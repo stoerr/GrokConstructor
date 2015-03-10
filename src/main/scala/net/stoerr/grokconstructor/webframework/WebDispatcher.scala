@@ -6,6 +6,8 @@ import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
 import net.stoerr.grokconstructor.incremental.{IncrementalConstructionInputView, IncrementalConstructionStepView}
 import net.stoerr.grokconstructor.matcher.MatcherEntryView
+import org.json4s.NoTypeHints
+import org.json4s.native.Serialization
 
 import scala.collection.JavaConversions
 import scala.xml.{Elem, NodeSeq}
@@ -130,7 +132,6 @@ class WebDispatcher extends HttpServlet {
   def reqInfo(req: HttpServletRequest): String = {
     val parameterMap = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
     req.getRequestURL + "?" + req.getQueryString + ":\n" + write(parameterMap)
-    // req.getParameterMap.mapValues(_.asInstanceOf[Array[String]].mkString("\n"))
   }
 
 }
