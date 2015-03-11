@@ -40,6 +40,8 @@ class WebDispatcher extends HttpServlet {
           resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1
           resp.setHeader("Pragma", "no-cache") // HTTP 1.0
           resp.setDateHeader("Expires", 0)
+          resp.setContentType("application/xhtml+xml")
+          resp.setCharacterEncoding("UTF-8")
           getServletContext.getRequestDispatcher("/jsp/frame.jsp").forward(req, resp)
       }
     } catch {
@@ -80,8 +82,6 @@ class WebDispatcher extends HttpServlet {
       navlink(MatcherEntryView.path, "Matcher") ++ navlink(AutomaticDiscoveryView.path, "Automatic Construction")
   }
 
-  import org.json4s._
-  import org.json4s.native.Serialization
   import org.json4s.native.Serialization.write
 
   def errorPage(req: HttpServletRequest, resp: HttpServletResponse, e: Exception): Unit = {
@@ -130,8 +130,13 @@ class WebDispatcher extends HttpServlet {
   }
 
   def reqInfo(req: HttpServletRequest): String = {
-    val parameterMap = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
-    req.getRequestURL + "?" + req.getQueryString + ":\n" + write(parameterMap)
+    try {
+      val parameterMap = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
+      req.getRequestURL + "?" + req.getQueryString + ":\n" + write(parameterMap)
+    } catch {
+      case e: Exception => logger.log(Level.SEVERE, "Trouble logging request", e)
+        return "OUCH: Trouble logging request: " + e
+    }
   }
 
 }

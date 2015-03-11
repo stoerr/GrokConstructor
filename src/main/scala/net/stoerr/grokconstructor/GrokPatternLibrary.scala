@@ -34,8 +34,10 @@ object GrokPatternLibrary {
     val grokLine = "(\\w+) (.*)".r
     cleanedupLines.map {
       case grokLine(name, grokregex) => name -> grokregex
-      case other => sys.error("Can't understand the following line in the additional grok patterns - " +
-        "it doesn't seem to be a normal line for a grok pattern file consisting of a key, a space and a definition:\n\n" + other)
+      case other => sys.error("Can't understand the following line in the additional grok patterns - \n" +
+        "it doesn't seem to be a normal line for a grok pattern file consisting of " +
+        "a key, a space and a definition. For example, this would be correct:\n# Some comment\nUSERNAME [a-zA-Z0-9._-]+\nUSER %{USERNAME}\n" +
+        "\nThe troublesome line is:\n\n" + other)
     }.toMap
   }
 

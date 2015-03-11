@@ -10,7 +10,7 @@
     </description>
 
     <properties>
-        <appengine.app.version>${pom.version}</appengine.app.version>
+        <appengine.app.version>3</appengine.app.version>
         <appengine.target.version>1.9.17</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
