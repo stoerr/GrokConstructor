@@ -27,9 +27,20 @@ $X{key} -> key (from MDC)
 
 format_modifiers = [left_justification_flag][minimum_field_width][.][maximum_field_width]
 left_justification_flag = - for left justification (pad on the right) , not present -> right justification (pad on the left)
-Bsp: $20c, %-20c , %.30c, %20.30c, %-20.30c
+Bsp: %20c, %-20c , %.30c, %20.30c, %-20.30c
+%(?:(-)?(\d+))?(?:\.(\d+))?[a-zA-Z]
+http://www.regexplanet.com/advanced/java/index.html !
 
 	date {
 		type => "log4j"
 		match => ["timestamp", "ISO8601", "yyyy-MM-dd HH:mm:ss,SSS"]
 	}
+
+ConversionPatterns:
+%d{dd.MM.yyyy HH:mm:ss},%m%n
+%-4r [%t] %-5p %c %x - %m%n
+%d{yyyyMMddHHmmss};%X{host};EKP;COMMONS;(%13F:%L);%X{gsid};%X{lsid};%-5p;%m%n
+[cc]%d{MMM-dd HH:mm:ss} %-14.14c{1}- %m%n
+%d{ABSOLUTE} | %-5p | %-10t | %-24.24c{1} | %-30.30C %4L | %m%n
+%d{dd.MM.yyyy HH:mm:ss,SSS} - %r [%-5p] %c %m%n
+%d{yyyy-MM-dd HH:mm:ss} %-5.5p [%-30c{1}] %-32X{sessionId} %X{requestId} - %m\n

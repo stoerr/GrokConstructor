@@ -1,0 +1,92 @@
+package net.stoerr.grokconstructor.patterntranslation
+
+import scala.util.matching.Regex
+
+/**
+ * Translates a log4j conversation pattern into a grok pattern for parsing the log4j output
+ * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
+ * @since 16.02.2015
+ * @see "https://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html"
+ */
+object Log4jTranslator {
+
+  /** Matches log4j conversion specifiers - group 1 = left justify if -, group 2 = minimum width,
+    * group 3 = maximum width, group 4 = argument in case of %d etc. */
+  val conversionSpecifier: Regex = """%(?:(-)?(\d+))?(?:\.(\d+))?([a-zA-Z])(?:\{([^}]+)\})?""".r
+
+  def translate(conversionpattern: String): String =
+    replaceMatchesAndInbetween(conversionpattern, conversionSpecifier, translateConversionSpecifier, quoteAsRegex)
+
+  private def translateConversionSpecifier(thematch: Regex.Match): String = {
+    val List(leftjust, minwidth, maxwidth, conversionchar, argument) = thematch.subgroups
+    val baseRegex = conversionchar match {
+      case "c" => "%{JAVACLASS:logger}"
+      case "C" => "%{JAVACLASS:class}"
+      case "F" => "%{JAVAFILE:class}"
+      case "l" => "%{JAVASTACKTRACEPART:location}"
+      case "L" => "%{NONNEGINT:line}"
+      case "m" => "%{GREEDYDATA:message}"
+      case "n" => "\\r?\\n"
+      case "M" => "${WORD:method}"
+      case "p" => "%{LOGLEVEL:loglevel}"
+      case "r" => "${INT:relativetime}"
+      case "x" => "${WORD:ndc}?"
+      case "X" => if (null == argument) """\{(?<mdc>(?:\{[^\}]*,[^\}]*\})*)\}""" else "${WORD:" + argument + "}?"
+      case "d" => translateDate(argument)
+    }
+    align(baseRegex, leftjust, minwidth, maxwidth)
+  }
+
+  private def translateDate(argument: String): String = {
+    val format = argument match {
+      case null | "ISO8601" => "%{TIMESTAMP_ISO8601}"
+      case "ABSOLUTE" => "HH:mm:ss,SSS"
+      case "DATE" => "dd MMM yyyy HH:mm:ss,SSS"
+      case explicitFormat => translateExplicitDateFormat(explicitFormat)
+    }
+    "(?<date>" + format + ")"
+  }
+
+  val dateFormatComponent = "(([a-zA-Z])\\2*)(.*)".r
+  // fullcomponent, componentchar, rest
+  val dateFormatLiteral = "'([^']+)(.*)".r // literal, rest
+
+  private def translateExplicitDateFormat(dateFormat: String): String = dateFormat match {
+    case null | "" => dateFormat
+    case dateFormatLiteral(literal, rest) => quoteAsRegex(literal) + translateExplicitDateFormat(rest)
+    case dateFormatLiteral(_, "d", rest) => "%{MONTHDAY}" + translateExplicitDateFormat(rest)
+    case dateFormatLiteral(_, "y", rest) => "%{YEAR}" + translateExplicitDateFormat(rest)
+    case dateFormatLiteral("MMM", _, rest) => "%{MONTH}" + translateExplicitDateFormat(rest)
+    case dateFormatLiteral("MM", _, rest) => "%{MONTHNUM2}" + translateExplicitDateFormat(rest)
+    case dateFormatLiteral("EEE", _, rest) => "%{DAY}" + translateExplicitDateFormat(rest)
+    case dateFormatLiteral(_, "H", rest) => "%{HOUR}" + translateExplicitDateFormat(rest)
+    case dateFormatLiteral(_, "m", rest) => "%{MINUTE}" + translateExplicitDateFormat(rest)
+    case dateFormatLiteral(_, "s", rest) => "%{SECOND}" + translateExplicitDateFormat(rest)
+    case dateFormatLiteral(_, "X", rest) => "%{ISO8601_TIMEZONE}" + translateExplicitDateFormat(rest)
+    case dateFormatLiteral(_, "z" | "Z", rest) => "%{TZ}" + translateExplicitDateFormat(rest)
+  }
+
+  private def align(baseRegex: String, leftjust: String, minwidth: String, maxwidth: String): String =
+    if (null == minwidth || minwidth.isEmpty) baseRegex
+    else leftjust match {
+      // widths are ignored for now - that'd be hard in regexes
+      case "-" => " *" + baseRegex
+      case "" => baseRegex + " *"
+    }
+
+  private def quoteAsRegex(literalchars: String): String = literalchars.replaceAll("%%", "%").replaceAll("%n", "\\n")
+    .replaceAll( """([(){}|\\\[\]])""", """\\$1""")
+
+  def replaceMatchesAndInbetween(source: String, regex: Regex, matchfunc: Regex.Match => String, betweenfunc: String => String): String = {
+    val res = new StringBuilder
+    var lastend = 0
+    regex findAllMatchIn source foreach { thematch =>
+      res ++= betweenfunc(source.substring(lastend, thematch.start))
+      res ++= matchfunc(thematch)
+      lastend = thematch.end
+    }
+    res ++= betweenfunc(source.substring(lastend, source.length))
+    res.toString()
+  }
+
+}
