@@ -39,3 +39,7 @@ project/plugins/project/
 /.classpath
 /.project
 /.settings
+/src/main/webapp/yamlold
+/deploy.cmd
+/start.cmd
+/src/main/webapp/css/combined*

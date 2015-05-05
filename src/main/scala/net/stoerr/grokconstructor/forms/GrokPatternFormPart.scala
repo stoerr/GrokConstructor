@@ -1,5 +1,7 @@
 package net.stoerr.grokconstructor.forms
 
+import java.util.logging.Logger
+
 import net.stoerr.grokconstructor.GrokPatternLibrary
 import net.stoerr.grokconstructor.webframework.WebForm
 
@@ -12,10 +14,14 @@ import scala.xml.NodeSeq
  */
 trait GrokPatternFormPart extends WebForm {
 
+  private val logger = Logger.getLogger("GrokPatternFormPart")
+
   lazy val grokPatternLibrary: Map[String, String] =
     GrokPatternLibrary.mergePatternLibraries(groklibs.values, grokadditionalinput.value)
   val groklibs = InputMultipleChoice("groklibs", GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap, GrokPatternLibrary.grokpatternnames)
   val grokadditionalinput = InputText("grokadditional")
+
+  if (grokadditionalinput.value.isDefined) logger.fine("grokadditionalinput: " + grokadditionalinput.value)
 
   def grokpatternEntry =
     <div class="ym-fbox-text">

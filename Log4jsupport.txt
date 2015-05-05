@@ -6,8 +6,8 @@ https://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html
 
 % format_modifiers conversion_caracter
 
-%c -> category
-%C -> classname
+%c -> category : %{JAVACLASS:logger} (JAVACLASS does not work when abbreviated since it requires a package name)
+%C -> classname : %{JAVACLASS:logger} (JAVACLASS does not work when abbreviated since it requires a package name)
 %d ->
 %d{HH:mm:ss,SSS} or %d{dd MMM yyyy HH:mm:ss,SSS}, kein specifier -> iso8601
 %d{ISO8601} %d{ABSOLUTE} %{DATE}

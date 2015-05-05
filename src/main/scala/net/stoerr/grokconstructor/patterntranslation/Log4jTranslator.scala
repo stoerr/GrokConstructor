@@ -20,18 +20,18 @@ object Log4jTranslator {
   private def translateConversionSpecifier(thematch: Regex.Match): String = {
     val List(leftjust, minwidth, maxwidth, conversionchar, argument) = thematch.subgroups
     val baseRegex = conversionchar match {
-      case "c" => "%{JAVACLASS:logger}"
-      case "C" => "%{JAVACLASS:class}"
+      case "c" => "(?<logger>[A-Za-z0-9$_.]+)" // "%{JAVACLASS:logger}" does not work for abbreviated patterns
+      case "C" => "(?<class>[A-Za-z0-9$_.]+)"
       case "F" => "%{JAVAFILE:class}"
       case "l" => "%{JAVASTACKTRACEPART:location}"
       case "L" => "%{NONNEGINT:line}"
       case "m" => "%{GREEDYDATA:message}"
-      case "n" => "\\r?\\n"
-      case "M" => "${WORD:method}"
+      case "n" => "$" // possibly also "\\r?\\n"
+      case "M" => "%{NOTSPACE:method}"
       case "p" => "%{LOGLEVEL:loglevel}"
-      case "r" => "${INT:relativetime}"
-      case "x" => "${WORD:ndc}?"
-      case "X" => if (null == argument) """\{(?<mdc>(?:\{[^\}]*,[^\}]*\})*)\}""" else "${WORD:" + argument + "}?"
+      case "r" => "%{INT:relativetime}"
+      case "x" => "(%{NOTSPACE:ndc})?"
+      case "X" => if (null == argument) """\{(?<mdc>(?:\{[^\}]*,[^\}]*\})*)\}""" else "(%{NOTSPACE:" + argument + "})?"
       case "d" => translateDate(argument)
     }
     align(baseRegex, leftjust, minwidth, maxwidth)
@@ -44,7 +44,7 @@ object Log4jTranslator {
       case "DATE" => "dd MMM yyyy HH:mm:ss,SSS"
       case explicitFormat => translateExplicitDateFormat(explicitFormat)
     }
-    "(?<date>" + format + ")"
+    "(?<timestamp>" + format + ")"
   }
 
   val dateFormatComponent = "(([a-zA-Z])\\2*)(.*)".r
@@ -66,12 +66,15 @@ object Log4jTranslator {
     case dateFormatLiteral(_, "z" | "Z", rest) => "%{TZ}" + translateExplicitDateFormat(rest)
   }
 
+  // format_modifiers = [left_justification_flag][minimum_field_width][.][maximum_field_width]
+  // left_justification_flag = - for left justification (pad on the right) , not present -> right justification (pad on the left)
+  // Bsp: %20c, %-20c , %.30c, %20.30c, %-20.30c
   private def align(baseRegex: String, leftjust: String, minwidth: String, maxwidth: String): String =
     if (null == minwidth || minwidth.isEmpty) baseRegex
     else leftjust match {
       // widths are ignored for now - that'd be hard in regexes
-      case "-" => " *" + baseRegex
-      case "" => baseRegex + " *"
+      case "-" => baseRegex + " *"
+      case "" | null => " *" + baseRegex
     }
 
   private def quoteAsRegex(literalchars: String): String = literalchars.replaceAll("%%", "%").replaceAll("%n", "\\n")
