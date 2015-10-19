@@ -44,7 +44,7 @@ trait WebForm extends TableMaker {
 
     def radiobutton(value: String, description: NodeSeq): NodeSeq = <div>
       <input type="radio" name={name} value={value}
-             id={name}/> <label for={name}>
+             id={"radio" + name.hashCode + value.hashCode}/> <label for={"radio" + name.hashCode + value.hashCode}>
         {description}
       </label>
     </div>
