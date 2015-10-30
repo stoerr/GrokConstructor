@@ -1,6 +1,9 @@
 package net.stoerr.grokconstructor
 
+import java.util.logging.Logger
+
 import org.jcodings.specific.UTF8Encoding
+import org.joni.exception.SyntaxException
 import org.joni.{Matcher, NameEntry, Regex}
 
 /**
@@ -13,7 +16,15 @@ import org.joni.{Matcher, NameEntry, Regex}
  */
 case class JoniRegex(regex: String) {
 
-  private val compiledRegex = new Regex(regex, UTF8Encoding.INSTANCE)
+  private val logger = Logger.getLogger("JoniRegex")
+
+  private val compiledRegex = try {
+    new Regex(regex, UTF8Encoding.INSTANCE)
+  } catch {
+    case e: SyntaxException =>
+      logger.severe("Trouble with regex '" + regex + "'")
+      throw e
+  }
 
   def matchStartOf(str: String): Option[StartMatch] = {
     val bytes = str.getBytes("UTF-8")
@@ -71,5 +82,5 @@ case class StartMatch(length: Int, matched: String, rest: String)
 object JoniRegexQuoter {
   /** Quotes a string such that it can serve as a literal expression */
   // [.(|?*+{^$
-  def quote(str: String): String = str.replaceAll("([.|?*+{^$(\\[\\\\])", "\\\\$1")
+  def quote(str: String): String = str.replaceAll("([.|?*+{^$()\\[\\\\])", "\\\\$1")
 }
