@@ -1,6 +1,6 @@
 package net.stoerr.grokconstructor.forms
 
-import net.stoerr.grokconstructor.JoniRegex
+import net.stoerr.grokconstructor.{GrokPatternLibrary, JoniRegex}
 import net.stoerr.grokconstructor.webframework.WebForm
 
 import scala.xml.NodeSeq
@@ -11,7 +11,7 @@ import scala.xml.NodeSeq
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 26.02.13
  */
-trait MultilineFormPart extends WebForm {
+trait MultilineFormPart extends GrokPatternFormPart {
 
   /** If non empty, we will put the loglines through a
     * http://logstash.net/docs/latest/filters/multiline filter */
@@ -24,7 +24,7 @@ trait MultilineFormPart extends WebForm {
   val multilineNegate = InputMultipleChoice("multilinenegate", Map(negatekey -> <span>negate the multiline regex</span>), List())
 
   def multilineEntry: NodeSeq =
-    multilineRegex.inputText("If you want to use logstash's multiline filter please specify the used regex:", 80) ++
+    multilineRegex.inputText("If you want to use logstash's multiline filter please specify the used pattern (can include grok Patterns):", 80) ++
       multilineNegate.checkboxes
 
   def multilinehiddenfields: NodeSeq = multilineRegex.hiddenField ++ multilineNegate.hiddenField
@@ -47,7 +47,8 @@ trait MultilineFormPart extends WebForm {
   }
 
   private def continuationLine(line: String): Boolean = {
-    val ismatched = new JoniRegex(multilineRegex.value.get).findIn(line).isDefined
+    val regex = new JoniRegex(GrokPatternLibrary.replacePatterns(multilineRegex.value.get, grokPatternLibrary))
+    val ismatched = regex.findIn(line).isDefined
     if (multilineNegate.values.contains(negatekey)) !ismatched else ismatched
   }
 
