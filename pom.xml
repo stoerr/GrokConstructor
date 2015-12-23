@@ -10,9 +10,10 @@
     </description>
 
     <properties>
-        <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>1.9.27</appengine.target.version>
+        <appengine.app.version>3</appengine.app.version>
+        <appengine.target.version>1.9.30</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <scala.version>2.11.7</scala.version>
     </properties>
 
     <dependencies>
@@ -25,12 +26,12 @@
         <dependency>
             <groupId>org.jruby.joni</groupId>
             <artifactId>joni</artifactId>
-            <version>2.1.5</version>
+            <version>2.1.9</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.11.4</version>
+            <version>${scala.version}</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -52,7 +53,7 @@
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.11</artifactId>
-            <version>2.2.3</version>
+            <version>2.2.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -114,7 +115,7 @@
                 <!-- http://davidb.github.io/scala-maven-plugin/ ; continuous compilation with scala:cc! -->
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.2.2</version>
                 <executions>
                     <execution>
                         <goals>
