@@ -2,7 +2,7 @@ package net.stoerr.grokconstructor
 
 import java.io.InputStream
 
-import scala.io.Source
+import scala.io.{Codec, Source}
 import scala.util.matching.Regex
 
 /**
@@ -25,7 +25,7 @@ object GrokPatternLibrary {
     if (!location.matches("^[a-z-]+$")) throw new IllegalArgumentException("Invalid fullpath " + location)
     val inputStream: InputStream = getClass.getResourceAsStream("/grok/" + location)
     if (null == inputStream) throw new IllegalArgumentException("Could not find " + location)
-    Source.fromInputStream(inputStream)
+    Source.fromInputStream(inputStream)(Codec.UTF8)
   }
 
   /** Reads the patterns from a source */

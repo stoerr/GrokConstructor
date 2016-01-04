@@ -1,5 +1,6 @@
 package net.stoerr.grokconstructor
 
+import java.nio.charset.Charset
 import java.util.logging.Logger
 
 import org.jcodings.specific.UTF8Encoding
@@ -19,7 +20,8 @@ case class JoniRegex(regex: String) {
   private val logger = Logger.getLogger("JoniRegex")
 
   private val compiledRegex = try {
-    new Regex(regex, UTF8Encoding.INSTANCE)
+    val patternBytes = regex.getBytes("UTF-8")
+    new Regex(patternBytes, 0, patternBytes.length, org.joni.Option.NONE, UTF8Encoding.INSTANCE)
   } catch {
     case e: SyntaxException =>
       logger.severe("Trouble with regex '" + regex + "'")
