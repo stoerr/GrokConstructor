@@ -24,12 +24,13 @@ trait WebForm extends TableMaker {
 
     def valueSplitToLines: Array[String] = value.map(_.split("\r?\n")).getOrElse(Array())
 
-    def inputText(label: String, cols: Int, enabled: Boolean = true): Elem =
+    def inputText(label: String, cols: Int, rows: Int = 6, enabled: Boolean = true): Elem =
       <div class="ym-fbox-text">
         <label for={name}>
           {new Text(label)}
-        </label> <input
-        type="text" name={name} id={name} size={cols.toString} value={value.orNull} disabled={if (enabled) null else "disabled"}/>
+        </label>
+          <textarea name={name} id={name} cols={cols.toString} rows={rows.toString}
+                  disabled={if (enabled) null else "disabled"}>{value.orNull} </textarea>
       </div>
 
     def inputTextArea(label: String, rows: Int, cols: Int): Elem =
