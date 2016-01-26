@@ -24,7 +24,7 @@ case class JoniRegex(regex: String) {
     new Regex(patternBytes, 0, patternBytes.length, org.joni.Option.NONE, UTF8Encoding.INSTANCE)
   } catch {
     case e: SyntaxException =>
-      logger.severe("Trouble with regex '" + regex + "'")
+      logger.warning("Trouble with regex '" + regex + "' :" + e)
       throw e
   }
 

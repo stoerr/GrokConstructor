@@ -1,5 +1,6 @@
 package net.stoerr.grokconstructor.matcher
 
+import java.util.logging.Logger
 import javax.servlet.http.HttpServletRequest
 
 import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
@@ -14,6 +15,8 @@ import scala.xml.NodeSeq
  * @since 17.02.13
  */
 class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
+  private val logger = Logger.getLogger("JoniRegex")
+
   override val title: String = "Test grok patterns"
   val form = MatcherForm(request)
 
@@ -102,11 +105,14 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
   private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
   private def longestMatchOfRegexPrefix(pattern: String, line: String): (JoniRegex#JoniMatch, String) = {
-    val found: (Option[JoniRegex#JoniMatch], String) = NumericRange.inclusive(pattern.length - 1, 0, -1).toIterator
+    val foundOption: Option[(Option[JoniRegex#JoniMatch], String)] = NumericRange.inclusive(pattern.length - 1, 0, -1).toIterator
       .map(pattern.substring(0, _))
       .map(safefind(_, line))
-      .find(_._1.isDefined).get
-    (found._1.get, found._2)
+      .find(_._1.isDefined)
+    if (!foundOption.isDefined) {
+      logger.severe(s"Bug??? Impossible: no matching prefix '$pattern' for '$line'")
+    }
+    (foundOption.get._1.get, foundOption.get._2)
   }
 
   private def safefind(regex: String, line: String): (Option[JoniRegex#JoniMatch], String) =
