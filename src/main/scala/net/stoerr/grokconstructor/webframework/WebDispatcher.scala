@@ -9,12 +9,13 @@ import net.stoerr.grokconstructor.matcher.MatcherEntryView
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 
-import scala.collection.JavaConversions
+import scala.collection.{mutable, JavaConversions}
 import scala.xml.{Elem, NodeSeq}
 
 /**
  * Servlet that forwards the request to a controller and displays the view.
- * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
+  *
+  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
  * @since 15.02.13
  */
 class WebDispatcher extends HttpServlet {
@@ -46,7 +47,9 @@ class WebDispatcher extends HttpServlet {
       }
     } catch {
       case e: Exception =>
-        logger.log(Level.SEVERE, e + " for " + reqInfo(req), e)
+        logger.log(Level.SEVERE, e + " for " + reqInfo(req) + "\n\n" +
+          "Request properties: " + JavaConversions.enumerationAsScalaIterator(req.getAttributeNames).map(attr => attr + ": " + req.getAttribute("" + attr)).mkString("; "),
+          e)
         errorPage(req, resp, e);
     }
   }
@@ -123,7 +126,8 @@ class WebDispatcher extends HttpServlet {
         | server, only in the page shown in the browser.
         | </p><pre>
       """.stripMargin)
-    writer.println("\nError message: " + e + "\n")
+    writer.println("\nError message: " + e)
+    writer.println("\nTime: " + new java.util.Date())
     writer.println("\nRequest Info:\n" + reqInfo(req) + "\n\n")
     e.printStackTrace(writer)
     writer.println("\n</pre>")
@@ -131,8 +135,8 @@ class WebDispatcher extends HttpServlet {
 
   def reqInfo(req: HttpServletRequest): String = {
     try {
-      val parameterMap = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
-      req.getRequestURL + "?" + req.getQueryString + ":\n" + write(parameterMap)
+      val parameterMap: mutable.Map[String, Array[String]] = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
+      req.getRequestURL + "?" + req.getQueryString + ":{\n" + parameterMap.map(e => e._1 + ": " + write(e._2)).mkString(",\n") + "\n}"
     } catch {
       case e: Exception => logger.log(Level.SEVERE, "Trouble logging request", e)
         return "OUCH: Trouble logging request: " + e

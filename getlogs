@@ -1,2 +1,3 @@
 #https://cloud.google.com/appengine/docs/java/tools/uploadinganapp#Downloading_Logs
-/cygdrive/c/dev/m2repo/com/google/appengine/appengine-java-sdk/1.9.20/appengine-java-sdk/appengine-java-sdk-1.9.20/bin/appcfg.cmd --proxy=proxy:8080 -V 2 -n 10 --include_all --severity=0 request_logs target/GrokConstructor-0.0.2-SNAPSHOT/ version2.log
+cd /cygdrive/c/R/GitHub/GrokConstructor
+/cygdrive/c/dev/m2repo/com/google/appengine/appengine-java-sdk/1.9.30/appengine-java-sdk/appengine-java-sdk-1.9.20/bin/appcfg.cmd --proxy=proxy:8080 -V 2 -n 10 --include_all --severity=0 request_logs target/GrokConstructor-0.0.2-SNAPSHOT/ version2.log

@@ -8,14 +8,15 @@ import net.stoerr.grokconstructor.{GrokPatternLibrary, GrokPatternNameUnknownExc
 import org.joni.exception.SyntaxException
 
 import scala.collection.immutable.NumericRange
+import scala.collection.mutable
 import scala.xml.NodeSeq
 
 /**
- * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
- * @since 17.02.13
- */
+  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
+  * @since 17.02.13
+  */
 class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
-  private val logger = Logger.getLogger("JoniRegex")
+  private val logger = Logger.getLogger("MatcherEntryView")
 
   override val title: String = "Test grok patterns"
   val form = MatcherForm(request)
@@ -26,12 +27,14 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
   else Some(Left(fullpath(MatcherEntryView.path) + "?example=" + RandomTryLibrary.randomExampleNumber()))
 
   override def maintext: NodeSeq = <p>This tries to parse a set of given logfile lines with a given
-    <a href="http://logstash.net/docs/latest/filters/grok">grok regular expression</a> and prints
+    <a href="http://logstash.net/docs/latest/filters/grok">grok regular expression</a>
+    and prints
     the matches for named patterns for each log line. You can also apply a
-    <a href="http://logstash.net/docs/latest/filters/multiline">multiline filter</a> first.</p> ++
-  <p>Please enter some loglines for which you want to check a grok pattern,
-    the grok expression that should match these, mark the pattern libraries you draw your patterns from and then press
-  </p> ++ submit("Go!")
+    <a href="http://logstash.net/docs/latest/filters/multiline">multiline filter</a>
+    first.</p> ++
+    <p>Please enter some loglines for which you want to check a grok pattern,
+      the grok expression that should match these, mark the pattern libraries you draw your patterns from and then press
+    </p> ++ submit("Go!")
 
   override def sidebox: NodeSeq = <p>
     You can also just try this out with a</p> ++ buttonanchor(MatcherEntryView.path + "?randomize", "random example")
@@ -58,12 +61,13 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
       val regex = new JoniRegex(patternGrokked)
       try {
         val lines: Seq[String] = form.multilineFilter(form.loglines.valueSplitToLines)
+        val regexCache = new mutable.HashMap[String, JoniRegex]
         return <hr/> ++ <table class="bordertable narrow">
           {for (line <- lines) yield {
             rowheader2(line) ++ {
               regex.findIn(line) match {
                 case None =>
-                  val (jmatch, subregex) = longestMatchOfRegexPrefix(pat, line)
+                  val (jmatch, subregex) = longestMatchOfRegexPrefix(pat, line, regexCache)
                   row2(warn("NOT MATCHED")) ++
                     row2("Longest prefix that matches", subregex) ++ {
                     for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
@@ -104,10 +108,10 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
 
   private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
-  private def longestMatchOfRegexPrefix(pattern: String, line: String): (JoniRegex#JoniMatch, String) = {
+  private def longestMatchOfRegexPrefix(pattern: String, line: String, regexCache: mutable.Map[String, JoniRegex]): (JoniRegex#JoniMatch, String) = {
     val foundOption: Option[(Option[JoniRegex#JoniMatch], String)] = NumericRange.inclusive(pattern.length - 1, 0, -1).toIterator
       .map(pattern.substring(0, _))
-      .map(safefind(_, line))
+      .map(safefind(_, line, regexCache))
       .find(_._1.isDefined)
     if (!foundOption.isDefined) {
       logger.severe(s"Bug??? Impossible: no matching prefix '$pattern' for '$line'")
@@ -115,12 +119,16 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
     (foundOption.get._1.get, foundOption.get._2)
   }
 
-  private def safefind(regex: String, line: String): (Option[JoniRegex#JoniMatch], String) =
+  private def safefind(regex: String, line: String, regexCache: mutable.Map[String, JoniRegex]): (Option[JoniRegex#JoniMatch], String) =
     try {
-      val regexGrokked = GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary)
-      (new JoniRegex(regexGrokked).findIn(line), regex)
+      val compiledRegex = regexCache.getOrElseUpdate(regex,
+        new JoniRegex(GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary))
+      )
+      (compiledRegex.findIn(line), regex)
     } catch {
-      case _: Exception => (None, regex)
+      case e: Exception =>
+        // logger.warning(s"safefind got for '$regex' line '$line' : $e")
+        (None, regex)
     }
 
 }
