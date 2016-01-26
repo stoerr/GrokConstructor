@@ -10,6 +10,7 @@ import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 
 import scala.collection.{mutable, JavaConversions}
+import scala.util.Random
 import scala.xml.{Elem, NodeSeq}
 
 /**
@@ -22,6 +23,7 @@ class WebDispatcher extends HttpServlet {
 
   val logger = Logger.getLogger("WebDispatcher")
   implicit val formats = Serialization.formats(NoTypeHints)
+  private val reqattrReqId = "requestid"
 
   override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
     doGet(req, resp)
@@ -30,11 +32,14 @@ class WebDispatcher extends HttpServlet {
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
     logger.fine("Processing request " + reqInfo(req))
     try {
+      val requestid = Random.alphanumeric.take(8).mkString("")
+      req.setAttribute(reqattrReqId, requestid)
       val vieworredirect: Either[String, WebView] = giveView(req)
       vieworredirect match {
         case Left(url) =>
           resp.sendRedirect(url)
         case Right(view) =>
+          resp.setHeader("RequestId", requestid)
           req.setAttribute("title", view.title)
           req.setAttribute("body", view.body)
           req.setAttribute("navigation", navigation(req))
@@ -128,6 +133,7 @@ class WebDispatcher extends HttpServlet {
       """.stripMargin)
     writer.println("\nError message: " + e)
     writer.println("\nTime: " + new java.util.Date())
+    writer.println("\nRequestId: " + req.getAttribute(reqattrReqId))
     writer.println("\nRequest Info:\n" + reqInfo(req) + "\n\n")
     e.printStackTrace(writer)
     writer.println("\n</pre>")
@@ -136,7 +142,8 @@ class WebDispatcher extends HttpServlet {
   def reqInfo(req: HttpServletRequest): String = {
     try {
       val parameterMap: mutable.Map[String, Array[String]] = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
-      req.getRequestURL + "?" + req.getQueryString + ":{\n" + parameterMap.map(e => e._1 + ": " + write(e._2)).mkString(",\n") + "\n}"
+      req.getRequestURL + "?" + req.getQueryString + ":{\n" + parameterMap.map(e => e._1 + ": " + write(e._2)).mkString(",\n") + "\n}" +
+        " \t requestid=" + req.getAttribute(reqattrReqId)
     } catch {
       case e: Exception => logger.log(Level.SEVERE, "Trouble logging request", e)
         return "OUCH: Trouble logging request: " + e
