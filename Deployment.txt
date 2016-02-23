@@ -1,4 +1,6 @@
-Deployment process:
+Deployment process on google appengine
+(only for owner of http://grokconstructor.appspot.com/, that is, Hans-Peter Störr!)
+
 - Check https://appengine.google.com/deployment?&app_id=s~grokconstructor which instance is active
 - change appengine.app.version in pom.xml to oldest instance, which should be replaced
 - run
