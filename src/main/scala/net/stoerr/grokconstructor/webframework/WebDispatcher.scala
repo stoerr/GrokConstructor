@@ -3,13 +3,15 @@ package net.stoerr.grokconstructor.webframework
 import java.util.logging.{Level, Logger}
 import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
+import net.stoerr.grokconstructor.FeatureConfiguration
 import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
 import net.stoerr.grokconstructor.incremental.{IncrementalConstructionInputView, IncrementalConstructionStepView}
 import net.stoerr.grokconstructor.matcher.MatcherEntryView
+import net.stoerr.grokconstructor.patterntranslation.PatternTranslatorView
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 
-import scala.collection.{mutable, JavaConversions}
+import scala.collection.{JavaConversions, mutable}
 import scala.util.Random
 import scala.xml.{Elem, NodeSeq}
 
@@ -65,6 +67,7 @@ class WebDispatcher extends HttpServlet {
       case IncrementalConstructionInputView.path => new IncrementalConstructionInputView(request)
       case IncrementalConstructionStepView.path => new IncrementalConstructionStepView(request)
       case AutomaticDiscoveryView.path => new AutomaticDiscoveryView(request)
+      case PatternTranslatorView.path => new PatternTranslatorView(request)
     }
     val forward: Option[Either[String, WebView]] = view.doforward
     forward match {
@@ -87,7 +90,9 @@ class WebDispatcher extends HttpServlet {
       </li>
 
     navlink("/../", "About") ++ navlink(IncrementalConstructionInputView.path, "Incremental Construction") ++
-      navlink(MatcherEntryView.path, "Matcher") ++ navlink(AutomaticDiscoveryView.path, "Automatic Construction")
+      navlink(MatcherEntryView.path, "Matcher") ++ navlink(AutomaticDiscoveryView.path, "Automatic Construction") ++
+      (if (FeatureConfiguration.patternTranslation) navlink(PatternTranslatorView.path, "Pattern Translator")
+      else <!-- Pattern Translator not displayed since it is not done yet. -->)
   }
 
   import org.json4s.native.Serialization.write

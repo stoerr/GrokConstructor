@@ -3,16 +3,18 @@ package net.stoerr.grokconstructor.patterntranslation
 import scala.util.matching.Regex
 
 /**
- * Translates a log4j conversation pattern into a grok pattern for parsing the log4j output
- * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
- * @since 16.02.2015
- * @see "https://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html"
- */
+  * Translates a log4j conversation pattern into a grok pattern for parsing the log4j output
+  *
+  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
+  * @since 16.02.2015
+  * @see "https://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html"
+  */
 object Log4jTranslator {
 
   /** Matches log4j conversion specifiers - group 1 = left justify if -, group 2 = minimum width,
     * group 3 = maximum width, group 4 = argument in case of %d etc. */
-  val conversionSpecifier: Regex = """%(?:(-)?(\d+))?(?:\.(\d+))?([a-zA-Z])(?:\{([^}]+)\})?""".r
+  val conversionSpecifier: Regex =
+    """%(?:(-)?(\d+))?(?:\.(\d+))?([a-zA-Z])(?:\{([^}]+)\})?""".r
 
   def translate(conversionpattern: String): String =
     replaceMatchesAndInbetween(conversionpattern, conversionSpecifier, translateConversionSpecifier, quoteAsRegex)
@@ -30,9 +32,11 @@ object Log4jTranslator {
       case "M" => "%{NOTSPACE:method}"
       case "p" => "%{LOGLEVEL:loglevel}"
       case "r" => "%{INT:relativetime}"
+      case "t" => "%{NOTSPACE:thread}"
       case "x" => "(%{NOTSPACE:ndc})?"
       case "X" => if (null == argument) """\{(?<mdc>(?:\{[^\}]*,[^\}]*\})*)\}""" else "(%{NOTSPACE:" + argument + "})?"
       case "d" => translateDate(argument)
+      case other => throw new TranslationException("Unknown conversion specifier " + other)
     }
     align(baseRegex, leftjust, minwidth, maxwidth)
   }
@@ -49,21 +53,25 @@ object Log4jTranslator {
 
   val dateFormatComponent = "(([a-zA-Z])\\2*)(.*)".r
   // fullcomponent, componentchar, rest
-  val dateFormatLiteral = "'([^']+)(.*)".r // literal, rest
+  val dateFormatLiteral = "'([^']+)(.*)".r
+  // literal, rest
+  val otherChar = "([^a-zA-Z])(.*)".r // char, rest
 
   private def translateExplicitDateFormat(dateFormat: String): String = dateFormat match {
     case null | "" => dateFormat
     case dateFormatLiteral(literal, rest) => quoteAsRegex(literal) + translateExplicitDateFormat(rest)
-    case dateFormatLiteral(_, "d", rest) => "%{MONTHDAY}" + translateExplicitDateFormat(rest)
-    case dateFormatLiteral(_, "y", rest) => "%{YEAR}" + translateExplicitDateFormat(rest)
-    case dateFormatLiteral("MMM", _, rest) => "%{MONTH}" + translateExplicitDateFormat(rest)
-    case dateFormatLiteral("MM", _, rest) => "%{MONTHNUM2}" + translateExplicitDateFormat(rest)
-    case dateFormatLiteral("EEE", _, rest) => "%{DAY}" + translateExplicitDateFormat(rest)
-    case dateFormatLiteral(_, "H", rest) => "%{HOUR}" + translateExplicitDateFormat(rest)
-    case dateFormatLiteral(_, "m", rest) => "%{MINUTE}" + translateExplicitDateFormat(rest)
-    case dateFormatLiteral(_, "s", rest) => "%{SECOND}" + translateExplicitDateFormat(rest)
-    case dateFormatLiteral(_, "X", rest) => "%{ISO8601_TIMEZONE}" + translateExplicitDateFormat(rest)
-    case dateFormatLiteral(_, "z" | "Z", rest) => "%{TZ}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent(_, "d", rest) => "%{MONTHDAY}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent(_, "y", rest) => "%{YEAR}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent("MMM", _, rest) => "%{MONTH}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent("MM", _, rest) => "%{MONTHNUM2}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent("EEE", _, rest) => "%{DAY}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent(_, "H", rest) => "%{HOUR}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent(_, "m", rest) => "%{MINUTE}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent(_, "s", rest) => "%{SECOND}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent(_, "S", rest) => "%{NONNEGINT}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent(_, "X", rest) => "%{ISO8601_TIMEZONE}" + translateExplicitDateFormat(rest)
+    case dateFormatComponent(_, "z" | "Z", rest) => "%{TZ}" + translateExplicitDateFormat(rest)
+    case otherChar(char, rest) => quoteAsRegex(char) + translateExplicitDateFormat(rest)
   }
 
   // format_modifiers = [left_justification_flag][minimum_field_width][.][maximum_field_width]
@@ -93,3 +101,5 @@ object Log4jTranslator {
   }
 
 }
+
+case class TranslationException(reason: String) extends Exception(reason)
