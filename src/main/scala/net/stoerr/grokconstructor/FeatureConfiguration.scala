@@ -7,6 +7,7 @@ package net.stoerr.grokconstructor
 object FeatureConfiguration {
 
   /** If started with environment variable feature.log4jtrans set to true we display the log4j translator */
-  val patternTranslation: Boolean = Option(System.getenv("feature.patterntranslation")).getOrElse("false").toBoolean
+  val patternTranslation: Boolean = true
+  // Option(System.getenv("feature.patterntranslation")).getOrElse("false").toBoolean
 
 }
