@@ -21,6 +21,7 @@ Bsp: \A%{TIMESTAMP_ISO8601:timestamp}
 %n -> line separator "\n" oder "\r\n"
 %p -> loglevel / priority  : %{LOGLEVEL:loglevel}
 %r -> relativeTime (number of milliseconds elapsed from the construction of the layout until the creation of the logging event.)
+%t -> thread name : %{NOTSPACE:thread}
 %x NDC
 $X{key} -> key (from MDC)
 %% -> percent sign
