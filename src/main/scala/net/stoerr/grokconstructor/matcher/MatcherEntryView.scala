@@ -12,6 +12,7 @@ import scala.collection.mutable
 import scala.xml.NodeSeq
 
 /**
+  * View that allows checking for matches of grok regular expressions in logfile lines.
   * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
   * @since 17.02.13
   */
