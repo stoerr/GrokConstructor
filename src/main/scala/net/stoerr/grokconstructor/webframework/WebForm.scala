@@ -33,7 +33,7 @@ trait WebForm extends TableMaker {
           {new Text(label)}
         </label>{// we add the child explicitly since we must not include any additional whitespace:
           <textarea name={name} id={name} cols={cols.toString} rows={rows.toString}
-                    disabled={if (enabled) null else "disabled"}/>.copy(child = new Text(value.getOrElse("")))}
+                    readonly={if (enabled) null else "readonly"}/>.copy(child = new Text(value.getOrElse("")))}
       </div>
 
     def hiddenField: Elem = <input type="hidden" name={name} id={name} value={value.getOrElse("")}/>

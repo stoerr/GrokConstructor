@@ -40,7 +40,7 @@ http://www.regexplanet.com/advanced/java/index.html !
 ConversionPatterns:
 %d{dd.MM.yyyy HH:mm:ss},%m%n
 %-4r [%t] %-5p %c %x - %m%n
-%d{yyyyMMddHHmmss};%X{host};EKP;COMMONS;(%13F:%L);%X{gsid};%X{lsid};%-5p;%m%n
+%d{yyyyMMddHHmmss};%X{host};COMMONS;(%13F:%L);%X{sid};%X{rid};%-5p;%m%n
 [cc]%d{MMM-dd HH:mm:ss} %-14.14c{1}- %m%n
 %d{ABSOLUTE} | %-5p | %-10t | %-24.24c{1} | %-30.30C %4L | %m%n
 %d{dd.MM.yyyy HH:mm:ss,SSS} - %r [%-5p] %c %m%n
