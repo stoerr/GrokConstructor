@@ -25,23 +25,18 @@ trait WebForm extends TableMaker {
     def valueSplitToLines: Array[String] = value.map(_.split("\r?\n")).getOrElse(Array())
 
     def inputText(label: String, cols: Int, rows: Int = 6, enabled: Boolean = true): Elem =
-      <div class="ym-fbox-text">
-        <label for={name}>
-          {new Text(label)}
-        </label>
-          <textarea name={name} id={name} cols={cols.toString} rows={rows.toString}
-                  disabled={if (enabled) null else "disabled"}>{value.orNull} </textarea>
-      </div>
+      inputTextArea(label, cols, rows, enabled)
 
-    def inputTextArea(label: String, rows: Int, cols: Int): Elem =
+    def inputTextArea(label: String, cols: Int, rows: Int = 6, enabled: Boolean = true): Elem =
       <div class="ym-fbox-text">
         <label for={name}>
           {new Text(label)}
         </label>{// we add the child explicitly since we must not include any additional whitespace:
-          <textarea name={name} id={name} cols={cols.toString} rows={rows.toString}/>.copy(child = new Text(value.getOrElse("")))}
+          <textarea name={name} id={name} cols={cols.toString} rows={rows.toString}
+                    disabled={if (enabled) null else "disabled"}/>.copy(child = new Text(value.getOrElse("")))}
       </div>
 
-    def hiddenField: Elem = <input type="hidden" name={name} id={name} value={value.orNull}/>
+    def hiddenField: Elem = <input type="hidden" name={name} id={name} value={value.getOrElse("")}/>
 
     def radiobutton(value: String, description: NodeSeq): NodeSeq = <div>
       <input type="radio" name={name} value={value}
