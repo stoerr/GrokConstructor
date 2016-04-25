@@ -4,13 +4,13 @@
     <groupId>net.stoerr</groupId>
     <artifactId>GrokConstructor</artifactId>
     <packaging>war</packaging>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <description>Semi-automatic incremental construction and debugging of regular expressions for grok to parse logfiles
         for logstash http://logstash.net/ . Deployed at http://grokconstructor.appspot.com/ .
     </description>
 
     <properties>
-        <appengine.app.version>3</appengine.app.version>
+        <appengine.app.version>4</appengine.app.version>
         <appengine.target.version>1.9.30</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.version>2.11.7</scala.version>

@@ -90,9 +90,8 @@ class WebDispatcher extends HttpServlet {
       </li>
 
     navlink("/../", "About") ++ navlink(IncrementalConstructionInputView.path, "Incremental Construction") ++
-      navlink(MatcherEntryView.path, "Matcher") ++ navlink(AutomaticDiscoveryView.path, "Automatic Construction") ++
-      (if (FeatureConfiguration.patternTranslation) navlink(PatternTranslatorView.path, "Pattern Translator")
-      else <!-- Pattern Translator not displayed since it is not done yet. -->)
+      navlink(MatcherEntryView.path, "Matcher") ++ navlink(PatternTranslatorView.path, "(New!) Pattern Translator") ++
+      navlink(AutomaticDiscoveryView.path, "Automatic Construction")
   }
 
   import org.json4s.native.Serialization.write
@@ -151,7 +150,7 @@ class WebDispatcher extends HttpServlet {
         " \t requestid=" + req.getAttribute(reqattrReqId)
     } catch {
       case e: Exception => logger.log(Level.SEVERE, "Trouble logging request", e)
-        return "OUCH: Trouble logging request: " + e
+        "OUCH: Trouble logging request: " + e
     }
   }
 
