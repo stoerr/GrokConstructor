@@ -36,7 +36,10 @@ class PatternTranslatorView(val request: HttpServletRequest) extends WebViewWith
     Please report problems and, if possible, make good
     suggestions how to translate troublesome placeholders to a appropriate grok expressions.</p> ++
     <p>It would be comparatively easy to extend this to other logging libraries like logback etc.
-      if someone comes up with good suggestions how to translate the different placeholders.</p> ++
+      if someone comes up with good suggestions how to translate the different placeholders. The,
+      more or less, specification for the log4j pattern translation is
+      <a href="https://github.com/stoerr/GrokConstructor/blob/master/Log4jsupport.txt">here</a>
+      .</p> ++
     <p>Please enter the log4j pattern and then press</p> ++ submit("Go!")
 
   val translationResult: Option[Try[String]] = form.format.value.map(pat => Try(Log4jTranslator.translate(pat)))

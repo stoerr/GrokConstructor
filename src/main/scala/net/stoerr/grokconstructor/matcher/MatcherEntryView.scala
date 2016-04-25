@@ -29,6 +29,9 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
 
   override def maintext: NodeSeq = <p>This tries to parse a set of given logfile lines with a given
     <a href="http://logstash.net/docs/latest/filters/grok">grok regular expression</a>
+    (based on
+    <a href="/RegularExpressionSyntax.txt">Oniguruma regular expressions</a>
+    )
     and prints
     the matches for named patterns for each log line. You can also apply a
     <a href="http://logstash.net/docs/latest/filters/multiline">multiline filter</a>
@@ -114,7 +117,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
       .map(pattern.substring(0, _))
       .map(safefind(_, line, regexCache))
       .find(_._1.isDefined)
-    if (!foundOption.isDefined) {
+    if (foundOption.isEmpty) {
       logger.severe(s"Bug??? Impossible: no matching prefix '$pattern' for '$line'")
     }
     (foundOption.get._1.get, foundOption.get._2)
