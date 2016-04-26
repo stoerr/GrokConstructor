@@ -10,7 +10,7 @@
     </description>
 
     <properties>
-        <appengine.app.version>4</appengine.app.version>
+        <appengine.app.version>5</appengine.app.version>
         <appengine.target.version>1.9.30</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.version>2.11.7</scala.version>

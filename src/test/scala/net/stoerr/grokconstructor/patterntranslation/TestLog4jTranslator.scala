@@ -49,6 +49,7 @@ class TestLog4jTranslator extends FlatSpec {
 
   it should "translate dateformats" in {
     assert( """(?<timestamp>%{YEAR}-%{MONTHNUM2}-%{MONTHDAY} %{HOUR}:%{MINUTE}:%{SECOND})""" == Log4jTranslator.translate("%d{yyyy-MM-dd HH:mm:ss}"))
+    assert( """(?<timestamp>%{YEAR}-%{MONTHNUM2}-%{MONTHDAY} %{HOUR}:%{MINUTE}:%{SECOND}.%{NONNEGINT})""" == Log4jTranslator.translate("%d{YYYY-MM-dd HH:mm:ss.SSS}"))
   }
 
   // format_modifiers = [left_justification_flag][minimum_field_width][.][maximum_field_width]

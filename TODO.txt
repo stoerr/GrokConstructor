@@ -1,0 +1,9 @@
+* Check all examples in incremental construction. (Ex 3???)
+* Integrate google analytics
+https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+https://developers.google.com/analytics/devguides/collection/analyticsjs/#the_javascript_tracking_snippet
+https://developers.google.com/analytics/devguides/collection/analyticsjs/sending-hits#using_the_ga_command_queue
+
+* Quick click in log
+
+log4j pattern example
