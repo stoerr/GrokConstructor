@@ -40,7 +40,7 @@ class PatternTranslatorView(val request: HttpServletRequest) extends WebViewWith
       more or less, specification for the log4j pattern translation is
       <a href="https://github.com/stoerr/GrokConstructor/blob/master/Log4jsupport.txt">here</a>
       .</p> ++
-    <p>Please enter the log4j pattern and then press</p> ++ submit("Go!")
+    <p>Please enter the log4j format and then press</p> ++ submit("Go!")
 
   val translationResult: Option[Try[String]] = form.format.value.map(pat => Try(Log4jTranslator.translate(pat)))
 
@@ -77,7 +77,7 @@ class PatternTranslatorView(val request: HttpServletRequest) extends WebViewWith
   def resultPart = translationResult.map {
     case Success(translated) =>
       form.result.value = Some(translated)
-      table(row(form.result.inputTextArea("Constructed grok pattern", 180, 6, enabled = false)))
+      table(row(form.result.inputTextArea("Constructed grok pattern:", 180, 6, enabled = false)))
     case Failure(TranslationException(message)) =>
       table(warn(s"The pattern could not be translated because : $message"))
     case Failure(otherException) => throw otherException
