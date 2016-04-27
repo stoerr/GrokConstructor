@@ -4,6 +4,5 @@ https://developers.google.com/analytics/devguides/collection/protocol/v1/devguid
 https://developers.google.com/analytics/devguides/collection/analyticsjs/#the_javascript_tracking_snippet
 https://developers.google.com/analytics/devguides/collection/analyticsjs/sending-hits#using_the_ga_command_queue
 
-* Quick click in log
+* Additional patterns as error message
 
-log4j pattern example

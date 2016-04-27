@@ -11,6 +11,7 @@ import net.stoerr.grokconstructor.patterntranslation.PatternTranslatorView
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 
+import scala.collection.immutable.{SortedMap, TreeMap}
 import scala.collection.{JavaConversions, mutable}
 import scala.util.Random
 import scala.xml.{Elem, NodeSeq}
@@ -146,8 +147,8 @@ class WebDispatcher extends HttpServlet {
   def reqInfo(req: HttpServletRequest): String = {
     try {
       val parameterMap: mutable.Map[String, Array[String]] = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
-      req.getRequestURL + "?" + req.getQueryString + ":{\n" + parameterMap.map(e => e._1 + ": " + write(e._2)).mkString(",\n") + "\n}" +
-        " \t requestid=" + req.getAttribute(reqattrReqId)
+      val url = req.getRequestURI + Option(req.getQueryString).map("?" + _).getOrElse("")
+      Serialization.writePretty(TreeMap(parameterMap.toList: _*) + ("_url" -> url))
     } catch {
       case e: Exception => logger.log(Level.SEVERE, "Trouble logging request", e)
         "OUCH: Trouble logging request: " + e

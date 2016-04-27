@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Bugreproducer</title>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.js"></script>
+</head>
+<body>
+<h1>Bug reproducer</h1>
+<p>
+    Paste RequestInfo (JSON) from log here and then
+    <button type="button" onclick="createForm();">Create Form</button>
+    and push submit button in the generated form below.
+</p>
+
+<script type="text/javascript">
+    function createForm() {
+        var reqinfo = JSON.parse($("#requestinfofromlog").text());
+        var form = $("#form");
+        var num = 1;
+        form.empty();
+        for (var key in reqinfo) {
+            if (!reqinfo.hasOwnProperty(key)) continue;
+            var values = reqinfo[key];
+            if ("_url" == key) form.attr("action",values);
+            else {
+                for (var i = 0; i < values.length; i++) {
+                    var value = values[i];
+                    if (key == 'submit') {
+                        form.prepend('<input id="' + num + '" type="submit" name="submit"><br/>');
+                        $("#" + num).attr("value",value);
+                    } else {
+                        form.append(key + ':<br/> <textarea id="' + num + '" rows="2" cols="120" name="' + key + '" /><br/>');
+                        $("#" + num).val(value);
+                    }
+                    num = num + 1;
+                }
+            }
+        }
+    }
+
+</script>
+<textarea rows="25" cols="120" id="requestinfofromlog"></textarea>
+<p>The form generated from the data will go here:</p>
+<form action="/uninitialized" method="POST" target="_blank" id="form">
+</form>
+
+</body>
+</html>
