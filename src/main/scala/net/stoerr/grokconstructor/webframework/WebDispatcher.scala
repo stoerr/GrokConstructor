@@ -3,6 +3,7 @@ package net.stoerr.grokconstructor.webframework
 import java.util.logging.{Level, Logger}
 import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
+import com.google.apphosting.api.ApiProxy
 import net.stoerr.grokconstructor.FeatureConfiguration
 import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
 import net.stoerr.grokconstructor.incremental.{IncrementalConstructionInputView, IncrementalConstructionStepView}
@@ -29,20 +30,22 @@ class WebDispatcher extends HttpServlet {
   private val reqattrReqId = "requestid"
 
   override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
+    logger.info("Incoming request: " + reqInfo(req))
     doGet(req, resp)
   }
+
+  private def requestid(req: HttpServletRequest) =
+    ApiProxy.getCurrentEnvironment.getAttributes.get("com.google.appengine.runtime.request_log_id").asInstanceOf[String]
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
     logger.fine("Processing request " + reqInfo(req))
     try {
-      val requestid = Random.alphanumeric.take(8).mkString("")
-      req.setAttribute(reqattrReqId, requestid)
       val vieworredirect: Either[String, WebView] = giveView(req)
       vieworredirect match {
         case Left(url) =>
           resp.sendRedirect(url)
         case Right(view) =>
-          resp.setHeader("RequestId", requestid)
+          resp.setHeader("RequestId", requestid(req))
           req.setAttribute("title", view.title)
           req.setAttribute("body", view.body)
           req.setAttribute("navigation", navigation(req))
@@ -55,9 +58,8 @@ class WebDispatcher extends HttpServlet {
       }
     } catch {
       case e: Exception =>
-        logger.log(Level.SEVERE, e + " for " + reqInfo(req) + "\n\n" +
-          "Request properties: " + JavaConversions.enumerationAsScalaIterator(req.getAttributeNames).map(attr => attr + ": " + req.getAttribute("" + attr)).mkString("; "),
-          e)
+        logger.log(Level.SEVERE, e + " for\n" + reqInfo(req))
+        // "\n\nRequest properties: " + JavaConversions.enumerationAsScalaIterator(req.getAttributeNames).map(attr => attr + ": " + req.getAttribute("" + attr)).mkString("; "), e)
         errorPage(req, resp, e);
     }
   }
@@ -148,7 +150,7 @@ class WebDispatcher extends HttpServlet {
     try {
       val parameterMap: mutable.Map[String, Array[String]] = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
       val url = req.getRequestURI + Option(req.getQueryString).map("?" + _).getOrElse("")
-      Serialization.writePretty(TreeMap(parameterMap.toList: _*) + ("_url" -> url))
+      requestid(req) + " : " + Serialization.writePretty(TreeMap(parameterMap.toList: _*) + ("_url" -> url))
     } catch {
       case e: Exception => logger.log(Level.SEVERE, "Trouble logging request", e)
         "OUCH: Trouble logging request: " + e
