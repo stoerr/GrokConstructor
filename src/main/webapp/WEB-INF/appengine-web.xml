@@ -29,6 +29,9 @@
         <include path="/**.css" expiration="31d">
             <http-header name="Pragma" value="Public"/>
         </include>
+        <include path="/**.js" expiration="31d">
+            <http-header name="Pragma" value="Public"/>
+        </include>
         <include path="/**.html" expiration="7d">
             <http-header name="Pragma" value="Public"/>
         </include>
