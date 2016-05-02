@@ -30,7 +30,7 @@ class WebDispatcher extends HttpServlet {
   private val reqattrReqId = "requestid"
 
   override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
-    logger.info("Incoming request: " + reqInfo(req))
+    System.err.println("Incoming request " + reqInfo(req))
     doGet(req, resp)
   }
 
@@ -150,7 +150,7 @@ class WebDispatcher extends HttpServlet {
     try {
       val parameterMap: mutable.Map[String, Array[String]] = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
       val url = req.getRequestURI + Option(req.getQueryString).map("?" + _).getOrElse("")
-      requestid(req) + " : " + Serialization.writePretty(TreeMap(parameterMap.toList: _*) + ("_url" -> url))
+      "ReqInfo for " + requestid(req) + " : " + Serialization.writePretty(TreeMap(parameterMap.toList: _*) + ("_url" -> url))
     } catch {
       case e: Exception => logger.log(Level.SEVERE, "Trouble logging request", e)
         "OUCH: Trouble logging request: " + e
