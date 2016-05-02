@@ -63,15 +63,15 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
     try {
       val patternGrokked = GrokPatternLibrary.replacePatterns(pat, form.grokPatternLibrary)
       val regex = new JoniRegex(patternGrokked)
+      lazy val regexPrefixes = compilablePrefixes(pat)
       try {
         val lines: Seq[String] = form.multilineFilter(form.loglines.valueSplitToLines)
-        val regexCache = new mutable.HashMap[String, JoniRegex]
         return <hr/> ++ <table class="bordertable narrow">
           {for (line <- lines) yield {
             rowheader2(line) ++ {
               regex.findIn(line) match {
                 case None =>
-                  val (jmatch, subregex) = longestMatchOfRegexPrefix(pat, line, regexCache)
+                  val (jmatch, subregex) = longestMatchOfRegexPrefix(regexPrefixes, line)
                   row2(warn("NOT MATCHED")) ++
                     row2("Longest prefix that matches", subregex) ++ {
                     for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
@@ -112,28 +112,20 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
 
   private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
-  private def longestMatchOfRegexPrefix(pattern: String, line: String, regexCache: mutable.Map[String, JoniRegex]): (JoniRegex#JoniMatch, String) = {
-    val foundOption: Option[(Option[JoniRegex#JoniMatch], String)] = NumericRange.inclusive(pattern.length - 1, 0, -1).toIterator
-      .map(pattern.substring(0, _))
-      .map(safefind(_, line, regexCache))
-      .find(_._1.isDefined)
-    if (foundOption.isEmpty) {
-      logger.severe(s"Bug??? Impossible: no matching prefix '$pattern' for '$line'")
-    }
-    (foundOption.get._1.get, foundOption.get._2)
-  }
+  private def longestMatchOfRegexPrefix(patterns: Stream[(JoniRegex, String)], line: String): (JoniRegex#JoniMatch, String) =
+    patterns.map(t => (t._1.findIn(line), t._2)).filter(_._1.isDefined).map(t => (t._1.get, t._2)).head
 
-  private def safefind(regex: String, line: String, regexCache: mutable.Map[String, JoniRegex]): (Option[JoniRegex#JoniMatch], String) =
-    try {
-      val compiledRegex = regexCache.getOrElseUpdate(regex,
-        new JoniRegex(GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary))
-      )
-      (compiledRegex.findIn(line), regex)
-    } catch {
-      case e: Exception =>
-        // logger.warning(s"safefind got for '$regex' line '$line' : $e")
-        (None, regex)
+  private def compilablePrefixes(pat: String): Stream[(JoniRegex, String)] = {
+    val prefixes = NumericRange.inclusive(pat.length - 1, 0, -1).toStream.map(pat.substring(0, _))
+    prefixes.flatMap { regex =>
+      try {
+        Some((new JoniRegex(GrokPatternLibrary.replacePatterns(regex, form.grokPatternLibrary)), regex))
+      } catch {
+        case e: Exception =>
+          None
+      }
     }
+  }
 
 }
 

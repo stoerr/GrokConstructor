@@ -41,11 +41,12 @@ object GrokPatternLibrary {
     }.toMap
   }
 
+  private val grokReference = """%\{(\w+)(?::(\w+)(?::(?:int|float))?)?\}""".r
+
   /** We replace patterns like %{BLA:name} with the definition of bla. This is done
     * (arbitrarily) 10 times to allow recursions but to not allow infinite loops. */
   def replacePatterns(grokregex: String, grokMap: Map[String, String]): String = {
     var substituted = grokregex
-    val grokReference = """%\{(\w+)(?::(\w+)(?::(?:int|float))?)?\}""".r
     0 until 10 foreach {
       _ =>
         substituted = grokReference replaceAllIn(substituted, {
