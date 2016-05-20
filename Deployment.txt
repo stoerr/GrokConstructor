@@ -1,7 +1,7 @@
 Deployment process on google appengine
 (only for owner of http://grokconstructor.appspot.com/, that is, Hans-Peter Störr!)
 
-- Check https://appengine.google.com/deployment?&app_id=s~grokconstructor which instance is active
+- Check https://console.cloud.google.com/appengine/versions?project=grokconstructor&moduleId=default which instance is active
 - change appengine.app.version in pom.xml to oldest instance, which should be replaced
 - run
     maven -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 clean install appengine:update
