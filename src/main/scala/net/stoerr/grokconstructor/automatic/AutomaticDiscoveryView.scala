@@ -91,7 +91,7 @@ class AutomaticDiscoveryView(val request: HttpServletRequest) extends WebViewWit
       val restlines = lines.map(_.substring(commonPrefix.length))
       return matchingRegexpStructures(restlines).map(FixedString(commonPrefix) :: _)
     } else {
-      val regexpand = for ((name, regex) <- namedRegexpsList) yield (name, lines.map(regex.matchStartOf))
+      val regexpand = for ((name, regex) <- namedRegexpsList) yield (name, lines.map(regex.oldMatchStartOf))
       val candidatesThatMatchAllLines = regexpand.filter(_._2.find(_.isEmpty).isEmpty)
       val candidates = candidatesThatMatchAllLines.filterNot(_._2.find(_.get.length > 0).isEmpty)
       val candidateToMatches = candidates.map {

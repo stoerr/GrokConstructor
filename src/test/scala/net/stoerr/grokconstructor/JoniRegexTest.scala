@@ -42,14 +42,14 @@ class JoniRegexTest extends FlatSpec with ShouldMatchers {
 
   val rn = JoniRegex("a.*c")
 
-  "JoniRegex.matchStartOf" should "return None if the regex is not found at the start" in {
+  "JoniRegex.oldMatchStartOf" should "return None if the regex is not found at the start" in {
     for (str <- List("cabcd", "bcd", ""))
-      rn.matchStartOf(str) should equal(None)
+      rn.oldMatchStartOf(str) should equal(None)
   }
 
   it should "return the appropriate length, match and rest if the regex matches the start" in {
-    rn.matchStartOf("abc") should equal(Some(StartMatch(length = 3, matched = "abc", rest = "")))
-    rn.matchStartOf("acdfsdf") should equal(Some(StartMatch(2, "ac", "dfsdf")))
+    rn.oldMatchStartOf("abc") should equal(Some(StartMatch(length = 3, matched = "abc", rest = "")))
+    rn.oldMatchStartOf("acdfsdf") should equal(Some(StartMatch(2, "ac", "dfsdf")))
   }
 
   "JoniRegex.find" should "find a regex and return the correct values" in {
@@ -72,7 +72,7 @@ class JoniRegexTest extends FlatSpec with ShouldMatchers {
     quote("bla") should equal("bla")
     val allspecialchars = "bla[.(|?*+{^$blu\\"
     quote(allspecialchars) should equal("bla\\[\\.\\(\\|\\?\\*\\+\\{\\^\\$blu\\\\")
-    val matched = new JoniRegex(quote(allspecialchars)).matchStartOf(allspecialchars)
+    val matched = new JoniRegex(quote(allspecialchars)).oldMatchStartOf(allspecialchars)
     matched.get.rest should equal("")
   }
 

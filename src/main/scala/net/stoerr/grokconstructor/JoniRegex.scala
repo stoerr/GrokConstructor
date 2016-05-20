@@ -28,7 +28,8 @@ case class JoniRegex(regex: String) {
       throw e
   }
 
-  def matchStartOf(str: String): Option[StartMatch] = {
+  @deprecated("Use matchStartOf")
+  def oldMatchStartOf(str: String): Option[StartMatch] = {
     val bytes = str.getBytes("UTF-8")
     val matcher = compiledRegex.matcher(bytes)
     val matchedLength = matcher.`match`(0, bytes.length, 0)
@@ -73,12 +74,29 @@ case class JoniRegex(regex: String) {
     if (found < 0) None else Some(new JoniMatch(matcher, bytes))
   }
 
+  /** Checks whether regex matches the start of the string */
+  def matchStartOf(str: String): Option[JoniMatch] = {
+    val bytes = str.getBytes("UTF-8")
+    val matcher = compiledRegex.matcher(bytes)
+    val matchedLength = matcher.`match`(0, bytes.length, 0)
+    if (0 > matchedLength) None else Some(new JoniMatch(matcher, bytes))
+  }
+
+  /** Checks whether regex matches the full string */
+  def matchFull(str: String): Option[JoniMatch] = {
+    val bytes = str.getBytes("UTF-8")
+    val matcher = compiledRegex.matcher(bytes)
+    val matchedLength = matcher.`match`(0, bytes.length, 0)
+    if (0 > matchedLength) None else Some(new JoniMatch(matcher, bytes))
+  }
+
 }
 
 /** Represents a match at the beginning of a string.
   * @param length length of the match
   * @param matched the part of the string that was matched by the regex
   * @param rest the part of the string after the match */
+@deprecated()
 case class StartMatch(length: Int, matched: String, rest: String)
 
 object JoniRegexQuoter {

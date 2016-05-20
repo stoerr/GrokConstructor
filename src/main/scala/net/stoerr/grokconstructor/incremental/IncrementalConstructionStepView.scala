@@ -22,7 +22,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   val currentJoniRegex = new JoniRegex(GrokPatternLibrary.replacePatterns(currentRegex, form.grokPatternLibrary))
   val loglinesSplitted: Seq[(String, String)] = form.multilineFilter(form.loglines.valueSplitToLines).map({
     line =>
-      val jmatch = currentJoniRegex.matchStartOf(line)
+      val jmatch = currentJoniRegex.oldMatchStartOf(line)
       (jmatch.get.matched, jmatch.get.rest)
   })
   val loglineRests: Seq[String] = loglinesSplitted.map(_._2)
@@ -30,7 +30,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   val groknameToMatches: List[(String, List[String])] = for {
     grokname <- form.grokPatternLibrary.keys.toList
     regex = new JoniRegex(GrokPatternLibrary.replacePatterns("%{" + grokname + "}", form.grokPatternLibrary))
-    restlinematchOptions = loglineRests.map(regex.matchStartOf)
+    restlinematchOptions = loglineRests.map(regex.oldMatchStartOf)
     if restlinematchOptions.find(_.isEmpty).isEmpty
     restlinematches: List[String] = restlinematchOptions.map(_.get.matched).toList
   } yield (grokname, restlinematches)

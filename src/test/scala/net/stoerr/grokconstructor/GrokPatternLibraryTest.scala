@@ -24,7 +24,7 @@ class GrokPatternLibraryTest extends FlatSpec with ShouldMatchers {
         val replaced = GrokPatternLibrary.replacePatterns(v, patterns)
         // println(k + "\t" + replaced)
         // make sure all patterns are actually compileable
-        new JoniRegex(v).matchStartOf("bla")
+        new JoniRegex(v).oldMatchStartOf("bla")
     }
   }
 

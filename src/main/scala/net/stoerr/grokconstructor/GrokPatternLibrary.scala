@@ -47,16 +47,21 @@ object GrokPatternLibrary {
     * (arbitrarily) 10 times to allow recursions but to not allow infinite loops. */
   def replacePatterns(grokregex: String, grokMap: Map[String, String]): String = {
     var substituted = grokregex
+    var haveReplacement = true
     0 until 10 foreach {
       _ =>
-        substituted = grokReference replaceAllIn(substituted, {
-          m => {
-            val patternName = m.group(1)
-            if (!grokMap.contains(patternName)) throw new GrokPatternNameUnknownException(patternName, m.group(0))
-            "(?" + Option(m.group(2)).map(Regex.quoteReplacement).map("<" + _ + ">").getOrElse(":") +
-              Regex.quoteReplacement(grokMap(patternName)) + ")"
-          }
-        })
+        if (haveReplacement) {
+          haveReplacement = false
+          substituted = grokReference replaceAllIn(substituted, {
+            m => {
+              haveReplacement = true
+              val patternName = m.group(1)
+              if (!grokMap.contains(patternName)) throw new GrokPatternNameUnknownException(patternName, m.group(0))
+              "(?" + Option(m.group(2)).map(Regex.quoteReplacement).map("<" + _ + ">").getOrElse(":") +
+                Regex.quoteReplacement(grokMap(patternName)) + ")"
+            }
+          })
+        }
     }
     substituted
   }

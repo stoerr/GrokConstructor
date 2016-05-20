@@ -17,6 +17,8 @@ import scala.xml.NodeSeq
   * @since 17.02.13
   */
 class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
+  private val stopPrefixMatchingTime = System.currentTimeMillis() + 30000
+
   private val logger = Logger.getLogger("MatcherEntryView")
 
   override val title: String = "Test grok patterns"
@@ -69,16 +71,20 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
         return <hr/> ++ <table class="bordertable narrow">
           {for (line <- lines) yield {
             rowheader2(line) ++ {
-              regex.findIn(line) match {
+              regex.matchFull(line) match {
                 case None =>
-                  val (jmatch, subregex) = longestMatchOfRegexPrefix(regexPrefixes, line)
-                  row2(warn("NOT MATCHED")) ++
-                    row2("Longest prefix that matches", subregex) ++ {
-                    for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
-                  } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
-                    ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
+                  if (System.currentTimeMillis() < stopPrefixMatchingTime) {
+                    val (jmatch, subregex) = longestMatchOfRegexPrefix(regexPrefixes, line)
+                    row2(warn("NOT MATCHED. The longest regex prefix matching the beginning of this line is as follows:")) ++
+                      row2("prefix", subregex) ++ {
+                      for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
+                    } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
+                      ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
+                  } else {
+                    row2(warn("NOT MATCHED")) ++ row2("Couldn't check for longest matching prefix due to timeout.")
+                  }
                 case Some(jmatch) =>
-                  row2(<b>MATCHED</b>) ++ {
+                  row2(<b class="success">MATCHED</b>) ++ {
                     for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
                   } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
                     ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
@@ -93,6 +99,10 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
             :
             <br/>{multilineSyntaxException.getMessage}
           </p>
+      } finally {
+        if (System.currentTimeMillis() >= stopPrefixMatchingTime) {
+          logger.warning("30s Timelimit exceeded")
+        }
       }
     } catch {
       case patternSyntaxException: SyntaxException =>
@@ -113,7 +123,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
   private def ifNotEmpty[A](cond: String, value: A): Option[A] = if (null != cond && !cond.isEmpty) Some(value) else None
 
   private def longestMatchOfRegexPrefix(patterns: Stream[(JoniRegex, String)], line: String): (JoniRegex#JoniMatch, String) =
-    patterns.map(t => (t._1.findIn(line), t._2)).filter(_._1.isDefined).map(t => (t._1.get, t._2)).head
+    patterns.map(t => (t._1.matchStartOf(line), t._2)).filter(_._1.isDefined).map(t => (t._1.get, t._2)).head
 
   private def compilablePrefixes(pat: String): Stream[(JoniRegex, String)] = {
     val prefixes = NumericRange.inclusive(pat.length - 1, 0, -1).toStream.map(pat.substring(0, _))
