@@ -54,7 +54,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
     form.pattern.value = Some(trial.pattern)
     form.multilineRegex.value = trial.multiline
     form.multilineNegate.values = List()
-    form.groklibs.values = List("grok-patterns")
+    form.groklibs.values = List("grok-patterns", "java")
   }
 
   override def result = form.pattern.value.map(showResult).getOrElse(<span/>)

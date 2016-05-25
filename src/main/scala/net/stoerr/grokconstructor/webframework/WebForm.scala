@@ -38,7 +38,7 @@ trait WebForm extends TableMaker {
 
     def hiddenField: Elem = <input type="hidden" name={name} id={name} value={value.getOrElse("")}/>
 
-    def radiobutton(value: String, description: NodeSeq): NodeSeq = <div>
+    def radiobutton(value: String, description: NodeSeq, title:String = null): NodeSeq = <div title={title}>
       <input type="radio" name={name} value={value}
              id={"radio" + name.hashCode + value.hashCode}/> <label for={"radio" + name.hashCode + value.hashCode}>
         {description}

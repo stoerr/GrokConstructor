@@ -1,8 +1,66 @@
-* Check all examples in incremental construction. (Ex 3???)
+* Check all examples in incremental construction. (Ex 3??? 0?)
 * Integrate google analytics
 https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 https://developers.google.com/analytics/devguides/collection/analyticsjs/#the_javascript_tracking_snippet
 https://developers.google.com/analytics/devguides/collection/analyticsjs/sending-hits#using_the_ga_command_queue
 
 * Additional patterns as error message
+
+* Raise awareness for name input in construction. Reset name input each time.
+
+* Bug report helper that creates JSON from current form .
+
+Problem with example 0 in incremental construction: No suggested pattern for stacktrace!
+{
+  "_url":"/do/constructionstep",
+  "grokadditional":[
+    ""
+  ],
+  "groklibs":[
+    "grok-patterns"
+  ],
+  "loglines":[
+    "2013-02-28 09:57:56,662 WARN  CreateSomethingActivationKey - WhateverException for User 49-123-345678 {{rid,US8cFAp5eZgAABwUItEAAAAI_dev01_443}{realsid,60A9772A136B9912B6FF0C3627A47090.dev1-a}}\r\n2013-02-28 09:57:56,663 INFO  LMLogger - ERR1700 - u:null failures: 0  - Technical error {{rid,US8cFAp5eZgAABwUItEAAAAI_dev01_443}{realsid,60A9772A136B9912B6FF0C3627A47090.dev1-a}}\r\n2013-02-28 09:57:56,668 ERROR SomeCallLogger - ESS10005 Cpc portalservices: Exception caught while writing log messege to MEA Call:  {}\r\njava.sql.SQLSyntaxErrorException: ORA-00942: table or view does not exist\r\n\r\n\tat oracle.jdbc.driver.T4CTTIoer.processError(T4CTTIoer.java:445)\r\n\tat oracle.jdbc.driver.T4CTTIoer.processError(T4CTTIoer.java:396)\r\n2013-02-28 10:04:35,723 INFO  EntryFilter - Fresh on request /portalservices/foobarwhatever {{rid,US8dogp5eZgAABwXPGEAAAAL_dev01_443}{realsid,56BA2AD41D9BB28AFCEEEFF927EE61C2.dev1-a}}"
+  ],
+  "multiline":[
+    "^(?!201)"
+  ],
+  "nameOfNextPart":[
+    "msg"
+  ],
+  "nextPart":[
+    "%{GREEDYDATA}"
+  ],
+  "nextPartPerHand":[
+    ""
+  ],
+  "pattern":[
+    "\\A%{TIMESTAMP_ISO8601:time} %{LOGLEVEL:level} ",
+    "\\A%{TIMESTAMP_ISO8601:time} %{LOGLEVEL:level} "
+  ],
+  "submit":[
+    "Continue!"
+  ]
+}
+
+26. Mai 2016 um 15:35:45 UTC+2
+
+ java.lang.OutOfMemoryError: Java heap space
+
+        at net.stoerr.grokconstructor.JoniRegex.oldMatchStartOf (JoniRegex.scala:37)
+        at net.stoerr.grokconstructor.incremental.IncrementalConstructionStepView$$anonfun$5$$anonfun$6.apply (IncrementalConstructionStepView.scala:33)
+        at net.stoerr.grokconstructor.incremental.IncrementalConstructionStepView$$anonfun$5$$anonfun$6.apply (IncrementalConstructionStepView.scala:33)
+        at scala.collection.TraversableLike$$anonfun$map$1.apply (TraversableLike.scala:245)
+        at scala.collection.TraversableLike$$anonfun$map$1.apply (TraversableLike.scala:245)
+        at scala.collection.mutable.ResizableArray$class.foreach (ResizableArray.scala:59)
+        at scala.collection.mutable.ArrayBuffer.foreach (ArrayBuffer.scala:48)
+        at scala.collection.TraversableLike$class.map (TraversableLike.scala:245)
+        at scala.collection.AbstractTraversable.map (Traversable.scala:104)
+        at net.stoerr.grokconstructor.incremental.IncrementalConstructionStepView$$anonfun$5.apply (IncrementalConstructionStepView.scala:33)
+        at net.stoerr.grokconstructor.incremental.IncrementalConstructionStepView$$anonfun$5.apply (IncrementalConstructionStepView.scala:31)
+        at scala.collection.immutable.List.map (List.scala:277)
+        at net.stoerr.grokconstructor.incremental.IncrementalConstructionStepView.<init> (IncrementalConstructionStepView.scala:31)
+        at net.stoerr.grokconstructor.webframework.WebDispatcher.giveView (WebDispatcher.scala:71)
+        at net.stoerr.grokconstructor.webframework.WebDispatcher.doGet (WebDispatcher.scala:43)
+        at net.stoerr.grokconstructor.webframework.WebDispatcher.doPost (WebDispatcher.scala:34)
 

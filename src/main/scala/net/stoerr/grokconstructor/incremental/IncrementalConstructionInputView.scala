@@ -26,7 +26,7 @@ class IncrementalConstructionInputView(val request: HttpServletRequest) extends 
     form.loglines.value = Some(trial.loglines)
     form.multilineRegex.value = trial.multiline
     form.multilineNegate.values = List(form.multilineNegate.name)
-    form.groklibs.values = List("grok-patterns")
+    form.groklibs.values = List("grok-patterns", "java")
   }
 
   def maintext: NodeSeq = <p>You can provide a number of log file lines and step by step construct a

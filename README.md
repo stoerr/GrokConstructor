@@ -24,13 +24,11 @@ TODO:
 - Better error handling in incremental matching
 - Give definition of grok patterns as title on pattern selections.
 - Send mail for bugreports
-- !!! Log4j Conversion pattern to grok regex converter
 
-TODO eventually:
+TODO eventually (aka probably never, unless someone asks):
 - Move error box on top of page
 - AutomaticDiscoveryView: use simpler examples such that the output makes sense.
 - Quoting and unquoting of patterns for logstash.conf
-- Clarify licence.
 
 https://cloud.google.com/appengine/docs/java/tools/maven :
 mvn help:describe -DgroupId=com.google.appengine -DartifactId=appengine-maven-plugin -Ddetail=true

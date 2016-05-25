@@ -58,7 +58,7 @@ class WebDispatcher extends HttpServlet {
       }
     } catch {
       case e: Exception =>
-        logger.log(Level.SEVERE, e + " for\n" + reqInfo(req))
+        logger.log(Level.SEVERE, e + " for\n" + reqInfo(req), e)
         // "\n\nRequest properties: " + JavaConversions.enumerationAsScalaIterator(req.getAttributeNames).map(attr => attr + ": " + req.getAttribute("" + attr)).mkString("; "), e)
         errorPage(req, resp, e);
     }
