@@ -42,6 +42,8 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   /** groknameListToMatches that have at least one nonempty match, sorted by the sum of the lengths of the matches. */
   val groknameListToMatchesCleanedup = groknameListToMatches.filter(_._2.find(!_.isEmpty).isDefined).sortBy(-_._2.map(_.length).sum)
 
+  form.nameOfNextPart.value = None // reset for next form display
+
   override def action: String =
     if (!constructionDone) IncrementalConstructionStepView.path
     else MatcherEntryView.path
@@ -121,7 +123,9 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       row2(
         <div class="ym-fbox-check">
           {groknames.sorted.map(grokname =>
-          form.nextPart.radiobutton("%{" + grokname + "}", <code/>.copy(child = new Text("%{" + grokname + "}"))))
+          form.nextPart.radiobutton("%{" + grokname + "}", <code/>.copy(child = new Text("%{" + grokname + "}")),
+            form.grokPatternLibrary(grokname)
+          ))
           .reduce(_ ++ _)}
         </div>, <pre/>.copy(child = new Text(visibleWhitespaces(restlinematches.mkString("\n"))))
       )

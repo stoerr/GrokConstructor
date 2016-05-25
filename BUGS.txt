@@ -1,7 +1,4 @@
 Downloading logs:
 https://cloud.google.com/appengine/docs/java/tools/uploadinganapp#Downloading_Logs
 
-Neccesary Optimizations:
-- Why are the log lines in the dashboard cut off????
-
 - suggest issues for suggestions.
