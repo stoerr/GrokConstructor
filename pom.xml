@@ -179,6 +179,13 @@
                     <server>preview.appengine.google.com</server>
                     <address>0.0.0.0</address>
                     <port>9090</port>
+                    <jvmFlags>
+                        <jvmFlag>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmFlag>
+                        <jvmFlag>-Dcom.sun.management.jmxremote</jvmFlag>
+                        <jvmFlag>-Dcom.sun.management.jmxremote.port=5006</jvmFlag>
+                        <jvmFlag>-Dcom.sun.management.jmxremote.ssl=false</jvmFlag>
+                        <jvmFlag>-Dcom.sun.management.jmxremote.authenticate=false</jvmFlag>
+                    </jvmFlags>
                 </configuration>
             </plugin>
         </plugins>
