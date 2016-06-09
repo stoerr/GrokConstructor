@@ -24,7 +24,7 @@ trait TableMaker {
 
   def warn(content: NodeSeq) =
     <div class="ym-fbox-text ym-error">
-      <p class="ym-message">
+      <p class="error ym-message">
         {content}
       </p>
     </div>
