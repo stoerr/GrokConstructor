@@ -17,6 +17,8 @@ import scala.xml.NodeSeq
   * @since 17.02.13
   */
 class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
+  private val stopPrefixMatchingTime = System.currentTimeMillis() + 30000
+
   private val logger = Logger.getLogger("MatcherEntryView")
 
   override val title: String = "Test grok patterns"
@@ -71,14 +73,18 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
             rowheader2(line) ++ {
               regex.findIn(line) match {
                 case None =>
-                  val (jmatch, subregex) = longestMatchOfRegexPrefix(regexPrefixes, line)
-                  row2(warn("NOT MATCHED")) ++
-                    row2("Longest prefix that matches", subregex) ++ {
-                    for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
-                  } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
-                    ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
+                  if (System.currentTimeMillis() < stopPrefixMatchingTime) {
+                    val (jmatch, subregex) = longestMatchOfRegexPrefix(regexPrefixes, line)
+                    row2(warn("NOT MATCHED. The longest regex prefix matching the beginning of this line is as follows:")) ++
+                      row2("prefix", subregex) ++ {
+                      for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
+                    } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
+                      ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
+                  } else {
+                    row2(warn("NOT MATCHED")) ++ row2("Couldn't check for longest matching prefix due to timeout.")
+                  }
                 case Some(jmatch) =>
-                  row2(<b>MATCHED</b>) ++ {
+                  row2(<b class="success">MATCHED</b>) ++ {
                     for ((name, nameResult) <- jmatch.namedgroups) yield row2(name, visibleWhitespaces(nameResult))
                   } ++ ifNotEmpty(jmatch.before, row2("before match:", jmatch.before)) ++
                     ifNotEmpty(jmatch.after, row2("after match: ", jmatch.after))
@@ -93,6 +99,10 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
             :
             <br/>{multilineSyntaxException.getMessage}
           </p>
+      } finally {
+        if (System.currentTimeMillis() >= stopPrefixMatchingTime) {
+          logger.warning("30s Timelimit exceeded")
+        }
       }
     } catch {
       case patternSyntaxException: SyntaxException =>
