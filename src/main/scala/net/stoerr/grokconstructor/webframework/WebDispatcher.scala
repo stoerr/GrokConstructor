@@ -34,8 +34,19 @@ class WebDispatcher extends HttpServlet {
     doGet(req, resp)
   }
 
-  private def requestid(req: HttpServletRequest) =
-    ApiProxy.getCurrentEnvironment.getAttributes.get("com.google.appengine.runtime.request_log_id").asInstanceOf[String]
+  private val reqIdAttr = "_requestid"
+
+  private def requestid(req: HttpServletRequest): String =
+    if (req.getAttribute(reqIdAttr) != null) req.getAttribute(reqIdAttr).toString
+    else {
+      Option(ApiProxy.getCurrentEnvironment).map(_.getAttributes)
+        .map(_.get("com.google.appengine.runtime.request_log_id")).map(_.asInstanceOf[String])
+        .getOrElse {
+          val randomReqId = Random.alphanumeric.take(8).mkString("")
+          req.setAttribute(reqIdAttr, randomReqId)
+          randomReqId
+        }
+    }
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
     logger.fine("Processing request " + reqInfo(req))
