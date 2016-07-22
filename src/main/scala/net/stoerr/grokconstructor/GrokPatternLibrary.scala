@@ -41,7 +41,7 @@ object GrokPatternLibrary {
     }.toMap
   }
 
-  private val grokReference = """%\{((?:\w|[+-.%*])+)(?::((?:\w|[+-.%*])+)(?::(?:int|float))?)?\}""".r
+  private val grokReference = """%\{([^}>':]+)(?::([^}>':]+)(?::(?:int|float))?)?\}""".r
 
   /** We replace patterns like %{BLA:name} with the definition of bla. This is done
     * (arbitrarily) 10 times to allow recursions but to not allow infinite loops. */

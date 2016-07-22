@@ -94,7 +94,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
         </table>
       } catch {
         case multilineSyntaxException: SyntaxException =>
-          return <hr/> ++ <p class="box error">Syntaxfehler in the pattern for the multiline filter
+          return <hr/> ++ <p class="box error">Syntax error in the pattern for the multiline filter
             {form.multilineRegex.value.get}
             :
             <br/>{multilineSyntaxException.getMessage}
@@ -106,7 +106,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
       }
     } catch {
       case patternSyntaxException: SyntaxException =>
-        return <hr/> ++ <p class="box error">Syntaxfehler in the given pattern
+        return <hr/> ++ <p class="box error">Syntax error in the given pattern
           {pat}
           :
           <br/>{patternSyntaxException.getMessage}
