@@ -11,6 +11,6 @@ trait LoglinesFormPart extends WebForm {
 
   val loglines = InputText("loglines")
 
-  def loglinesEntry = loglines.inputTextArea("Some log lines you want to match. Choose lines that are as diverse as possible.", 180, 20)
+  def loglinesEntry = loglines.inputTextArea("Some log lines you want to match. It's helps much to use several lines, and to choose lines that are as diverse as possible.", 180, 20)
 
 }

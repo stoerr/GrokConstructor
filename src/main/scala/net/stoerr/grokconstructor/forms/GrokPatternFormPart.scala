@@ -30,7 +30,7 @@ trait GrokPatternFormPart extends WebForm {
         <a href="http://logstash.net/docs/latest/filters/grok">grok Patterns</a>
         from
         <a href="http://logstash.net/">logstash</a>
-        v.2.1 which you want to use. You probably want to use grok-patterns if you use any of the others, since they rely on the basic patterns defined there.</label>
+        v.2.4.0 which you want to use. You probably want to use grok-patterns if you use any of the others, since they rely on the basic patterns defined there.</label>
     </div> ++ groklibs.checkboxes ++
       grokadditionalinput.inputTextArea("You can also provide a library of some additional grok patterns in the same format " +
               "as the pattern files linked above. On each line you give a pattern name, a space and the pattern. For example: WORD \\b\\w+\\b", 180, 5)
