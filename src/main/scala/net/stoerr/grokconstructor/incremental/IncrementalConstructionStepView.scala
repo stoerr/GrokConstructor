@@ -5,15 +5,17 @@ import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokconstructor.matcher.MatcherEntryView
 import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
 import net.stoerr.grokconstructor.{GrokPatternLibrary, JoniRegex, JoniRegexQuoter, RandomTryLibrary}
+import org.joni.exception.SyntaxException
 
 import scala.collection.immutable.NumericRange
 import scala.xml.{NodeSeq, Text}
 
 /**
- * Performs a step in the incremental construction of the grok pattern.
- * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
- * @since 02.03.13
- */
+  * Performs a step in the incremental construction of the grok pattern.
+  *
+  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
+  * @since 02.03.13
+  */
 class IncrementalConstructionStepView(val request: HttpServletRequest) extends WebViewWithHeaderAndSidebox {
 
   override val title: String = "Incremental Construction of Grok Patterns in progress"
@@ -37,10 +39,20 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   // TODO missing: add extra patterns by hand later
   /** List of pairs of a list of groknames that have identical matches on the restlines to the list of matches. */
-  val groknameListToMatches: List[(List[String], List[String])] = groknameToMatches.groupBy(_._2).map(p => (p._2.map(_._1), p._1)).toList
+  val groknameListToMatches: List[(List[String], List[String])] = groknameToMatches.groupBy(_._2).map(p => (p._2.map
+  (_._1), p._1)).toList
   form.constructedRegex.value = Some(currentRegex)
   /** groknameListToMatches that have at least one nonempty match, sorted by the sum of the lengths of the matches. */
-  val groknameListToMatchesCleanedup = groknameListToMatches.filter(_._2.exists(!_.isEmpty)).sortBy(-_._2.map(_.length).sum)
+  val groknameListToMatchesCleanedup = groknameListToMatches.filter(_._2.exists(!_.isEmpty)).sortBy(-_._2.map(_
+    .length).sum)
+
+  private val syntaxErrorInNextPartPerHand: Option[String] = try {
+    JoniRegex(form.nextPartPerHand.value.getOrElse(""))
+    None
+  } catch {
+    case patternSyntaxException: SyntaxException =>
+      Some(patternSyntaxException.getMessage)
+  }
 
   form.nameOfNextPart.value = None // reset for next form display
   form.nextPartPerHand.value = None
@@ -64,15 +76,23 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   else <p>All log lines are successfully matched. You can copy the regular expression from the form field below.
     You can also try out the constructed regex by calling the matcher.</p> ++ submit("Go to matcher")
 
-  def sidebox: NodeSeq = <p>To try out how regular expressions on the unmatched rests press</p> ++ submit("Match restlines!", "matchrests", "_blank")
+  def sidebox: NodeSeq = <p>To try out how regular expressions on the unmatched rests press</p> ++ submit("Match " +
+    "restlines!", "matchrests", "_blank")
 
   override def result: NodeSeq = <span/>
 
-  def formparts: NodeSeq = form.constructedRegex.inputText("Constructed regular expression so far: ", 180, enabled = false) ++
+  def formparts: NodeSeq = form.constructedRegex.inputText("Constructed regular expression so far: ", 180, enabled =
+    false) ++
     form.loglines.hiddenField ++
     form.constructedRegex.hiddenField ++
     form.grokhiddenfields ++
-    form.multilinehiddenfields ++ selectionPart
+    form.multilinehiddenfields ++
+    (if (syntaxErrorInNextPartPerHand.isDefined)
+      <p class="box error">Syntax error in the handmade regex:
+        <br/>{syntaxErrorInNextPartPerHand.get}
+      </p>
+    else <span/>) ++
+    selectionPart
 
   def selectionPart: NodeSeq = {
     val alreadymatchedtable = table(
@@ -87,14 +107,17 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
     )
     if (!constructionDone) {
       alreadymatchedtable ++
-        formsection("To choose a continuation of your regular expression you can either choose a fixed string that is common to all log file line rests as a separator:") ++
+        formsection("To choose a continuation of your regular expression you can either choose a fixed string that is" +
+          " common to all log file line rests as a separator:") ++
         <div class="ym-fbox-check">
           {commonprefixesOfLoglineRests.map(p => form.nextPart.radiobutton(JoniRegexQuoter.quote(p), <code>
           {'»' + visibleWhitespaces(p) + '«'}
         </code>)).reduceOption(_ ++ _).getOrElse(<span/>)}
         </div> ++
-        formsection("or select one of the following expressions from the grok library that matches a segment of the log lines:") ++
-        form.nameOfNextPart.inputText("Optional: give name for the grok expression to retrieve it's match value", 20, 1) ++
+        formsection("or select one of the following expressions from the grok library that matches a segment of the " +
+          "log lines:") ++
+        form.nameOfNextPart.inputText("Optional: give name for the grok expression to retrieve it's match value", 20,
+          1) ++
         table(
           rowheader2("Grok expression", "Matches at the start of the rest of the loglines") ++
             groknameListToMatchesCleanedup.map(grokoption)) ++
@@ -114,10 +137,11 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   /** The longest string that is a prefix of all lines. */
   private def biggestCommonPrefix(lines: Seq[String]): String =
-    if (lines.size > 1) lines.reduce(commonPrefix) else lines.head
+  if (lines.size > 1) lines.reduce(commonPrefix) else lines.head
 
   // unfortunately wrapString collides with TableMaker.stringToNode , so we use it explicitly
-  private def commonPrefix(str1: String, str2: String) = wrapString(str1).zip(wrapString(str2)).takeWhile(p => (p._1 == p._2)).map(_._1).mkString("")
+  private def commonPrefix(str1: String, str2: String) = wrapString(str1).zip(wrapString(str2)).takeWhile(p => (p._1
+    == p._2)).map(_._1).mkString("")
 
   def grokoption(grokopt: (List[String], List[String])) = grokopt match {
     case (groknames, restlinematches) =>
@@ -134,7 +158,14 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   private def getNamedNextPartOrEmpty = {
     val nextPart = form.nextPart.value.getOrElse("")
-    if (nextPart == form.nextPartPerHandMarker) form.nextPartPerHand.value.getOrElse("")
+    if (nextPart == form.nextPartPerHandMarker) {
+      try {
+        JoniRegex(form.nextPartPerHand.value.getOrElse("")).regex
+      } catch {
+        case _: SyntaxException =>
+          ""
+      }
+    }
     else form.nameOfNextPart.value match {
       case None => nextPart
       case Some(name) => nextPart.replaceFirst( """^%\{(\w+)}$""", """%{$1:""" + name + "}")
