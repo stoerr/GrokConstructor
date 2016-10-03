@@ -4,7 +4,6 @@ import java.util.logging.{Level, Logger}
 import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
 import com.google.apphosting.api.ApiProxy
-import net.stoerr.grokconstructor.FeatureConfiguration
 import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
 import net.stoerr.grokconstructor.incremental.{IncrementalConstructionInputView, IncrementalConstructionStepView}
 import net.stoerr.grokconstructor.matcher.MatcherEntryView
@@ -12,7 +11,7 @@ import net.stoerr.grokconstructor.patterntranslation.PatternTranslatorView
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 
-import scala.collection.immutable.{SortedMap, TreeMap}
+import scala.collection.immutable.TreeMap
 import scala.collection.{JavaConversions, mutable}
 import scala.util.Random
 import scala.xml.{Elem, NodeSeq}
@@ -108,8 +107,6 @@ class WebDispatcher extends HttpServlet {
       navlink(AutomaticDiscoveryView.path, "Automatic Construction")
   }
 
-  import org.json4s.native.Serialization.write
-
   def errorPage(req: HttpServletRequest, resp: HttpServletResponse, e: Exception): Unit = {
     val writer = resp.getWriter
     writer.println(
@@ -161,7 +158,9 @@ class WebDispatcher extends HttpServlet {
     try {
       val parameterMap: mutable.Map[String, Array[String]] = JavaConversions.mapAsScalaMap(req.getParameterMap.asInstanceOf[java.util.Map[String, Array[String]]])
       val url = req.getRequestURI + Option(req.getQueryString).map("?" + _).getOrElse("")
-      "ReqInfo for " + requestid(req) + " : " + Serialization.writePretty(TreeMap(parameterMap.toList: _*) + ("_url" -> url))
+      val parameters: TreeMap[String, Array[String]] = TreeMap(parameterMap.toList: _*)
+        .filterNot(e => e._2.isEmpty || e._2.forall(_.isEmpty))
+      "ReqInfo for " + requestid(req) + " : " + Serialization.writePretty(parameters + ("_url" -> url))
     } catch {
       case e: Exception => logger.log(Level.SEVERE, "Trouble logging request", e)
         "OUCH: Trouble logging request: " + e
