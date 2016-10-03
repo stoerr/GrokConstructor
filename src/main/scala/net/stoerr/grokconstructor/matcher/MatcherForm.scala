@@ -13,7 +13,7 @@ case class MatcherForm(request: HttpServletRequest) extends WebForm with GrokPat
 
   val pattern = InputText("pattern")
 
-  def patternEntry = pattern.inputText("The pattern that should match all logfile lines." +
+  def patternEntry = pattern.inputText("The (unquoted!) pattern that should match all logfile lines." +
     "(Please keep in mind that the whole log line / message is searched for this pattern; if you want this to match the " +
     "whole line, enclose it in ^ $ or \\A \\Z. This speeds up the search - especially if the pattern is not found.)", 180)
 
