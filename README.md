@@ -18,6 +18,9 @@ and start with
 mvn appengine:devserver
 . It runs on http://localhost:9090/
 
+If you want to run it on a system without internet connection or that has an application server, anyway,
+you can also deploy the created target/GrokConstructor-*-SNAPSHOT.war e.g. on a Tomcat.
+
 Status: beta.
 
 TODO:
