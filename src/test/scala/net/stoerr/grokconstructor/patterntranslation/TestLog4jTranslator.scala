@@ -1,9 +1,11 @@
 package net.stoerr.grokconstructor.patterntranslation
 
+import java.text.SimpleDateFormat
 import java.util
+import java.util.Date
 
-import org.apache.log4j.spi.{LoggingEvent, ThrowableInformation}
 import org.apache.log4j._
+import org.apache.log4j.spi.{LoggingEvent, ThrowableInformation}
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
@@ -76,10 +78,11 @@ class TestLog4jTranslator extends FlatSpec {
     val mdc = new util.HashMap[String, String]()
     mdc.put("sid", "83k238d2")
     mdc.put("rid", "83482")
+    val dateString = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS").format(new Date(1424339008197L))
     val event = new LoggingEvent(getClass.toString, Logger.getLogger(getClass), 1424339008197L, Level.INFO, "this is the message",
       "main", new ThrowableInformation(new Exception("whatever")), "theNdc", null, mdc)
     val formatted = layout.format(event)
-    assert("19.02.2015 10:43:28,197 - [INFO ] net.stoerr.grokconstructor.patterntranslation.TestLog4jTranslator 83k238d2 this is the message" == formatted)
+    assert(dateString + " - [INFO ] net.stoerr.grokconstructor.patterntranslation.TestLog4jTranslator 83k238d2 this is the message" == formatted)
   }
 
 }
