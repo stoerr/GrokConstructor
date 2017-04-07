@@ -11,8 +11,8 @@ import scala.util.matching.Regex
  */
 object GrokPatternLibrary {
 
-  val grokpatternnames = List("firewalls", "grok-patterns", "haproxy", "java", "junos", "linux-syslog", "mcollective",
-    "mcollective-patterns", "mongodb", "nagios", "postgresql", "redis", "ruby")
+  val grokpatternnames = List("aws", "bacula", "bro", "exim", "firewalls", "grok-patterns", "haproxy", "java", "junos",
+    "linux-syslog", "mcollective", "mcollective-patterns", "mongodb", "nagios", "postgresql", "rails", "redis", "ruby")
 
   def mergePatternLibraries(libraries: List[String], extrapatterns: Option[String]): Map[String, String] = {
     val extrapatternlines: Iterator[String] = extrapatterns.map(Source.fromString(_).getLines()).getOrElse(Iterator())
