@@ -178,6 +178,27 @@
                     </jvmFlags>
                 </configuration>
             </plugin>
+            <plugin>
+                <!-- see http://tomcat.apache.org/maven-plugin-2.0/tomcat7-maven-plugin/exec-war-mojo.html -->
+                <!-- see also http://tomcat.apache.org/maven-plugin-2.0-beta-1/executable-war-jar.html -->
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.1</version>
+                <executions>
+                    <execution>
+                        <id>tomcat-run</id>
+                        <goals>
+                            <goal>exec-war-only</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <path>/</path>
+                            <finalName>${project.artifactId}-${project.version}-standalone.jar</finalName>
+                            <enableNaming>false</enableNaming>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
