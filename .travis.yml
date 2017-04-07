@@ -1,0 +1,8 @@
+language: java
+branches:
+  only:
+  - master
+  - develop
+notifications:
+  email:
+    - yu4cheem@techno.ms
