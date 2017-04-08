@@ -44,3 +44,6 @@ project/plugins/project/
 /deploy.cmd
 /start.cmd
 /src/main/webapp/css/combined*
+
+# deliberately excluded
+deploy/grokconstructor-*.json

@@ -10,8 +10,8 @@
     </description>
 
     <properties>
-        <appengine.app.version>7</appengine.app.version>
-        <appengine.target.version>1.9.38</appengine.target.version>
+        <appengine.app.version>1</appengine.app.version>
+        <appengine.target.version>1.9.50</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.version>2.11.7</scala.version>
         <maven.compiler.source>7</maven.compiler.source>
@@ -176,6 +176,10 @@
                         <jvmFlag>-Dcom.sun.management.jmxremote.ssl=false</jvmFlag>
                         <jvmFlag>-Dcom.sun.management.jmxremote.authenticate=false</jvmFlag>
                     </jvmFlags>
+                    <oauth2>false</oauth2>
+                    <additionalParams>
+                        <additionalParam>--service_account_json_key_file=deploy/grokconstructor-default.json</additionalParam>
+                    </additionalParams>
                 </configuration>
             </plugin>
             <plugin>
