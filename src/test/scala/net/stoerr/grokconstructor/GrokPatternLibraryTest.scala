@@ -5,7 +5,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers
 
-import scala.io.Source
+import scala.io.{Codec, Source}
 
 /**
  * @author <a href="http://www.stoerr.net/">Hans-Peter Stoerr</a>
@@ -15,7 +15,7 @@ import scala.io.Source
 class GrokPatternLibraryTest extends FlatSpec with ShouldMatchers {
 
   "GrokPatternLibrary.readGrokPatterns" should "read a pattern file and replace patterns" in {
-    val src = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("grok/grok-patterns"))
+    val src = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("grok/grok-patterns"))(Codec.UTF8)
     val patterns = GrokPatternLibrary.readGrokPatterns(src.getLines())
     patterns.size should equal(77)
     patterns("HOUR") should equal("(?:2[0123]|[01]?[0-9])")
