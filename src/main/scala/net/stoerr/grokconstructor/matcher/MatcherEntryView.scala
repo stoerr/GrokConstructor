@@ -3,12 +3,11 @@ package net.stoerr.grokconstructor.matcher
 import java.util.logging.Logger
 import javax.servlet.http.HttpServletRequest
 
-import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
 import net.stoerr.grokconstructor.{GrokPatternLibrary, GrokPatternNameUnknownException, JoniRegex, RandomTryLibrary}
+import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
 import org.joni.exception.SyntaxException
 
 import scala.collection.immutable.NumericRange
-import scala.collection.mutable
 import scala.xml.NodeSeq
 
 /**
@@ -115,7 +114,9 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
         return <hr/> ++ <p class="box error">This grok pattern has an unknown name
           {patternUnknownException.patternname}
           :
-          {patternUnknownException.pattern}
+          {patternUnknownException.pattern}. <br/>
+          This might be a typing error, or you are using a personal grok pattern library, and need
+          to include those patterns in the "additional patterns" field.
         </p>
     }
   }

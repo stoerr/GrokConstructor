@@ -1,0 +1,9 @@
+To update this from a specific version of logstash download the logstash zip
+and replace these files from
+./vendor/bundle/jruby/*/gems/logstash-patterns-core-*/patterns/
+and sometimes check GrokPatternLibrary.grokpatternnames if there are new files
+
+Alternative: https://github.com/logstash-plugins/logstash-patterns-core.git
+
+View all patterns:
+cat * | egrep -v '^#' | sort -u | less

@@ -11,7 +11,7 @@
 
     <properties>
         <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>1.9.50</appengine.target.version>
+        <appengine.target.version>1.9.54</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.version>2.11.7</scala.version>
         <maven.compiler.source>7</maven.compiler.source>

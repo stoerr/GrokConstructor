@@ -18,7 +18,7 @@ class WarmupListener extends ServletContextListener {
 
   override def contextInitialized(sce: ServletContextEvent) = {
     logger.info("Warming up")
-    GrokPatternLibrary.mergePatternLibraries(GrokPatternLibrary.grokpatternnames, None)
+    GrokPatternLibrary.mergePatternLibraries(GrokPatternLibrary.grokPatternLibraryNames, None)
     warmup(new IncrementalConstructionInputView(null))
     warmup(new IncrementalConstructionStepView(null))
     warmup(new MatcherEntryView(null))

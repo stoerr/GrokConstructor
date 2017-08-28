@@ -18,7 +18,7 @@ trait GrokPatternFormPart extends WebForm {
 
   lazy val grokPatternLibrary: Map[String, String] =
     GrokPatternLibrary.mergePatternLibraries(groklibs.values, grokadditionalinput.value)
-  val groklibs = InputMultipleChoice("groklibs", GrokPatternLibrary.grokpatternnames.map(keyToGrokLink).toMap, GrokPatternLibrary.grokpatternnames)
+  val groklibs = InputMultipleChoice("groklibs", GrokPatternLibrary.grokPatternLibraryNames.map(keyToGrokLink).toMap, GrokPatternLibrary.grokPatternLibraryNames)
   val grokadditionalinput = InputText("grokadditional")
 
   if (grokadditionalinput.value.isDefined) logger.fine("grokadditionalinput: " + grokadditionalinput.value)

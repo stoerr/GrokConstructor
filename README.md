@@ -1,6 +1,6 @@
 # grokconstructor
 
-AVAILABLE ON {{}http://grokconstructor.appspot.com/
+AVAILABLE ON http://grokconstructor.appspot.com/
 
 Grok is a collection of named regular expressions that can be used - for instance with logstash http://logstash.net/ -
 to parse logfiles. GrokDiscovery http://grokdebug.herokuapp.com/ can somewhat help you by suggesting regular
