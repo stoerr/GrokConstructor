@@ -1,0 +1,7 @@
+version: '2'
+
+services:
+  grokconstructor:
+    build: .
+    ports:
+      - "8080:8080"

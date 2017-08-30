@@ -38,3 +38,17 @@ Please be aware that this creates a directory .extract in the current directory 
 unpacked webapp. You can print additional arguments (such as ports, unpack location) with
 
 java -jar GrokConstructor-0.1.0-SNAPSHOT-standalone.jar -h
+
+### With Docker
+```
+docker build -t grokconstructor .
+
+docker run -d -p 8080:8080 grokconstructor
+
+```
+
+### With docker-compose
+```
+docker-compose up
+```
+
