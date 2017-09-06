@@ -40,14 +40,16 @@ unpacked webapp. You can print additional arguments (such as ports, unpack locat
 java -jar GrokConstructor-0.1.0-SNAPSHOT-standalone.jar -h
 
 ### With Docker
+
+If you don't have a JDK installation and maven installed on your server and don't want to create a standalone executable otherwise, you can also run the build and startup within a on-build docker container (courtesy of Timothy Van Heest http://turtlemonvh.github.io/). Please note that this container executes the maven build within the docker container and then starts the development server.
 ```
 docker build -t grokconstructor .
 
 docker run -d -p 8080:8080 grokconstructor
 
 ```
+Alternatively, you can run it with docker-compose:
 
-### With docker-compose
 ```
 docker-compose up
 ```
