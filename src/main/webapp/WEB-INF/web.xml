@@ -17,6 +17,11 @@
         <servlet-class>net.stoerr.grokconstructor.webframework.WebDispatcher</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>api</servlet-name>
+        <servlet-class>net.stoerr.grokconstructor.APIServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>library</servlet-name>
         <url-pattern>/groklib/*</url-pattern>
@@ -24,6 +29,10 @@
     <servlet-mapping>
         <servlet-name>web</servlet-name>
         <url-pattern>/do/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>api</servlet-name>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <!-- We don't use sessions - smallest value. -->
