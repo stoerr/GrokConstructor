@@ -5,7 +5,7 @@ import com.google.apphosting.api.DeadlineExceededException
 import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokconstructor.matcher.MatcherEntryView
 import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
-import net.stoerr.grokconstructor.{GrokPatternLibrary, JoniRegex, JoniRegexQuoter, RandomTryLibrary}
+import net.stoerr.grokconstructor.{GrokPatternLibrary, JoniRegex, JoniRegexQuoter, RandomTryLibrary, TimeoutException}
 import org.joni.exception.SyntaxException
 
 import scala.collection.immutable.NumericRange
@@ -46,7 +46,7 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
     } yield (grokname, restlinematches)
   } catch {
     case deadlineExceededException: DeadlineExceededException =>
-      throw new RuntimeException("Timeout executing the search for the next pattern.\n" +
+      throw new TimeoutException("Timeout executing the search for the next pattern.\n" +
         "Number one recommendation is to input more and more diverse log lines, which should all be matched by the pattern, into the log lines field." +
         "That restricts the search space - the more the better (within reasonable limits, of course).", deadlineExceededException)
   }

@@ -4,7 +4,7 @@ import com.google.apphosting.api.DeadlineExceededException
 
 import java.util.logging.Logger
 import javax.servlet.http.HttpServletRequest
-import net.stoerr.grokconstructor.{GrokPatternLibrary, GrokPatternNameUnknownException, JoniRegex, RandomTryLibrary}
+import net.stoerr.grokconstructor.{GrokPatternLibrary, GrokPatternNameUnknownException, JoniRegex, RandomTryLibrary, TimeoutException}
 import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
 import org.joni.exception.SyntaxException
 
@@ -100,7 +100,7 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
             <br/>{multilineSyntaxException.getMessage}
           </p>
         case deadlineExceededException: DeadlineExceededException =>
-          throw new RuntimeException("The request execution took too long. Sorry, we have to give up here.\n" +
+          throw new TimeoutException("The request execution took too long. Sorry, we have to give up here.\n" +
             "It's hard to give advice here: probably your regular expression leads to too much backtracking when it fails.\n" +
             "That could be a serious problem in logstash, btw.", deadlineExceededException)
       } finally {
