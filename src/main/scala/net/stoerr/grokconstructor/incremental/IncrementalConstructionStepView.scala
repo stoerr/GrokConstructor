@@ -86,7 +86,9 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
 
   def maintext: NodeSeq = if (!constructionDone) <p>Please select the next component for the grok pattern.
     You can select can either select a fixed string (e.g. a separator), a (possibly named) pattern from the grok
-    pattern library, or a pattern you explicitly specify. Make your selection and press</p> ++ submit("Continue!")
+    pattern library, or a pattern you explicitly specify.
+    You can use the browser's back button to retry (using form resubmission).
+    Make your selection and press</p> ++ submit("Continue!")
   else <p>All log lines are successfully matched. You can copy the regular expression from the form field below.
     You can also try out the constructed regex by calling the matcher.</p> ++ submit("Go to matcher")
 
