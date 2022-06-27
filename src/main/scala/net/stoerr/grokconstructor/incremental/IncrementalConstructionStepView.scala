@@ -1,7 +1,8 @@
 package net.stoerr.grokconstructor.incremental
 
-import javax.servlet.http.HttpServletRequest
+import com.google.apphosting.api.DeadlineExceededException
 
+import javax.servlet.http.HttpServletRequest
 import net.stoerr.grokconstructor.matcher.MatcherEntryView
 import net.stoerr.grokconstructor.webframework.{WebView, WebViewWithHeaderAndSidebox}
 import net.stoerr.grokconstructor.{GrokPatternLibrary, JoniRegex, JoniRegexQuoter, RandomTryLibrary}
@@ -31,17 +32,24 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   val loglineRests: Seq[String] = loglinesSplitted.map(_._2)
   val constructionDone = loglineRests.forall(_.isEmpty)
 
-  val groknameToMatches: List[(String, List[String])] = for {
-    grokname <- form.grokPatternLibrary.keys.toList
-    regex = JoniRegex(GrokPatternLibrary.replacePatterns("%{" + grokname + "}", form.grokPatternLibrary))
-    restlinematchOptions = loglineRests.map(regex.matchStartOf)
-    if !restlinematchOptions.exists(_.isEmpty)
-    /* In some cases a suggestion matches the rest of the line, but not as a continuation for the full line.
-      * For example: \\tb with current regex a\\t has restline b , which matches %{WORD} but that has a word boundary. */
-    newregex = new JoniRegex(currentJoniRegex.regex + regex.regex)
-    if logLines.map(newregex.matchStartOf).forall(_.isDefined)
-    restlinematches: List[String] = restlinematchOptions.map(_.get.matched).toList
-  } yield (grokname, restlinematches)
+  val groknameToMatches: List[(String, List[String])] = try {
+    for {
+      grokname <- form.grokPatternLibrary.keys.toList
+      regex = JoniRegex(GrokPatternLibrary.replacePatterns("%{" + grokname + "}", form.grokPatternLibrary))
+      restlinematchOptions = loglineRests.map(regex.matchStartOf)
+      if !restlinematchOptions.exists(_.isEmpty)
+      /* In some cases a suggestion matches the rest of the line, but not as a continuation for the full line.
+        * For example: \\tb with current regex a\\t has restline b , which matches %{WORD} but that has a word boundary. */
+      newregex = new JoniRegex(currentJoniRegex.regex + regex.regex)
+      if logLines.map(newregex.matchStartOf).forall(_.isDefined)
+      restlinematches: List[String] = restlinematchOptions.map(_.get.matched).toList
+    } yield (grokname, restlinematches)
+  } catch {
+    case deadlineExceededException: DeadlineExceededException =>
+      throw new RuntimeException("Timeout executing the search for the next pattern.\n" +
+        "Number one recommendation is to input more and more diverse log lines, which should all be matched by the pattern, into the log lines field." +
+        "That restricts the search space - the more the better (within reasonable limits, of course).", deadlineExceededException)
+  }
 
   // TODO missing: add extra patterns by hand later
   /** List of pairs of a list of groknames that have identical matches on the restlines to the list of matches. */
