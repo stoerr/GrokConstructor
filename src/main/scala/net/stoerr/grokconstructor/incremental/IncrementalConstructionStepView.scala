@@ -22,18 +22,24 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
   val form = IncrementalConstructionForm(request)
   val currentRegex = form.constructedRegex.value.getOrElse("\\A") + getNamedNextPartOrEmpty
   val currentJoniRegex = JoniRegex(GrokPatternLibrary.replacePatterns(currentRegex, form.grokPatternLibrary))
-  val loglinesSplitted: Seq[(String, String)] = form.multilineFilter(form.loglines.valueSplitToLines).map({
+  val logLines: Seq[String] = form.multilineFilter(form.loglines.valueSplitToLines).toIndexedSeq
+  val loglinesSplitted: Seq[(String, String)] = logLines.map({
     line =>
       val jmatch = currentJoniRegex.matchStartOf(line)
       (jmatch.get.matched, jmatch.get.rest)
   })
   val loglineRests: Seq[String] = loglinesSplitted.map(_._2)
   val constructionDone = loglineRests.forall(_.isEmpty)
+
   val groknameToMatches: List[(String, List[String])] = for {
     grokname <- form.grokPatternLibrary.keys.toList
     regex = JoniRegex(GrokPatternLibrary.replacePatterns("%{" + grokname + "}", form.grokPatternLibrary))
     restlinematchOptions = loglineRests.map(regex.matchStartOf)
     if !restlinematchOptions.exists(_.isEmpty)
+    /* In some cases a suggestion matches the rest of the line, but not as a continuation for the full line.
+      * For example: \\tb with current regex a\\t has restline b , which matches %{WORD} but that has a word boundary. */
+    newregex = new JoniRegex(currentJoniRegex.regex + regex.regex)
+    if logLines.map(newregex.matchStartOf).forall(_.isDefined)
     restlinematches: List[String] = restlinematchOptions.map(_.get.matched).toList
   } yield (grokname, restlinematches)
 
