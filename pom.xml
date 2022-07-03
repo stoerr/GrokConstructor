@@ -10,12 +10,12 @@
     </description>
 
     <properties>
-        <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>1.9.54</appengine.target.version>
+        <appengine.app.version>7</appengine.app.version>
+        <appengine.target.version>1.9.97</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.version>2.11.7</scala.version>
-        <maven.compiler.source>7</maven.compiler.source>
-        <maven.compiler.target>7</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -160,8 +160,7 @@
                     </jvmArgs>
                 </configuration>
             </plugin>
-            <plugin>
-                <!-- see https://cloud.google.com/appengine/docs/java/tools/maven -->
+            <!-- <plugin>
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine.target.version}</version>
@@ -178,14 +177,27 @@
                         <jvmFlag>-Dcom.sun.management.jmxremote.authenticate=false</jvmFlag>
                     </jvmFlags>
                     <oauth2>false</oauth2>
-                    <additionalParams>
-                        <additionalParam>--service_account_json_key_file=deploy/grokconstructor-default.json</additionalParam>
+                    <additionalParams>Dem Nutzer fehlt die Berechtigung „resourcemanager.projects.createBillingAssignment“ zum Verknüpfen eines Rechnungskontos mit dem Projekt.
+                        <additionalParam> - - service_account_json_key_file=deploy/grokconstructor-default.json</additionalParam>
                     </additionalParams>
                 </configuration>
-            </plugin>
+            </plugin> -->
+            <!-- https://cloud.google.com/appengine/docs/java/tools/maven -->
             <plugin>
-                <!-- see http://tomcat.apache.org/maven-plugin-2.0/tomcat7-maven-plugin/exec-war-mojo.html -->
-                <!-- see also http://tomcat.apache.org/maven-plugin-2.0-beta-1/executable-war-jar.html -->
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <projectId>grokconstructor</projectId>
+                    <version>${appengine.app.version}</version>
+                    <!-- <jvmFlags>
+                      <jvmFlag>-Xdebug</jvmFlag>
+                    </jvmFlags> -->
+                </configuration>
+            </plugin>
+            <!-- see http://tomcat.apache.org/maven-plugin-2.0/tomcat7-maven-plugin/exec-war-mojo.html -->
+            <!-- see also http://tomcat.apache.org/maven-plugin-2.0-beta-1/executable-war-jar.html -->
+            <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.1</version>

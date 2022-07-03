@@ -4,10 +4,16 @@ Deployment process on google appengine
 - Check https://console.cloud.google.com/appengine/versions?project=grokconstructor&moduleId=default which instance is active
 - change appengine.app.version in pom.xml to oldest instance, which should be replaced
 - run
-    mvn -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 clean install appengine:update
+    mvn clean install appengine:update
 - check if instance is working
 - make to default instance
 - close issue on https://github.com/stoerr/GrokConstructor/issues if checkin wasn't with closed #xyz
 
 Administration of keys:
 https://console.developers.google.com/iam-admin/serviceaccounts/project?project=grokconstructor&authuser=1
+
+## Migration to cloud run plugin
+
+# mvn com.google.cloud.tools:appengine-maven-plugin:run
+
+mvn appengine:run
