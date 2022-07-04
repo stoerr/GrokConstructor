@@ -15,5 +15,7 @@ https://console.developers.google.com/iam-admin/serviceaccounts/project?project=
 ## Migration to cloud run plugin
 
 # mvn com.google.cloud.tools:appengine-maven-plugin:run
+https://cloud.google.com/appengine/docs/standard/java/maven-reference?hl=de
+https://github.com/GoogleCloudPlatform/app-maven-plugin/blob/master/USER_GUIDE.md#app-engine-appengine-webxml-based-projects
 
 mvn appengine:run

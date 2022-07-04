@@ -183,6 +183,8 @@
                 </configuration>
             </plugin> -->
             <!-- https://cloud.google.com/appengine/docs/java/tools/maven -->
+            <!-- https://cloud.google.com/appengine/docs/standard/java/maven-reference?hl=de -->
+            <!-- https://github.com/GoogleCloudPlatform/app-maven-plugin/blob/master/USER_GUIDE.md#app-engine-appengine-webxml-based-projects -->
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
@@ -190,9 +192,12 @@
                 <configuration>
                     <projectId>grokconstructor</projectId>
                     <version>${appengine.app.version}</version>
-                    <!-- <jvmFlags>
-                      <jvmFlag>-Xdebug</jvmFlag>
-                    </jvmFlags> -->
+                    <verbosity>info</verbosity>
+                    <jvmFlags>
+                        <jvmFlag>
+                            -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n
+                        </jvmFlag>
+                      </jvmFlags>
                 </configuration>
             </plugin>
             <!-- see http://tomcat.apache.org/maven-plugin-2.0/tomcat7-maven-plugin/exec-war-mojo.html -->

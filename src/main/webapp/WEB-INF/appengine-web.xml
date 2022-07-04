@@ -3,6 +3,7 @@
     <!-- see https://cloud.google.com/appengine/docs/java/config/appconfig -->
     <!-- https://cloud.google.com/appengine/docs/standard/java/config/appref -->
     <threadsafe>true</threadsafe>
+    <runtime>java8</runtime>
 
     <module>default</module>
     <!--vm>true</vm> -->
