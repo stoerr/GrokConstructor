@@ -37,3 +37,9 @@ timeout
 
 !!!!! Timeout 2h in basic scaling -> set a timeout ourselves - how? Or use automatic scaling.
 https://cloud.google.com/appengine/docs/standard/python/how-instances-are-managed#timeout
+
+!! cache-control header nicht auf Einstiegsseiten ohne Daten setzen
+
+Test:
+\A"%{WORD}" \| %{IPORHOST} - - - \[%{HTTPDATE}] "%{WORD}%{GREEDYDATA}
+on https://7-dot-grokconstructor.appspot.com/do/construction?example=1

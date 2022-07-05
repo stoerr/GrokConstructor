@@ -31,7 +31,7 @@ case class JoniRegex(regex: String) {
   def matchStartOf(str: String): Option[StartMatch] = {
     val bytes = str.getBytes("UTF-8")
     val matcher = compiledRegex.matcher(bytes)
-    val matchedLength = matcher.`match`(0, bytes.length, 0)
+    val matchedLength = matcher.matchInterruptible(0, bytes.length, 0)
     if (0 > matchedLength) None
     else Some(StartMatch(matchedLength, new String(bytes, 0, matchedLength, "UTF-8"), new String(bytes, matchedLength, bytes.length - matchedLength, "UTF-8")))
   }
@@ -69,7 +69,7 @@ case class JoniRegex(regex: String) {
   def findIn(str: String): Option[JoniMatch] = {
     val bytes = str.getBytes("UTF-8")
     val matcher = compiledRegex.matcher(bytes)
-    val found = matcher.search(0, bytes.length, 0)
+    val found = matcher.searchInterruptible(0, bytes.length, 0)
     if (found < 0) None else Some(new JoniMatch(matcher, bytes))
   }
 

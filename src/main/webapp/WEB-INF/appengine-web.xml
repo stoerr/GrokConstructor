@@ -20,8 +20,6 @@
       <max-instances>1</max-instances>
     </automatic-scaling>
 
-    <sessions-enabled>false</sessions-enabled>
-
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
