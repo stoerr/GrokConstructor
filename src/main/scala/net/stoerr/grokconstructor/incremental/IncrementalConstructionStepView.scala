@@ -45,10 +45,10 @@ class IncrementalConstructionStepView(val request: HttpServletRequest) extends W
       restlinematches: List[String] = restlinematchOptions.map(_.get.matched).toList
     } yield (grokname, restlinematches)
   } catch {
-    case deadlineExceededException: DeadlineExceededException =>
+    case timeoutException @ (_ : DeadlineExceededException | _ : InterruptedException)  =>
       throw new TimeoutException("Timeout executing the search for the next pattern.\n" +
         "Number one recommendation is to input more and more diverse log lines, which should all be matched by the pattern, into the log lines field." +
-        "That restricts the search space - the more the better (within reasonable limits, of course).", deadlineExceededException)
+        "That restricts the search space - the more the better (within reasonable limits, of course).", timeoutException)
   }
 
   // TODO missing: add extra patterns by hand later

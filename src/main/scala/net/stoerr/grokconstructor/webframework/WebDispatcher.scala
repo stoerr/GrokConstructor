@@ -2,7 +2,6 @@ package net.stoerr.grokconstructor.webframework
 
 import java.util.logging.{Level, Logger}
 import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
-
 import com.google.apphosting.api.ApiProxy
 import net.stoerr.grokconstructor.automatic.AutomaticDiscoveryView
 import net.stoerr.grokconstructor.incremental.{IncrementalConstructionInputView, IncrementalConstructionStepView}
@@ -11,6 +10,7 @@ import net.stoerr.grokconstructor.patterntranslation.PatternTranslatorView
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 
+import java.util.{Timer, TimerTask}
 import scala.collection.immutable.TreeMap
 import scala.collection.{JavaConversions, mutable}
 import scala.util.Random
@@ -27,6 +27,13 @@ class WebDispatcher extends HttpServlet {
   val logger = Logger.getLogger("WebDispatcher")
   implicit val formats = Serialization.formats(NoTypeHints)
   private val reqattrReqId = "requestid"
+  private val timer = new Timer("Request aborter", true)
+  private val maxRequestProcessingTime = 20000
+
+  override def destroy(): Unit = {
+    timer.cancel()
+    super.destroy()
+  }
 
   override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
     System.err.println("Incoming request " + reqInfo(req))
@@ -49,6 +56,7 @@ class WebDispatcher extends HttpServlet {
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
     logger.fine("Processing request " + reqInfo(req))
+    val abortTask: TimerTask = scheduleInterruptTask()
     try {
       val vieworredirect: Either[String, WebView] = giveView(req)
       vieworredirect match {
@@ -71,7 +79,22 @@ class WebDispatcher extends HttpServlet {
         logger.log(Level.SEVERE, e + " for\n" + reqInfo(req), e)
         // "\n\nRequest properties: " + JavaConversions.enumerationAsScalaIterator(req.getAttributeNames).map(attr => attr + ": " + req.getAttribute("" + attr)).mkString("; "), e)
         errorPage(req, resp, e);
+    } finally {
+      abortTask.cancel()
     }
+  }
+
+  /** We cannot help many requests going too long. So we at least terminate them after a while. */
+  private def scheduleInterruptTask() = {
+    val requestThread = Thread.currentThread()
+    val abortTask = new TimerTask {
+      override def run(): Unit = {
+        logger.warning("Aborting task")
+        requestThread.interrupt()
+      }
+    }
+    timer.schedule(abortTask, maxRequestProcessingTime)
+    abortTask
   }
 
   def giveView(request: HttpServletRequest): Either[String, WebView] = {
@@ -142,8 +165,8 @@ class WebDispatcher extends HttpServlet {
         | with a copy of this page, or open an issue on
         | <a href="https://github.com/stoerr/GrokConstructor/issues">https://github.com/stoerr/GrokConstructor/issues</a> .
         | </p><p>
-        | Please remember that you can always press the back button to fix what was wrong - there is no state on the
-        | server, only in the page shown in the browser.
+        | Please remember that you can always press the back button (and probably do a form resubmission) to fix what was wrong -
+        | there is no state on the server, only in the page shown in the browser.
         | </p><pre>
       """.stripMargin)
     writer.println("\nError message: " + e)

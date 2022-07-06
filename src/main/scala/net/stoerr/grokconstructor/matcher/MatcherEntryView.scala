@@ -99,10 +99,10 @@ class MatcherEntryView(val request: HttpServletRequest) extends WebViewWithHeade
             :
             <br/>{multilineSyntaxException.getMessage}
           </p>
-        case deadlineExceededException: DeadlineExceededException =>
+        case timeoutException @ (_ : DeadlineExceededException | _ : InterruptedException)  =>
           throw new TimeoutException("The request execution took too long. Sorry, we have to give up here.\n" +
             "It's hard to give advice here: probably your regular expression leads to too much backtracking when it fails.\n" +
-            "That could be a serious problem in logstash, btw.", deadlineExceededException)
+            "That could be a serious problem in logstash, btw.", timeoutException)
       } finally {
         if (System.currentTimeMillis() >= stopPrefixMatchingTime) {
           logger.warning("30s Timelimit exceeded")
