@@ -193,11 +193,11 @@
                     <projectId>grokconstructor</projectId>
                     <version>${appengine.app.version}</version>
                     <verbosity>info</verbosity>
+                    <devserver.port>9090</devserver.port>
                     <jvmFlags>
-                        <jvmFlag>
-                            -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n
-                        </jvmFlag>
-                      </jvmFlags>
+                        <jvmFlag>-Xdebug</jvmFlag>
+                        <jvmFlag>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005</jvmFlag>
+                    </jvmFlags>
                 </configuration>
             </plugin>
             <!-- see http://tomcat.apache.org/maven-plugin-2.0/tomcat7-maven-plugin/exec-war-mojo.html -->
