@@ -67,11 +67,9 @@ class WebDispatcher extends HttpServlet {
           req.setAttribute("title", view.title)
           req.setAttribute("body", view.body)
           req.setAttribute("navigation", navigation(req))
-          resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1
-          resp.setHeader("Pragma", "no-cache") // HTTP 1.0
-          resp.setDateHeader("Expires", 0)
           resp.setContentType("application/xhtml+xml")
           resp.setCharacterEncoding("UTF-8")
+          setCacheControlHeader(req, resp)
           getServletContext.getRequestDispatcher("/jsp/frame.jsp").forward(req, resp)
       }
     } catch {
@@ -81,6 +79,23 @@ class WebDispatcher extends HttpServlet {
         errorPage(req, resp, e);
     } finally {
       abortTask.cancel()
+    }
+  }
+
+  private def setCacheControlHeader(req: HttpServletRequest, resp: HttpServletResponse): Unit = {
+    if (req.getParameterMap.isEmpty) {
+      // Unchangeable page, can and should be cached
+      resp.setHeader("Pragma", "public, max-age=86400") // HTTP 1.0
+      resp.setDateHeader("Expires", System.currentTimeMillis() + 86400000)
+    } else {
+      // We are actually idempotent: no state on the server and deterministic. Caching is good for the back button.
+      // But let's cache a reasonable amount of time.
+      resp.setHeader("Pragma", "public, max-age=3600") // HTTP 1.0
+      resp.setDateHeader("Expires", System.currentTimeMillis() + 3600000)
+      // Possibly disable caching?
+      // resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1
+      // resp.setHeader("Pragma", "no-cache") // HTTP 1.0
+      // resp.setDateHeader("Expires", 0)
     }
   }
 
