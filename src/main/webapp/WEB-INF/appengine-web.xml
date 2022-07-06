@@ -9,16 +9,16 @@
     <!--vm>true</vm> -->
 
     <!-- https://cloud.google.com/appengine/docs/standard#instance_classes -->
-    <!-- <instance-class>B1</instance-class>
+    <instance-class>B1</instance-class>
     <basic-scaling>
       <max-instances>1</max-instances>
       <idle-timeout>30m</idle-timeout>
-    </basic-scaling> -->
-    <instance-class>F1</instance-class>
+    </basic-scaling>
+    <!-- <instance-class>F1</instance-class>
     <automatic-scaling>
       <min-instances>0</min-instances>
       <max-instances>1</max-instances>
-    </automatic-scaling>
+    </automatic-scaling>  -->
 
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
