@@ -15,6 +15,8 @@ object GrokPatternLibrary {
     "httpd", "java", "junos", "linux-syslog", "maven", "mcollective", "mcollective-patterns", "mongodb",
     "nagios", "postgresql", "rails", "redis", "ruby", "squid").sorted
 
+  lazy val allGrokPatterns = mergePatternLibraries(grokPatternLibraryNames, None)
+
   def mergePatternLibraries(libraries: List[String], extrapatterns: Option[String]): Map[String, String] = {
     val extrapatternlines: Iterator[String] = extrapatterns.map(Source.fromString(_).getLines()).getOrElse(Iterator())
     val grokPatternSources = for (grokfile <- libraries) yield grokSource(grokfile).getLines()
@@ -57,9 +59,12 @@ object GrokPatternLibrary {
             m => {
               haveReplacement = true
               val patternName = m.group(1)
-              if (!grokMap.contains(patternName)) throw new GrokPatternNameUnknownException(patternName, m.group(0))
+              val pattern = if (grokMap.contains(patternName)) grokMap(patternName)
+              else if (allGrokPatterns.contains(patternName)) allGrokPatterns(patternName)
+              else throw new GrokPatternNameUnknownException(patternName, m.group(0))
+
               "(?" + Option(m.group(2)).map(Regex.quoteReplacement).map("<" + _ + ">").getOrElse(":") +
-                Regex.quoteReplacement(grokMap(patternName)) + ")"
+                Regex.quoteReplacement(pattern) + ")"
             }
           })
         }
