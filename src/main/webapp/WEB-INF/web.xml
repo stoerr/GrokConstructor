@@ -17,6 +17,11 @@
         <servlet-class>net.stoerr.grokconstructor.webframework.WebDispatcher</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>warmup</servlet-name>
+        <servlet-class>net.stoerr.grokconstructor.WarmupServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>library</servlet-name>
         <url-pattern>/groklib/*</url-pattern>
@@ -24,6 +29,10 @@
     <servlet-mapping>
         <servlet-name>web</servlet-name>
         <url-pattern>/do/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>warmup</servlet-name>
+        <url-pattern>/warmup.js</url-pattern>
     </servlet-mapping>
     <session-config>
         <!-- We don't use sessions - smallest value. -->

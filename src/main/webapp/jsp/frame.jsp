@@ -57,4 +57,19 @@
     </div>
     </footer>
   </div>
+  <% if ("GET".equalsIgnoreCase(request.getMethod())) { %>
+  <script defer="defer">
+      function triggerwarmup() {
+          var js = document.createElement("script");
+
+          js.type = "text/javascript";
+          js.src = "/warmup.js";
+
+          document.body.appendChild(js);
+      }
+
+      setTimeout(triggerwarmup, 1000)
+  </script>
+  <% } %>
+</body>
 </html>
