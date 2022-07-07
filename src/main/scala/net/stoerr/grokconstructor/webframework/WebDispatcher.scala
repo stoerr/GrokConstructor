@@ -55,6 +55,7 @@ class WebDispatcher extends HttpServlet {
     }
 
   override def doGet(req: HttpServletRequest, resp: HttpServletResponse) {
+    val beginTime = System.currentTimeMillis()
     logger.fine("Processing request " + reqInfo(req))
     val abortTask: TimerTask = scheduleInterruptTask()
     try {
@@ -79,6 +80,8 @@ class WebDispatcher extends HttpServlet {
         errorPage(req, resp, e);
     } finally {
       abortTask.cancel()
+      if (System.currentTimeMillis() - beginTime > 60000)
+        logger.severe("CAUTION: request took more than one minute! This must not happen! CHECK THIS!") // alert me.
     }
   }
 
