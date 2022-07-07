@@ -22,7 +22,7 @@
     <![endif]-->
 
 <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
 
 <title><%=request.getAttribute("title")%></title>
