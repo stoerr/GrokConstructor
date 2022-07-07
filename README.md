@@ -21,7 +21,7 @@ some examples or for your own log lines you want to match.
 To run locally, build with
 mvn clean install
 and start with
-mvn appengine:devserver
+mvn clean install appengine:run
 . It runs on http://localhost:9090/ .
 
 ### Deploy as a WAR
@@ -53,4 +53,3 @@ Alternatively, you can run it with docker-compose:
 ```
 docker-compose up
 ```
-

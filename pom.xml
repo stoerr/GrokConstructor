@@ -192,11 +192,13 @@
                 <configuration>
                     <projectId>grokconstructor</projectId>
                     <version>${appengine.app.version}</version>
+                    <promote>false</promote> <!-- Rather test and then promote by hand. -->
                     <verbosity>info</verbosity>
                     <devserver.port>9090</devserver.port>
                     <jvmFlags>
                         <jvmFlag>-Xdebug</jvmFlag>
                         <jvmFlag>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005</jvmFlag>
+                        <jvmFlag>-Xmx200m</jvmFlag>
                     </jvmFlags>
                 </configuration>
             </plugin>

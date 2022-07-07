@@ -4,7 +4,7 @@ Deployment process on google appengine
 - Check https://console.cloud.google.com/appengine/versions?project=grokconstructor&moduleId=default which instance is active
 - change appengine.app.version in pom.xml to oldest instance, which should be replaced
 - run
-    mvn clean install appengine:update
+    mvn clean install appengine:deploy
 - check if instance is working
 - make to default instance
 - close issue on https://github.com/stoerr/GrokConstructor/issues if checkin wasn't with closed #xyz
@@ -18,9 +18,9 @@ https://console.developers.google.com/iam-admin/serviceaccounts/project?project=
 https://cloud.google.com/appengine/docs/standard/java/maven-reference?hl=de
 https://github.com/GoogleCloudPlatform/app-maven-plugin/blob/master/USER_GUIDE.md#app-engine-appengine-webxml-based-projects
 
-mvn appengine:run
+mvn clean install appengine:run
 
-mvn appengine:deploy
+mvn clean install appengine:deploy
 
 Tail logs:
 gcloud app logs tail -s default
