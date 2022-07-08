@@ -36,7 +36,7 @@ class WebDispatcher extends HttpServlet {
   }
 
   override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
-    System.err.println("Incoming request " + reqInfo(req))
+    logger.info("Incoming request: " + reqInfo(req))
     doGet(req, resp)
   }
 
