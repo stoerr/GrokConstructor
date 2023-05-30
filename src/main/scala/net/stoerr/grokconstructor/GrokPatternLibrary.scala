@@ -44,7 +44,7 @@ object GrokPatternLibrary {
     }.toMap
   }
 
-  private val grokReference = """%\{([^}>':]+)(?::([^}>':@\[\]]+)(?::(?:int|float))?)?\}""".r
+  private val grokReference = """%\{([^}>':]+)(?::([^}>':]+)(?::(?:int|float))?)?\}""".r
 
   /** We replace patterns like %{BLA:name} with the definition of bla. This is done
     * (arbitrarily) 10 times to allow recursions but to not allow infinite loops. */
@@ -63,7 +63,15 @@ object GrokPatternLibrary {
               else if (allGrokPatterns.contains(patternName)) allGrokPatterns(patternName)
               else throw new GrokPatternNameUnknownException(patternName, m.group(0))
 
-              "(?" + Option(m.group(2)).map(Regex.quoteReplacement).map("<" + _ + ">").getOrElse(":") +
+              var semantic = m.group(2);
+              if (semantic != null && semantic.startsWith("[")) {
+                // joni doesn't support that but logstash does. :-(
+                // We make a hack since, strangely, it does support it with something before that.
+                // hopefully, people will know what we mean.
+                semantic = "_" + semantic;
+              }
+
+              "(?" + Option(semantic).map(Regex.quoteReplacement).map("<" + _ + ">").getOrElse(":") +
                 Regex.quoteReplacement(pattern) + ")"
             }
           })

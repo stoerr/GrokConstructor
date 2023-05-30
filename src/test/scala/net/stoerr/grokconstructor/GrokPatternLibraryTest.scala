@@ -36,6 +36,10 @@ class GrokPatternLibraryTest extends FlatSpec with ShouldMatchers {
     grokReference.pattern.matcher("%{BLA:name:float}").matches() should equal(true)
     GrokPatternLibrary.replacePatterns("bla%{BU}bu%{BLA}hu", Map("BU" -> "XYZ", "BLA" -> "HU%{BU}HA")) should equal("bla(?:XYZ)bu(?:HU(?:XYZ)HA)hu")
     GrokPatternLibrary.replacePatterns("%{BU:foo}%{BLA:bar}", Map("BU" -> "XYZ", "BLA" -> "HU%{BU}HA")) should equal("(?<foo>XYZ)(?<bar>HU(?:XYZ)HA)")
+    GrokPatternLibrary.replacePatterns("%{BU:foo:int}%{BLA:bar:float}", Map("BU" -> "XYZ", "BLA" -> "HU%{BU}HA")) should equal("(?<foo>XYZ)(?<bar>HU(?:XYZ)HA)")
+    // joni is allergic to group names starting with [ , but not if it starts with a _ , so we make a hack and add a _ .
+    GrokPatternLibrary.replacePatterns("%{BU:[nested][field][test]}%{BLA:[@metadata][timestamp]}", Map("BU" -> "XYZ", "BLA" -> "HU%{BU}HA")) should equal("" +
+      "(?<_[nested][field][test]>XYZ)(?<_[@metadata][timestamp]>HU(?:XYZ)HA)")
     evaluating {
       GrokPatternLibrary.replacePatterns("%{NIX}", Map())
     } should produce[GrokPatternNameUnknownException]

@@ -76,4 +76,10 @@ class JoniRegexTest extends FlatSpec with ShouldMatchers {
     matched.get.rest should equal("")
   }
 
+  "group names" should "support weird characters []@" in {
+    val rnamed = new JoniRegex("(?<_[metadata][@what]>nix)")
+    rnamed.findIn("danixda") should not equal(None)
+    // ouch: joni doesn't support group names like [@metadata] just with something before the [ .
+  }
+
 }
